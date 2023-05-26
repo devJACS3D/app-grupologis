@@ -142,6 +142,14 @@ const NewEntryView = (props) => {
     }
   };
 
+  const comparar = (a, b) => {
+    const partesFeca = a.fecha_ing.split("/");
+    const partesFecb = b.fecha_ing.split("/");
+    const fechaA = new Date(partesFeca[2], partesFeca[1] - 1, partesFeca[0]);
+    const fechaB = new Date(partesFecb[2], partesFecb[1] - 1, partesFecb[0]);
+    return fechaB - fechaA;
+  };
+
   const getNovedadesAll = async () => {
     setLoader(true);
 
@@ -155,6 +163,8 @@ const NewEntryView = (props) => {
     if (respApi.status) {
       const { data } = respApi;
       if (data.orden_ingreso != null) {
+        data.orden_ingreso.sort(comparar);
+
         setListNoved(data.orden_ingreso);
         setLoader(false);
       } else {

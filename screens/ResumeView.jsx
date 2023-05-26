@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { RefreshControl, ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import CardEinfo from "../components/HomeScreen/homeView/CardEinfo";
 import ResumeList from "../components/HomeScreen/resumeView/ResumeList";
 import Layout from "../components/layout/Layout";
@@ -9,7 +9,7 @@ import { useFocusEffect } from "@react-navigation/native";
 const ResumeView = (props) => {
   const { navigation } = props;
   const [identif, setIdentif] = useState("");
-  const [refreshing, setRefreshing] = useState(false);
+  const [sendIdent, setSendIdent] = useState("");
 
   useFocusEffect(
     React.useCallback(() => {
@@ -20,32 +20,31 @@ const ResumeView = (props) => {
 
   const handleInputChange = (text) => {
     setIdentif(text);
+    if (text == "") {
+      sendInputChange(text);
+    }
   };
 
-  const onRefresh = React.useCallback(async () => {
-    setRefreshing(true);
-
-    handleInputChange("");
-    setRefreshing(false);
-  }, []);
+  const sendInputChange = (text) => {
+    setSendIdent(text);
+  };
 
   return (
     <Layout props={{ ...props }}>
       <ScrollView
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
       >
         <CardEinfo
           title={"Hojas de vida"}
+          buttonText="Buscar"
+          showButton={true}
           showInput={true}
-          onPressAction={() => setModal(!modal)}
+          onPressAction={() => sendInputChange(identif)}
           handleGoBack={() => navigation.navigate("EmployeeManagement")}
           onInputChange={handleInputChange}
         />
-        <ResumeList idenHoja={identif} />
+        <ResumeList idenHoja={sendIdent} />
       </ScrollView>
     </Layout>
   );

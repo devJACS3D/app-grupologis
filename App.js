@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   View,
+  Modal,
 } from "react-native";
 import * as MediaLibrary from "expo-media-library";
 import * as Permissions from "expo-permissions";
@@ -193,7 +194,6 @@ export default function App() {
                       />
                       <Stack.Screen name="Home" component={HomeScreens} />
                     </Stack.Navigator>
-
                     <Toast config={toastConfig} />
                   </NavigationContainer>
                 </LoaderProgContextProvider>

@@ -111,14 +111,16 @@ const NewEntryCard = (props) => {
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}
                   >
-                    <View style={styles.infoShow}>
+                    <View style={styles.infoShow2}>
                       <ShowInfo modul="NovIngreso" info={props} />
-                      <GLButton
-                        type={"second"}
-                        placeholder="Salir"
-                        width={widthPercentageToPx(70)}
-                        onPressAction={() => closeModal()}
-                      />
+                      <View style={styles.modalContainer}>
+                        <GLButton
+                          type={"second"}
+                          placeholder="Salir"
+                          width={widthPercentageToPx(70)}
+                          onPressAction={() => closeModal()}
+                        />
+                      </View>
                     </View>
                   </ScrollView>
                 ) : (
@@ -131,12 +133,14 @@ const NewEntryCard = (props) => {
                         infoDel={infoDel}
                         showModal={(c) => c && closeModal()}
                       />
-                      <GLButton
-                        type={"second"}
-                        placeholder="Cancelar"
-                        width={widthPercentageToPx(70)}
-                        onPressAction={() => closeModal()}
-                      />
+                      <View style={styles.modalContainer}>
+                        <GLButton
+                          type={"second"}
+                          placeholder="Cancelar"
+                          width={widthPercentageToPx(70)}
+                          onPressAction={() => closeModal()}
+                        />
+                      </View>
                     </View>
                   </ScrollView>
                 )}
@@ -190,27 +194,34 @@ const styles = StyleSheet.create({
     borderRadius: 7,
   }),
   modal: {
+    top: widthPercentageToPx(20),
     backgroundColor: "white",
     width: widthPercentageToPx(91),
     height: heightPercentageToPx(82),
     borderRadius: 20,
     padding: 30,
-    position: "absolute",
-    bottom: -20,
+    transform: [{ translateY: 40 }],
+    // position: "absolute",
+    // bottom: -20,
   },
   closeButton: {
-    top: widthPercentageToPx(-4),
-    left: widthPercentageToPx(-4),
+    top: widthPercentageToPx(0),
+    left: widthPercentageToPx(0),
   },
   modalContainer: {
-    flex: 1,
-    margin: 16,
-    borderRadius: 8,
-    height: 20,
+    // flex: 1,
+    // margin: 16,
+    // borderRadius: 8,
+    // height: 20,
     alignItems: "center",
     justifyContent: "center",
   },
   infoShow: {
+    marginBottom: 90,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  infoShow2: {
     marginBottom: 90,
   },
 });

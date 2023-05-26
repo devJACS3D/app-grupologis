@@ -103,6 +103,8 @@ const NotificationForm = ({ closeM }) => {
                     dateNot={e.fecha}
                     id={e.id}
                     imageNot={e.icono}
+                    type={e.tipo}
+                    close={closeM}
                   />
                 ))
               ) : (

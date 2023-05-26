@@ -1,17 +1,29 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useContext, useState } from "react";
 import FormInput from "./FormInput";
 import GLButton from "../../common/buttons/GLButton";
 import {
+  colors,
   getFontStyles,
   heightPercentageToPx,
   widthPercentageToPx,
 } from "../../../utils";
 import FormuBussines from "../../LoginScreen/FormBussinessEntry/FormBussinesEntry";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
+import Toast from "react-native-toast-message";
 
-const UserForm = ({ userData, navigation, handleChange, handleUpdateUser }) => {
-  // undefined;
+import { fetchPost } from "../../../utils/functions";
+
+const UserForm = ({
+  userData,
+  navigation,
+  handleChange,
+  handleUpdateUser,
+  handleImgUser,
+}) => {
+  const [nomImg, setNomImg] = useState("Seleccione la foto");
   const estadoCiv = [
     [
       { label: "DESCONOCIDO", value: "0" },
@@ -23,6 +35,15 @@ const UserForm = ({ userData, navigation, handleChange, handleUpdateUser }) => {
       { label: "OTRO", value: "6" },
     ],
   ];
+
+  const showToast = (smg, type) => {
+    Toast.show({
+      type: type, //"success", error
+      text1: smg,
+      position: "bottom",
+      visibilityTime: 2000,
+    });
+  };
 
   const closeApp = async () => {
     try {
@@ -37,6 +58,66 @@ const UserForm = ({ userData, navigation, handleChange, handleUpdateUser }) => {
       console.log("error", error);
     }
   };
+
+  const updateFoto = async (b64All, mime, b64) => {
+    try {
+      let infoLog = await AsyncStorage.getItem("logged");
+      infoLog = JSON.parse(infoLog);
+      const { codEmp, empSel } = infoLog;
+
+      const info = `CodEmpleado=${codEmp}&Empresa=${empSel}&filename=${nomImg}&fileBase64=${b64All}`;
+      const path = "usuario/updatePhotoPer.php";
+      const respApi = await fetchPost(path, info);
+      const { data, status } = respApi;
+      if (!status) {
+        showToast("Error al actualizar foto", "error");
+        return;
+      }
+      if (data.Correcto == 1) {
+        infoLog.foto.file = b64;
+        infoLog.foto.mimetype = mime;
+        infoLog.foto.name = nomImg;
+        const loggedIn = JSON.stringify(infoLog);
+        await AsyncStorage.setItem("logged", loggedIn);
+        showToast("Foto actualizada correctamente", "success");
+        handleImgUser();
+      } else {
+        showToast("Error al actualizar foto", "error");
+      }
+    } catch (error) {
+      console.log("todo mal", error);
+      showToast("Error al actualizar foto", "error");
+    }
+  };
+
+  const selectPhoto = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (status !== "granted") {
+      console.log("Permiso denegado para acceder a la biblioteca de medios");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({ base64: true });
+
+    if (!result.canceled) {
+      const localUri = result.assets[0].uri;
+      const filename = localUri.split("/").pop();
+      const match = /\.(\w+)$/.exec(filename);
+      const extension = match ? match[1] : "";
+      const fullName = `${filename}`;
+      const mimeType = `image/${extension}`;
+
+      const base64Image = await FileSystem.readAsStringAsync(localUri, {
+        encoding: "base64",
+      });
+      setNomImg(fullName);
+      const prefixedBase64Image = `data:${mimeType};base64,${base64Image}`;
+
+      updateFoto(prefixedBase64Image, mimeType, base64Image);
+    }
+  };
+
   return (
     <View style={styles.formContainer}>
       <FormInput
@@ -94,6 +175,15 @@ const UserForm = ({ userData, navigation, handleChange, handleUpdateUser }) => {
               onOptionSel={(e) => handleChange("Id_Est_Civ", e)}
             />
           </View>
+          <View style={styles.formInputContainer}>
+            <Text style={styles.foto}>Foto</Text>
+            <Pressable
+              style={styles.containerFoto}
+              onPress={() => selectPhoto()}
+            >
+              <Text>{nomImg}</Text>
+            </Pressable>
+          </View>
         </>
       )}
       <GLButton
@@ -137,5 +227,21 @@ const styles = StyleSheet.create({
   formInputContainer: {
     width: widthPercentageToPx(70),
     marginBottom: 12,
+  },
+  foto: {
+    fontSize: 16,
+    fontFamily: "Volks-Serial-Medium",
+    color: colors.placeholderColor,
+  },
+  containerFoto: {
+    backgroundColor: colors.inputBackground,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    borderRadius: 15,
+    height: 50,
+    // marginTop: 20,
   },
 });

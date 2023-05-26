@@ -44,8 +44,9 @@ const UserView = (props) => {
     React.useCallback(() => {
       setLoaderComp(true);
       getUserDataFromAsyncStorage();
-      //
-      return () => {};
+      return () => {
+        console.log("desmontado");
+      };
     }, [])
   );
 
@@ -109,6 +110,11 @@ const UserView = (props) => {
     }
   };
 
+  const handleImgUser = () => {
+    getUserDataFromAsyncStorage();
+    navigation.navigate("ProfileView");
+  };
+
   return (
     <Layout props={{ ...props }}>
       <ScrollView
@@ -124,6 +130,7 @@ const UserView = (props) => {
               navigation={navigation}
               handleChange={handleChangeInput}
               handleUpdateUser={handleUpdateUser}
+              handleImgUser={handleImgUser}
             />
           </>
         ) : (

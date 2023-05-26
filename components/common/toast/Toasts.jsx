@@ -8,38 +8,34 @@ import { Modal } from "react-native";
 
 export const SuccessToast = (props) => {
   return (
-    <Modal visible={props.isVisible} transparent={true} animationType="slide">
-      <View style={styles.toastContainer}>
-        <View style={styles.success}>
-          <View style={styles.boxToast}>
-            <View style={styles.textContainer}>
-              <Text style={styles.text}>{props.text1}</Text>
-            </View>
-
-            <SuccessIcon />
+    <View style={styles.toastContainer}>
+      <View style={styles.success}>
+        <View style={styles.boxToast}>
+          <View style={styles.textContainer}>
+            <Text style={styles.text}>{props.text1}</Text>
           </View>
+
+          <SuccessIcon />
         </View>
       </View>
-    </Modal>
+    </View>
   );
 };
 
 export const ErrorToast = (props) => {
-  console.log("props ErrorToast", props);
+  console.log("error toast", props);
   return (
-    <Modal visible={props.isVisible} transparent={true} animationType="slide">
-      <View style={styles.toastContainer}>
-        <View style={styles.error}>
-          <View style={styles.boxToast}>
-            <View style={styles.textContainer}>
-              <Text style={styles.text}>{props.text1}</Text>
-            </View>
-
-            <ErrorIcon />
+    <View style={styles.toastContainer}>
+      <View style={styles.error}>
+        <View style={styles.boxToast}>
+          <View style={styles.textContainer}>
+            <Text style={styles.text}>{props.text1}</Text>
           </View>
+
+          <ErrorIcon />
         </View>
       </View>
-    </Modal>
+    </View>
   );
 };
 
@@ -78,7 +74,7 @@ const styles = StyleSheet.create({
   toastContainer: {
     height: 40,
     position: "absolute",
-    bottom: 40,
+    bottom: -2,
     left: 0,
     right: 0,
     alignItems: "center",

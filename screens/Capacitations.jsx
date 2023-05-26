@@ -16,6 +16,7 @@ const Capacitations = (props) => {
   const { navigation } = props;
   const [refreshing, setRefreshing] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [allListCapac, setAllListCapac] = useState([]);
   const [listCapac, setListCapac] = useState([]);
 
   const showToast = (smg, type) => {
@@ -25,6 +26,14 @@ const Capacitations = (props) => {
       position: "bottom",
       visibilityTime: 2000,
     });
+  };
+
+  const comparar = (a, b) => {
+    const partesFeca = a.Fecha.split("/");
+    const partesFecb = b.Fecha.split("/");
+    const fechaA = new Date(partesFeca[2], partesFeca[1] - 1, partesFeca[0]);
+    const fechaB = new Date(partesFecb[2], partesFecb[1] - 1, partesFecb[0]);
+    return fechaB - fechaA;
   };
 
   const getCapacitations = async () => {
@@ -42,9 +51,12 @@ const Capacitations = (props) => {
     if (status) {
       if (data.Correcto == 1 && data.Programa.length > 0) {
         setLoader(false);
+        data.Programa.sort(comparar);
+        setAllListCapac(data.Programa);
         setListCapac(data.Programa);
       } else {
         setLoader(false);
+        setAllListCapac([]);
         setListCapac([]);
       }
     } else {
@@ -66,6 +78,17 @@ const Capacitations = (props) => {
     setRefreshing(false);
   }, []);
 
+  const handleInputChange = (noRad) => {
+    let filteredList = [];
+    for (let i = 0; i < allListCapac.length; i++) {
+      const lista = allListCapac[i];
+      if (lista.Documento.includes(noRad)) {
+        filteredList.push(lista);
+      }
+    }
+    filteredList.sort(comparar);
+    setListCapac(filteredList);
+  };
   return (
     <Layout props={{ ...props }}>
       <ScrollView
@@ -77,9 +100,12 @@ const Capacitations = (props) => {
       >
         <CardEinfo
           title={"Capacitaciones"}
+          buttonText="Buscar"
+          inputText="Ingresa el radicado"
           showButton={false}
-          showInput={false}
+          showInput={true}
           handleGoBack={() => navigation.navigate("EmployeeManagement")}
+          onInputChange={handleInputChange}
         />
 
         {!loader ? (

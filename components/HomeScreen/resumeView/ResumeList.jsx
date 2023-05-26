@@ -48,10 +48,9 @@ const ResumeList = (props) => {
         buscar = true;
         setLoading(true);
         setCodEmpleado("%");
-      } else if (idenHoja.length > 5) {
+      } else if (idenHoja != "") {
         buscar = true;
         setLoading(true);
-
         setCodEmpleado(idenHoja);
       } else {
         buscar = false;
@@ -109,9 +108,11 @@ const ResumeList = (props) => {
         {!showInfDesc ? (
           !loading ? (
             resumeList.length > 0 ? (
-              resumeList.map((n4, index4) => (
-                <ResumeCard key={index4} {...n4} initDesc={blockDownloads} />
-              ))
+              <View style={styles.itemResum}>
+                {resumeList.map((n4, index4) => (
+                  <ResumeCard key={index4} {...n4} initDesc={blockDownloads} />
+                ))}
+              </View>
             ) : (
               <ReplyMessage message="SinRes" />
             )
@@ -156,5 +157,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  itemResum: {
+    marginBottom: 60,
   },
 });

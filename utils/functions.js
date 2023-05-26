@@ -95,6 +95,18 @@ export const downloadArchivoAndroid = async (base64, mime, name) => {
 //   }
 // };
 
+const getUTIFromExtension = (extension) => {
+  switch (extension) {
+    case "pdf":
+      return "com.adobe.pdf";
+    case "xls":
+      return "com.microsoft.excel.xls";
+    // Agrega más casos aquí para otras extensiones y UTIs correspondientes
+    default:
+      return null; // Retorna null si no se encuentra el UTI para la extensión
+  }
+};
+
 export const downloadArchivoIOS = async (base64, mime, name) => {
   try {
     const downloadsDirectory = `${FileSystem.documentDirectory}Archivosapp/`;
@@ -120,11 +132,12 @@ export const downloadArchivoIOS = async (base64, mime, name) => {
     const fileUriLocal = `${FileSystem.documentDirectory}Archivosapp/${name}`;
 
     // codigo para compartir archivo
-    const uti =
-      mime === "application/pdf" ? "com.adobe.pdf" : "com.microsoft.excel.xls";
+    const fileExtension = name
+      .substring(name.lastIndexOf(".") + 1)
+      .toLowerCase();
     await Sharing.shareAsync(fileUriLocal, {
       mimeType: mime,
-      UTI: uti,
+      UTI: getUTIFromExtension(fileExtension),
     });
 
     return true;

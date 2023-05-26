@@ -122,31 +122,36 @@ const DownloadableCard = ({ title, desc, image, id }) => {
     const path = "usuario/getHojaDeVidaEmpleado.php";
 
     const respApi = await fetchPost(path, info);
-
+    console.log("respApihoja", respApi);
     const { status, data } = respApi;
     if (status) {
+      showToast(`Se descargaran ${data.Docs.length} elementos`, "success");
       if (data.Correcto == 1 && data.Docs.length > 0) {
-        const { CodEmpleado, IdDocumento } = data.Docs[0];
-        let infoDes = `NitCliente=%&Empresa=${empSel.toUpperCase()}`;
-        infoDes += `&CodEmpleado=${CodEmpleado}&IdDocumento=${IdDocumento}`;
-        const pathDes = "usuario/getDownDoc.php";
-        const respApiDes = await fetchPost(pathDes, infoDes);
+        for (let i = 0; i < data.Docs.length; i++) {
+          const docs = data.Docs[i];
+          const { CodEmpleado, IdDocumento } = docs;
+          let infoDes = `NitCliente=%&Empresa=${empSel.toUpperCase()}`;
+          infoDes += `&CodEmpleado=${CodEmpleado}&IdDocumento=${IdDocumento}`;
+          const pathDes = "usuario/getDownDoc.php";
+          const respApiDes = await fetchPost(pathDes, infoDes);
 
-        if (respApiDes.status) {
-          if (respApiDes.data.Correcto === 1) {
-            dowArchivo(respApiDes.data);
+          if (respApiDes.status) {
+            if (respApiDes.data.Correcto === 1) {
+              let next = i + 1 == data.Docs.length ? false : true;
+              dowArchivo(respApiDes.data, next);
+            } else {
+              showToast("No se encontro documento", "error");
+              setLoaderProg(false);
+            }
           } else {
-            showToast("No se encontro documento", "error");
-            setLoaderProg(false);
-          }
-        } else {
-          if (data == "limitExe") {
-            showToast("El servicio demoro mas de lo normal", "error");
-            setLoaderProg(false);
-            setReload(true);
-          } else {
-            showToast("Error en el servidor", "error");
-            setLoaderProg(false);
+            if (data == "limitExe") {
+              showToast("El servicio demoro mas de lo normal", "error");
+              setLoaderProg(false);
+              setReload(true);
+            } else {
+              showToast("Error en el servidor", "error");
+              setLoaderProg(false);
+            }
           }
         }
       } else {
@@ -289,7 +294,7 @@ const DownloadableCard = ({ title, desc, image, id }) => {
     }
   };
 
-  const dowArchivo = async (data) => {
+  const dowArchivo = async (data, next = "") => {
     let archDes;
     if (Platform.OS === "android") {
       archDes = await downloadArchivoAndroid(
@@ -300,13 +305,14 @@ const DownloadableCard = ({ title, desc, image, id }) => {
     } else {
       archDes = await downloadArchivoIOS(data.file, data.mimetype, data.name);
     }
-
-    if (archDes) {
-      showToast("Listo", "success");
-      setLoaderProg(false);
-    } else {
-      showToast("No se genero un archivo", "error");
-      setLoaderProg(false);
+    if (!next || next == "") {
+      if (archDes) {
+        showToast("Listo", "success");
+        setLoaderProg(false);
+      } else {
+        showToast("No se genero un archivo", "error");
+        setLoaderProg(false);
+      }
     }
   };
 
@@ -380,7 +386,8 @@ const DownloadableCard = ({ title, desc, image, id }) => {
               />
             </View>
           ) : (
-            <View style={styles.modalForm}>
+            <View style={styles.modalContainer}>
+              {/* <View style={styles.modalForm}> */}
               <FormInicFin
                 closeModal={() => {
                   setModal(false);
@@ -388,6 +395,7 @@ const DownloadableCard = ({ title, desc, image, id }) => {
                 }}
                 onConfirm={getModalHumanAndAusen}
               />
+              {/* </View> */}
             </View>
           )}
         </Modal>
@@ -447,14 +455,5 @@ const styles = StyleSheet.create({
   modalContainer: {
     justifyContent: "center",
     alignItems: "center",
-  },
-  modalForm: {
-    top: 45,
-    borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    transform: [{ translateY: 0 }],
-    width: widthPercentageToPx(90),
-    height: heightPercentageToPx(90),
   },
 });

@@ -68,12 +68,14 @@ const FormInicFin = ({ closeModal, onConfirm }) => {
             }
           />
         </View>
-        <GLButton
-          onPressAction={() => validateFech()}
-          type="default"
-          placeholder={"Consultar"}
-          width={widthPercentageToPx(80)}
-        />
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <GLButton
+            onPressAction={() => validateFech()}
+            type="default"
+            placeholder={"Consultar"}
+            width={widthPercentageToPx(80)}
+          />
+        </View>
       </View>
     </View>
   );
@@ -83,7 +85,7 @@ export default FormInicFin;
 
 const styles = StyleSheet.create({
   modalForm: {
-    // top: 45,
+    top: 60,
     backgroundColor: colors.white,
     borderRadius: 10,
     paddingVertical: 10,

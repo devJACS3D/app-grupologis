@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { Image, StyleSheet, View, Pressable, Text, Modal } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import {
@@ -14,11 +15,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import imgEmp from "../../assets/images/users/user-empresa.png";
 import imgFem from "../../assets/images/users/user-female.png";
 import imgMal from "../../assets/images/users/user-male.png";
+import { get } from "../../utils/axiosInstance";
 
 const Header = ({}) => {
   const { userData } = useContext(authContext);
   const [dataUs, setDataUs] = useState({ userData });
   const [modal, setModal] = useState(false);
+  const [number, setNumber] = useState(0);
+  const navigation = useNavigation();
 
   const getUserDataFromAsyncStorage = async () => {
     try {
@@ -32,9 +36,58 @@ const Header = ({}) => {
     }
   };
 
+  const getNotification = async () => {
+    let infoLog = await AsyncStorage.getItem("logged");
+    infoLog = JSON.parse(infoLog);
+    const empSel = infoLog.empSel;
+    const codEmp = infoLog.codEmp;
+    const type = infoLog.type === "employee" ? "1" : "2";
+
+    let path = "usuario/getNotificaciones.php";
+    path += `?empresa=${empSel}&tipUser=${type}`;
+
+    const respApi = await get(path);
+
+    const { status, data } = respApi;
+    if (status) {
+      let cantNoLeid = 0;
+      if (data.length > 0) {
+        data.forEach((noti) => {
+          if (noti.estado == 0) {
+            cantNoLeid += 1;
+          }
+        });
+      }
+      setNumber(cantNoLeid);
+    }
+  };
+
+  // const handleProfileChange = async () => {
+  //   try {
+  //     const userDataJSON = await AsyncStorage.getItem("logged");
+  //     if (userDataJSON !== null) {
+  //       const userData = JSON.parse(userDataJSON);
+  //       setDataUs(userData);
+
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   useEffect(() => {
     getUserDataFromAsyncStorage();
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("state", (e) => {
+      // La URL ha cambiado
+      getNotification();
+      getUserDataFromAsyncStorage();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <View style={styles.notbar}>
@@ -76,7 +129,14 @@ const Header = ({}) => {
       </View>
       <View>
         <Pressable onPress={() => setModal(!modal)}>
-          <Ionicons name="md-notifications-outline" size={30} color="white" />
+          <View style={styles.containerNot}>
+            <Ionicons name="md-notifications-outline" size={30} color="white" />
+            {number > 0 && (
+              <View style={styles.notification}>
+                <Text style={styles.notificationText}>{number}</Text>
+              </View>
+            )}
+          </View>
         </Pressable>
       </View>
       {modal && (
@@ -172,5 +232,26 @@ const styles = StyleSheet.create({
     width: widthPercentageToPx(90.5),
     height: heightPercentageToPx(86),
     left: 18,
+  },
+  containerNot: {
+    position: "relative",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  notification: {
+    position: "absolute",
+    top: -6,
+    right: -6,
+    backgroundColor: "red",
+    borderRadius: 50,
+    width: 20,
+    height: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  notificationText: {
+    color: "white",
+    fontSize: 12,
+    fontWeight: "bold",
   },
 });

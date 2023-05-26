@@ -13,7 +13,7 @@ import {
 } from "../../../utils";
 
 const UserInfo = (props) => {
-  const { userData } = props;
+  const { userData, navigation } = props;
 
   return (
     <View style={styles.userInfoContainer}>

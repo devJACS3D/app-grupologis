@@ -163,12 +163,14 @@ const StepOne = ({ formData, onComplete }) => {
         placeholderTextColor={colors.placeholderColor}
       />
       <FormCountry onSelectionChange={setSelCountry} dep={depar} ciu={munic} />
-      <GLButton
-        onPressAction={handlePress}
-        type="default"
-        placeholder={"Siguiente"}
-        width={widthPercentageToPx(70)}
-      />
+      <View style={styles.btnAli}>
+        <GLButton
+          onPressAction={handlePress}
+          type="default"
+          placeholder={"Siguiente"}
+          width={widthPercentageToPx(70)}
+        />
+      </View>
     </View>
   );
 };
@@ -178,6 +180,10 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "#F3F3FF",
     width: "100%",
+  },
+  btnAli: {
+    justifyContent: "center",
+    alignItems: "center",
   },
   input: {
     backgroundColor: colors.mainBackgroundColor,

@@ -29,12 +29,12 @@ const Footer = (props) => {
       screen: "ClientsInvoices",
       show: role === "business",
     },
-    {
-      id: "news",
-      icon: "calendar",
-      screen: "NewsView",
-      show: role === "employee",
-    },
+    // {
+    //   id: "news",
+    //   icon: "calendar",
+    //   screen: "NewsView",
+    //   show: role === "employee",
+    // },
     {
       id: "pqr",
       icon: "message-square",

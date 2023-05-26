@@ -1,4 +1,5 @@
 import React, { Component, useState } from "react";
+import Toast from "react-native-toast-message";
 import {
   View,
   Text,
@@ -11,8 +12,11 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import listDep from "../../../../../utils/json/depart.json";
 import listMun from "../../../../../utils/json/municip.json";
-import { colors } from "../../../../../utils";
-import Toast from "react-native-toast-message";
+import {
+  colors,
+  heightPercentageToPx,
+  widthPercentageToPx,
+} from "../../../../../utils";
 
 class Formulario extends Component {
   constructor(props) {
@@ -27,14 +31,14 @@ class Formulario extends Component {
     };
   }
 
-  showToast(smg, type) {
+  showToast = (smg, type) => {
     Toast.show({
       type: type, //"success", error
       text1: smg,
       position: "bottom",
       visibilityTime: 2000,
     });
-  }
+  };
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.dep !== prevProps.dep || this.props.ciu !== prevProps.ciu) {
@@ -68,9 +72,12 @@ class Formulario extends Component {
         break;
       case "select2":
         if (this.state.select1 != "Departamento") {
+          console.log("1", this.state.select1);
+          console.log("2", this.state.optionAb);
           modalOptions = listMun.municipios;
           this.setState({
             modalVisible: true,
+            optionAb: null,
             modalOptions,
             modalSelect: select,
           });
@@ -115,7 +122,11 @@ class Formulario extends Component {
         </TouchableOpacity>
 
         {/* Modal */}
-        <Modal visible={this.state.modalVisible} animationType="slide">
+        <Modal
+          visible={this.state.modalVisible}
+          transparent={true}
+          animationType="slide"
+        >
           <View style={styles.modal}>
             <TouchableOpacity
               style={styles.closeButton}
@@ -127,50 +138,63 @@ class Formulario extends Component {
                 color={colors.placeholderColor}
               />
             </TouchableOpacity>
-            {this.state.modalOptions.map((option) =>
-              this.state.optionAb == "select1" ? (
-                <TouchableOpacity
-                  key={option.nombre}
-                  onPress={() => {
-                    // Aquí actualizamos el estado del select correspondiente con la opción seleccionada
-                    this.setState({
-                      [this.state.modalSelect]: option.nombre,
-                      modalVisible: false,
-                      modalOptions: [],
-                      optionAb: null,
-                      modalSelect: "",
-                    });
-                    this.handleSelection(option.nombre, "Ciudad");
-                  }}
-                >
-                  <Text style={styles.modalOption}>{option.nombre}</Text>
-                </TouchableOpacity>
-              ) : (
-                this.state.select1 != "Departamento" &&
-                option.nombreDepart === this.state.select1 && (
-                  <TouchableOpacity
-                    key={option.nombre}
-                    onPress={() => {
-                      // Aquí actualizamos el estado del select correspondiente con la opción seleccionada
-                      this.setState({
-                        [this.state.modalSelect]: option.nombre,
-                        modalVisible: false,
-                        modalOptions: [],
-                        optionAb: null,
-                        modalSelect: "",
-                      });
-                      this.handleSelection(this.state.select1, option.nombre);
-                      // this.props.selCountry = {
-                      //   this.props.selCountry.dep: this.state.select1,
-                      //   mun: this.state.select2,
-                      // };
-                    }}
-                  >
-                    <Text style={styles.modalOption}>{option.nombre}</Text>
-                  </TouchableOpacity>
-                )
-              )
-            )}
+
+            <View style={styles.selectContainer}>
+              <ScrollView
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+              >
+                {this.state.modalOptions.map((option) =>
+                  this.state.optionAb == "select1" ? (
+                    <TouchableOpacity
+                      key={option.nombre}
+                      style={styles.modalOptionBox}
+                      onPress={() => {
+                        // Aquí actualizamos el estado del select correspondiente con la opción seleccionada
+                        this.setState({
+                          [this.state.modalSelect]: option.nombre,
+                          modalVisible: false,
+                          modalOptions: [],
+                          optionAb: null,
+                          modalSelect: "",
+                        });
+                        this.handleSelection(option.nombre, "Ciudad");
+                      }}
+                    >
+                      <Text style={styles.modalOption}>{option.nombre}</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    this.state.select1 != "Departamento" &&
+                    option.nombreDepart == this.state.select1 && (
+                      <TouchableOpacity
+                        key={option.nombre}
+                        style={styles.modalOptionBox}
+                        onPress={() => {
+                          // Aquí actualizamos el estado del select correspondiente con la opción seleccionada
+                          this.setState({
+                            [this.state.modalSelect]: option.nombre,
+                            modalVisible: false,
+                            modalOptions: [],
+                            optionAb: null,
+                            modalSelect: "",
+                          });
+                          this.handleSelection(
+                            this.state.select1,
+                            option.nombre
+                          );
+                          // this.props.selCountry = {
+                          //   this.props.selCountry.dep: this.state.select1,
+                          //   mun: this.state.select2,
+                          // };
+                        }}
+                      >
+                        <Text style={styles.modalOption}>{option.nombre}</Text>
+                      </TouchableOpacity>
+                    )
+                  )
+                )}
+              </ScrollView>
+            </View>
           </View>
         </Modal>
       </View>
@@ -195,24 +219,43 @@ const styles = StyleSheet.create({
     color: colors.placeholderColor,
   },
   modal: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-    margin: 16,
-    borderRadius: 8,
-    padding: 15,
-    alignItems: "center",
-    justifyContent: "center",
+    // flex: 1,
+    // width: widthPercentageToPx(100),
+    // height: heightPercentageToPx(40),
+    // backgroundColor: "#FFFFFF",
+    // margin: 16,
+    // borderRadius: 8,
+    // padding: 15,
+    // alignItems: "center",
+    // justifyContent: "center",
+    backgroundColor: "white",
+    width: widthPercentageToPx(100),
+    height: heightPercentageToPx(40),
+    borderRadius: 40,
+    padding: 30,
+    position: "absolute",
+    bottom: -20,
   },
   closeButton: {
     position: "absolute",
-    top: 50,
+    top: 20,
     right: 30,
   },
-  modalOption: {
-    fontSize: 20,
-    marginBottom: 16,
+  modalOptionBox: {
+    fontSize: 15,
+    padding: 18,
+    borderWidth: 1,
+    borderColor: colors.purpleIcons,
+    borderRadius: 10,
+    marginBottom: 15,
   },
-
+  modalOption: {
+    fontSize: 15,
+    fontFamily: "Volks-Serial-Medium",
+  },
+  selectContainer: {
+    marginTop: heightPercentageToPx(5),
+  },
   input: {
     backgroundColor: colors.mainBackgroundColor,
     height: 50,

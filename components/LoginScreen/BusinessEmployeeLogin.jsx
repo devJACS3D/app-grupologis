@@ -120,6 +120,14 @@ const BusinessEmployeeLogin = ({ navigation, route }) => {
             </Text>
           </View>
 
+          {/* <View style={styles.descriptionContainer}> */}
+          <Text style={styles.welcomeProb}>
+            ¿Tienes problemas para iniciar sesión? Escríbenos al correo{" "}
+            {type === "business"
+              ? "contacto@grupologis.co"
+              : "info@grupologis.co"}
+          </Text>
+          {/* </View> */}
           <View style={styles.descriptionContainer}>
             <Text style={styles.welcomeDesc}>
               Por favor ingresa tu número de identificación y número de celular
@@ -186,7 +194,7 @@ const styles = StyleSheet.create({
       alignItems: "center",
       justifyContent: "space-between",
       paddingTop: heightPercentageToPx(4),
-      height: heightPercentageToPx(107),
+      height: heightPercentageToPx(pixelDensity <= 1 ? 112 : 107),
     };
   },
   formContainer: {
@@ -243,13 +251,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     textAlign: "justify",
-    width: widthPercentageToPx(65),
+    width: widthPercentageToPx(90),
     marginBottom: 20,
   },
   welcomeDesc: {
     fontFamily: "Poppins-Regular",
     color: colors.white,
     ...getFontStyles(13, 0.7, 1.2),
+    textAlign: "center",
+  },
+  welcomeProb: {
+    fontFamily: "Poppins-Regular",
+    color: colors.white,
+    ...getFontStyles(13, 0.7, 0.9),
     textAlign: "center",
   },
   loginFormInput: {
@@ -280,16 +294,16 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    gap: 8,
+    gap: 4,
     width: widthPercentageToPx(100),
-    marginTop: 10,
+    marginTop: pixelDensity <= 1 ? -3 : 10,
   },
   imageContainer: {
     height: heightPercentageToPx(45),
     width: widthPercentageToPx(100),
   },
   loginBackgroundImages: {
-    height: Platform.OS === "ios" ? "90%" : heightPercentageToPx(51),
+    height: Platform.OS === "ios" ? "90%" : heightPercentageToPx(50),
     width: Platform.OS === "ios" ? "100%" : widthPercentageToPx(100),
     // height: "90%",
     // width: "100%",

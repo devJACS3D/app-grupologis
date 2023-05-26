@@ -1,12 +1,22 @@
 import React from "react";
-import { StyleSheet, Text, View, Image, Platform } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Platform,
+  Pressable,
+} from "react-native";
 import { colors, getFontStyles } from "../../../utils";
+import { useNavigation } from "@react-navigation/native";
+
 import state1 from "../../../assets/images/components/notifications/state-1.png";
 import state2 from "../../../assets/images/components/notifications/state-2.png";
 import state3 from "../../../assets/images/components/notifications/state-3.png";
 import state4 from "../../../assets/images/components/notifications/state-4.png";
 
-const NotCard = ({ titleNot, descNot, imageNot, dateNot }) => {
+const NotCard = ({ titleNot, descNot, imageNot, dateNot, type, close }) => {
+  const navigation = useNavigation();
   let srcImg;
   switch (imageNot) {
     case "state-1.jpg":
@@ -22,17 +32,26 @@ const NotCard = ({ titleNot, descNot, imageNot, dateNot }) => {
       srcImg = state4;
       break;
   }
+
+  const redir = (typeNot) => {
+    if (typeNot == "noticia") {
+      navigation.navigate("NewsDailyView");
+    }
+    close();
+  };
   return (
-    <View style={styles.scrollStyle}>
-      <View style={styles.imgContainer}>
-        <Image source={srcImg} style={styles.image} />
+    <Pressable onPress={() => redir(type)}>
+      <View style={styles.scrollStyle}>
+        <View style={styles.imgContainer}>
+          <Image source={srcImg} style={styles.image} />
+        </View>
+        <View style={styles.infoContainer}>
+          <Text style={styles.title}>{titleNot}</Text>
+          <Text style={styles.description}>{descNot}</Text>
+          <Text style={styles.description}>{dateNot}</Text>
+        </View>
       </View>
-      <View style={styles.infoContainer}>
-        <Text style={styles.title}>{titleNot}</Text>
-        <Text style={styles.description}>{descNot}</Text>
-        <Text style={styles.description}>{dateNot}</Text>
-      </View>
-    </View>
+    </Pressable>
   );
 };
 

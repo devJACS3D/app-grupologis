@@ -9,6 +9,7 @@ import { getSer } from "../../../../utils/axiosInstance";
 import Toast from "react-native-toast-message";
 import LoaderItemSwitch from "../../../common/loaders/LoaderItemSwitch";
 import { useFocusEffect } from "@react-navigation/native";
+import { StyleSheet } from "react-native";
 
 const StepThree = ({ formData, onComplete, completed }) => {
   const [value, setValue] = React.useState();
@@ -137,14 +138,22 @@ const StepThree = ({ formData, onComplete, completed }) => {
         value={dotacion}
       />
       {dotacion && <FormDotacion onSelectionChange={setSeleccForm} />}
-      <GLButton
-        onPressAction={handlePress}
-        type="default"
-        placeholder={"Siguiente"}
-        width={widthPercentageToPx(70)}
-      />
+      <View style={styles.btnAli}>
+        <GLButton
+          onPressAction={handlePress}
+          type="default"
+          placeholder={"Siguiente"}
+          width={widthPercentageToPx(70)}
+        />
+      </View>
     </View>
   );
 };
 
 export default StepThree;
+const styles = StyleSheet.create({
+  btnAli: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});

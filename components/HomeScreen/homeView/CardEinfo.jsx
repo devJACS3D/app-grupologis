@@ -9,7 +9,7 @@ import {
 
 const CardEinfo = ({
   title,
-  inputText,
+  inputText = "",
   buttonText,
   buttonIcon,
   onPressAction,
@@ -66,7 +66,10 @@ const CardEinfo = ({
       {showInput ? (
         <TextInput
           style={styles.titleContainer}
-          placeholder="Ingresa la identificación"
+          placeholder={
+            inputText != "" ? inputText : "Ingresa la identificación"
+          }
+          placeholderTextColor="#999999"
           value={identif}
           onChangeText={(text) => {
             setIdentif(text);
