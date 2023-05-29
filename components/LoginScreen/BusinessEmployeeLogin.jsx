@@ -24,6 +24,7 @@ import { fetchPost, validatePhone } from "../../utils/functions";
 
 import CloseLogin from "../../assets/images/auth/svg/CloseLogin";
 import LoaderItemSwitch from "../common/loaders/LoaderItemSwitch";
+import { decode } from "base-64";
 const pixelDensity = parseInt(PixelRatio.get());
 
 const BusinessEmployeeLogin = ({ navigation, route }) => {
@@ -75,10 +76,12 @@ const BusinessEmployeeLogin = ({ navigation, route }) => {
         if (status) {
           const data = respApi.data;
           if (typeof data == "object") {
+            const codeDec = decode(data.codigo);
+            const codeVer = codeDec.slice(3, -2);
             await AsyncStorage.setItem("type", type);
             await AsyncStorage.setItem("identi", identification);
             await AsyncStorage.setItem("phone", phone);
-            await AsyncStorage.setItem("code", data.codigo);
+            await AsyncStorage.setItem("code", codeVer);
             navigation.navigate("CodeAuth", { type: "business" });
           } else {
             setLoader(false);
@@ -130,7 +133,7 @@ const BusinessEmployeeLogin = ({ navigation, route }) => {
           {/* </View> */}
           <View style={styles.descriptionContainer}>
             <Text style={styles.welcomeDesc}>
-              Por favor ingresa tu número de identificación y número de celular
+              Por favor ingrese nit cliente y número de teléfono autorizado
             </Text>
           </View>
         </View>

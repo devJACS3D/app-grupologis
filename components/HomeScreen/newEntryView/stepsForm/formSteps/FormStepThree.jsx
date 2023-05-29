@@ -84,7 +84,15 @@ class Formulario extends Component {
             style={styles.select}
             onPress={() => this.openModal("selCenCost")}
           >
-            <Text style={styles.selectText}>{this.state.selCenCost}</Text>
+            <Text
+              style={
+                this.state.selCenCost2 == ""
+                  ? styles.selectTextDis
+                  : styles.selectText
+              }
+            >
+              {this.state.selCenCost}
+            </Text>
             <Ionicons
               name="chevron-down-outline"
               size={24}
@@ -96,7 +104,15 @@ class Formulario extends Component {
             style={styles.select}
             onPress={() => this.openModal("selSalario")}
           >
-            <Text style={styles.selectText}>{this.state.selSalario}</Text>
+            <Text
+              style={
+                this.state.selSalario == "Tipo de salario"
+                  ? styles.selectTextDis
+                  : styles.selectText
+              }
+            >
+              {this.state.selSalario}
+            </Text>
             <Ionicons
               name="chevron-down-outline"
               size={24}
@@ -121,7 +137,15 @@ class Formulario extends Component {
             style={styles.select}
             onPress={() => this.openModal("selAuxBon")}
           >
-            <Text style={styles.selectText}>{this.state.selAuxBon}</Text>
+            <Text
+              style={
+                this.state.selAuxBon2 == ""
+                  ? styles.selectTextDis
+                  : styles.selectText
+              }
+            >
+              {this.state.selAuxBon}
+            </Text>
             <Ionicons
               name="chevron-down-outline"
               size={24}
@@ -262,10 +286,15 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 10,
   },
-  selectText: {
+  selectTextDis: {
     fontSize: 16,
     fontFamily: "Volks-Serial-Medium",
     color: colors.placeholderColor,
+  },
+  selectText: {
+    fontSize: 16,
+    fontFamily: "Volks-Serial-Medium",
+    color: colors.black,
   },
   modalContainer: {
     flex: 1,

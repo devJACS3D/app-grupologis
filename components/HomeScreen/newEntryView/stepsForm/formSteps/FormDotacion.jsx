@@ -19,7 +19,7 @@ class FormDotacion extends Component {
   state = {
     selGuantes: "Talla guantes",
     selOverol: "Talla overol",
-    selCamisa: "Talla Camisa",
+    selCamisa: "Talla camisa",
     tallPantalon: "",
     tallZapatos: "",
     modalVisible: false,
@@ -79,7 +79,15 @@ class FormDotacion extends Component {
             style={styles.select}
             onPress={() => this.openModal("selGuantes")}
           >
-            <Text style={styles.selectText}>{this.state.selGuantes}</Text>
+            <Text
+              style={
+                this.state.selGuantes == "Talla guantes"
+                  ? styles.selectTextDis
+                  : styles.selectText
+              }
+            >
+              {this.state.selGuantes}
+            </Text>
             <Ionicons
               name="chevron-down-outline"
               size={24}
@@ -91,7 +99,15 @@ class FormDotacion extends Component {
             style={styles.select}
             onPress={() => this.openModal("selOverol")}
           >
-            <Text style={styles.selectText}>{this.state.selOverol}</Text>
+            <Text
+              style={
+                this.state.selOverol == "Talla overol"
+                  ? styles.selectTextDis
+                  : styles.selectText
+              }
+            >
+              {this.state.selOverol}
+            </Text>
             <Ionicons
               name="chevron-down-outline"
               size={24}
@@ -103,7 +119,15 @@ class FormDotacion extends Component {
             style={styles.select}
             onPress={() => this.openModal("selCamisa")}
           >
-            <Text style={styles.selectText}>{this.state.selCamisa}</Text>
+            <Text
+              style={
+                this.state.selCamisa == "Talla camisa"
+                  ? styles.selectTextDis
+                  : styles.selectText
+              }
+            >
+              {this.state.selCamisa}
+            </Text>
             <Ionicons
               name="chevron-down-outline"
               size={24}
@@ -209,10 +233,15 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 10,
   },
-  selectText: {
+  selectTextDis: {
     fontSize: 16,
     fontFamily: "Volks-Serial-Medium",
     color: colors.placeholderColor,
+  },
+  selectText: {
+    fontSize: 16,
+    fontFamily: "Volks-Serial-Medium",
+    color: colors.black,
   },
   input: {
     backgroundColor: colors.mainBackgroundColor,

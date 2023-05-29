@@ -14,8 +14,8 @@ const FormDateStepTwo = ({ changeResultDate }) => {
   const [textDateIng, setTextDateIng] = useState("Fecha de ingreso");
   const [textDateEgr, setTextDateEgr] = useState("Fecha de egreso");
   const [formdate, setFormdate] = useState({
-    ingreso: {},
-    egreso: {},
+    ingreso: null,
+    egreso: null,
   });
   const fechaAc = new Date();
 
@@ -45,7 +45,11 @@ const FormDateStepTwo = ({ changeResultDate }) => {
           setDateSel("ingreso");
         }}
       >
-        <Text style={styles.selectText}>{textDateIng}</Text>
+        <Text
+          style={formdate.ingreso ? styles.selectTextDis : styles.selectText}
+        >
+          {textDateIng}
+        </Text>
         <Ionicons name="calendar" size={25} color={colors.placeholderColor} />
       </Pressable>
 
@@ -56,7 +60,11 @@ const FormDateStepTwo = ({ changeResultDate }) => {
           setDateSel("egreso");
         }}
       >
-        <Text style={styles.selectText}>{textDateEgr}</Text>
+        <Text
+          style={formdate.egreso ? styles.selectTextDis : styles.selectText}
+        >
+          {textDateEgr}
+        </Text>
         <Ionicons name="calendar" size={25} color={colors.placeholderColor} />
       </Pressable>
 
@@ -101,6 +109,11 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 8,
     marginBottom: 10,
+  },
+  selectTextDis: {
+    fontSize: 16,
+    fontFamily: "Volks-Serial-Medium",
+    color: colors.black,
   },
   selectText: {
     fontSize: 16,

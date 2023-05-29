@@ -156,14 +156,14 @@ export default MultiStepForm;
 
 const styles = StyleSheet.create({
   modalForm: {
-    top: widthPercentageToPx(15),
+    top: 23,
     backgroundColor: colors.white,
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 30,
     transform: [{ translateY: 50 }],
     width: widthPercentageToPx(90),
-    height: heightPercentageToPx(70),
+    height: heightPercentageToPx(68),
   },
   goBackButton: {
     position: "relative",

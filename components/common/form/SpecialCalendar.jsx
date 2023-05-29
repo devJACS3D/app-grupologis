@@ -31,14 +31,28 @@ const SpecialCalendar = ({ placeholder, onChange, value, dia = "" }) => {
   const [showMonthPicker, setShowMonthPicker] = useState(false);
   const [selectedDay, setSelectedDay] = useState(null);
   const [selectedMonthYear, setSelectedMonthYear] = useState({
-    month: selectedDate.get("M"),
+    month: value.getMonth() + 1,
     year: value.getFullYear(),
   });
   const [dayOptions, setDayOptions] = useState([]);
   const fechaActual = new Date();
 
   useEffect(() => {
-    const result = getDaysArray(value.getFullYear(), value.getMonth() + 1, dia);
+    const fechaAc = new Date(); // Obtener fecha actual
+
+    let result;
+    if (dia == "") {
+      result = getDaysArray(value.getFullYear(), value.getMonth() + 1, dia);
+    } else {
+      fechaAc.setDate(fechaAc.getDate() + 3);
+
+      const diaAdd = fechaAc.getDate();
+      const mes = fechaAc.getMonth() + 1;
+      const anio = fechaAc.getFullYear();
+      console.log(diaAdd, mes, anio);
+      setSelectedDate(selectedDate.set("M", fechaAc.getMonth()));
+      result = getDaysArray(anio, mes, diaAdd);
+    }
     setDayOptions(result);
   }, []);
 

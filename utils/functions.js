@@ -4,7 +4,8 @@ import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import * as Permissions from "expo-permissions";
 import * as Sharing from "expo-sharing";
-import { Platform } from "react-native";
+import React, { useState } from "react";
+import { Platform, View, Button, Share, WebView } from "react-native";
 
 export function validatePhone(phone) {
   phone = phone.toString();

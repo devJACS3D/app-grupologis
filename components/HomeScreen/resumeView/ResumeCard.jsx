@@ -27,6 +27,7 @@ const ResumeCard = (props) => {
   };
 
   const dowArchivo = async (data) => {
+    console.log("data archivo", data);
     let archDes;
     if (Platform.OS === "android") {
       archDes = await downloadArchivoAndroid(

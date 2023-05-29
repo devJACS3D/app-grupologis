@@ -89,11 +89,14 @@ const StepTwo = ({ formData, onComplete, completed }) => {
     let fechaIng = new Date(parseInt(year), parseInt(month - 1), parseInt(day));
 
     let hoy = new Date();
-    const tresDiasMs = 3 * 24 * 60 * 60 * 1000; // milisegundos en 3 días
-    const nuevaFechaMs = hoy.getTime() + tresDiasMs;
 
     let limiteFecha = new Date();
+
     limiteFecha.setDate(hoy.getDate() + 3); // Obtener el límite de fecha mínimo permitido (hoy + 3 días)
+    limiteFecha.setHours(0);
+    limiteFecha.setMinutes(0);
+    limiteFecha.setSeconds(0);
+    limiteFecha.setMilliseconds(0);
 
     const { cargo, contrato, convenio, jornada, trabajador, jornadaPer } =
       infoForm;
@@ -101,7 +104,6 @@ const StepTwo = ({ formData, onComplete, completed }) => {
       !laborOrden ||
       !dateIng ||
       !dateEgr ||
-      !fechaIng >= limiteFecha ||
       contrato.label == "Tipo de contrato" ||
       cargo.label == "Cargo" ||
       convenio.label == "Convenio" ||
@@ -115,15 +117,19 @@ const StepTwo = ({ formData, onComplete, completed }) => {
     ) {
       showToast("Por favor, rellene todos los campos", "error");
     } else {
-      onComplete({
-        stepTwoData: {
-          select: infoForm,
-          laborOrden: laborOrden,
-          pago31: isDay31,
-          fecIngreso: dateIng.date,
-          fecEgreso: dateEgr.date,
-        },
-      });
+      if (fechaIng.getTime() >= limiteFecha.getTime()) {
+        onComplete({
+          stepTwoData: {
+            select: infoForm,
+            laborOrden: laborOrden,
+            pago31: isDay31,
+            fecIngreso: dateIng.date,
+            fecEgreso: dateEgr.date,
+          },
+        });
+      } else {
+        showToast("La fecha de ingreso es incorrecta", "error");
+      }
     }
   };
 
