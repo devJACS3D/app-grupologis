@@ -8,7 +8,7 @@ import { colors, getFontStyles } from "../../../utils";
 import MonthYearPicker from "./MonthYearPicker";
 import Toast from "react-native-toast-message";
 
-let getDaysArray = function (year, month, day) {
+let getDaysArray = function (year, month, day, selec) {
   let monthIndex = month - 1;
   let names = ["Dom", "Lun", "Mar", "Mier", "Jue", "Vie", "Sab"];
   // const newDay = typeof day == "string" ? 1 : day;
@@ -18,7 +18,9 @@ let getDaysArray = function (year, month, day) {
   while (date.getMonth() == monthIndex) {
     result.push({
       day: date.getDate().toString().padStart(2, "0"),
-      isSelectable: ![0, 6].includes(date.getDay()),
+      isSelectable: selec
+        ? ![0, 6].includes(date.getDay())
+        : ![-1, 7].includes(date.getDay()),
       weekdayName: names[date.getDay()],
     });
     date.setDate(date.getDate() + 1);
@@ -26,7 +28,13 @@ let getDaysArray = function (year, month, day) {
   return result;
 };
 
-const SpecialCalendar = ({ placeholder, onChange, value, dia = "" }) => {
+const SpecialCalendar = ({
+  placeholder,
+  onChange,
+  value,
+  dia = "",
+  selectable = true,
+}) => {
   const [selectedDate, setSelectedDate] = useState(moment(value));
   const [showMonthPicker, setShowMonthPicker] = useState(false);
   const [selectedDay, setSelectedDay] = useState(null);
@@ -42,7 +50,12 @@ const SpecialCalendar = ({ placeholder, onChange, value, dia = "" }) => {
 
     let result;
     if (dia == "") {
-      result = getDaysArray(value.getFullYear(), value.getMonth() + 1, dia);
+      result = getDaysArray(
+        value.getFullYear(),
+        value.getMonth() + 1,
+        dia,
+        selectable
+      );
     } else {
       fechaAc.setDate(fechaAc.getDate() + 3);
 
@@ -51,7 +64,7 @@ const SpecialCalendar = ({ placeholder, onChange, value, dia = "" }) => {
       const anio = fechaAc.getFullYear();
       console.log(diaAdd, mes, anio);
       setSelectedDate(selectedDate.set("M", fechaAc.getMonth()));
-      result = getDaysArray(anio, mes, diaAdd);
+      result = getDaysArray(anio, mes, diaAdd, selectable);
     }
     setDayOptions(result);
   }, []);
@@ -71,7 +84,12 @@ const SpecialCalendar = ({ placeholder, onChange, value, dia = "" }) => {
       month: mon,
     });
     setSelectedDate(selectedDate.set("M", mon));
-    const result = getDaysArray(selectedMonthYear.year, (mon += 1), diaAdd);
+    const result = getDaysArray(
+      selectedMonthYear.year,
+      (mon += 1),
+      diaAdd,
+      selectable
+    );
     setDayOptions(result);
   };
 
@@ -81,7 +99,12 @@ const SpecialCalendar = ({ placeholder, onChange, value, dia = "" }) => {
       year: yea,
     });
     setSelectedDate(selectedDate.set("y", yea));
-    const result = getDaysArray(yea, (selectedMonthYear.month += 1), diaAdd);
+    const result = getDaysArray(
+      yea,
+      (selectedMonthYear.month += 1),
+      diaAdd,
+      selectable
+    );
     setDayOptions(result);
   };
 
