@@ -19,10 +19,22 @@ import { Feather } from "@expo/vector-icons";
 import { useRef, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { decode } from "base-64";
+import { fetchPost } from "../../utils/functions";
+import LoaderItemSwitchDark from "../common/loaders/LoaderItemSwitchDark";
 
 const Code = ({ navigation }) => {
   let codeInputRef = useRef(null);
   const [code, setCode] = useState("");
+  const [loader, setLoader] = useState(false);
+
+  const showToast = (smg, type) => {
+    Toast.show({
+      type: type, //"success", error
+      text1: smg,
+      position: "bottom",
+      visibilityTime: 2000,
+    });
+  };
 
   const handlePressCode = () => {
     codeInputRef.current.focus();
@@ -34,18 +46,7 @@ const Code = ({ navigation }) => {
   };
 
   const handleContinueToSelectBusiness = async () => {
-    const codeEnc = await AsyncStorage.getItem("code");
-    const codeDec = decode(codeEnc);
-    const codeVer = codeDec.slice(3, -2);
-
-    const showToast = (smg, type) => {
-      Toast.show({
-        type: type, //"success", error
-        text1: smg,
-        position: "bottom",
-        visibilityTime: 2000,
-      });
-    };
+    const codeVer = await AsyncStorage.getItem("code");
 
     if (code.length !== 4 || code != codeVer) {
       showToast("El código no es válido", "error");
@@ -54,6 +55,30 @@ const Code = ({ navigation }) => {
       navigation.navigate("BusinessEntry", { type: "business" });
     }
   };
+
+  const resendCode = async () => {
+    setLoader(true);
+    const phone = await AsyncStorage.getItem("phone");
+    const path = "usuario/ReenviarCodigo.php";
+    const body = `telefono=${phone}`;
+    const respApi = await fetchPost(path, body);
+    console.log("respApi code", respApi);
+    const { status, data } = respApi;
+    if (status) {
+      if (data.code) {
+        showToast("Mensaje enviado correctamente", "success");
+        AsyncStorage.setItem("code", data.code);
+        setLoader(false);
+      } else {
+        showToast("Error al enviar el codigo", "error");
+        setLoader(false);
+      }
+    } else {
+      showToast("Error al enviar el codigo", "error");
+      setLoader(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.topContainer}>
@@ -95,9 +120,15 @@ const Code = ({ navigation }) => {
             <Text style={{ color: colors.white }}>Ingresar</Text>
           </View>
         </Pressable>
-        <Pressable>
+        <Pressable onPress={() => resendCode()}>
           <View style={styles.asCodeSend}>
-            <Text style={{ color: colors.blueIndicator }}>Reenviar codigo</Text>
+            {!loader ? (
+              <Text style={{ color: colors.blueIndicator }}>
+                Reenviar codigo
+              </Text>
+            ) : (
+              <LoaderItemSwitchDark />
+            )}
           </View>
         </Pressable>
       </View>

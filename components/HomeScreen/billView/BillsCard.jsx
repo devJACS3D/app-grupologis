@@ -11,9 +11,11 @@ import {
   fetchPost,
 } from "../../../utils/functions";
 import LoaderProgContext from "../../../context/loader/LoaderProgContext";
+import WebViewContext from "../../../context/webView/WebViewContext";
 
 const BillsCard = (props) => {
   const { setLoaderProg } = useContext(LoaderProgContext);
+  const { setNameUtiView } = useContext(WebViewContext);
 
   const showToast = (smg, type) => {
     Toast.show({
@@ -33,7 +35,13 @@ const BillsCard = (props) => {
         data.name
       );
     } else {
-      archDes = await downloadArchivoIOS(data.file, data.mimetype, data.name);
+      const respIOS = await downloadArchivoIOS(
+        data.file,
+        data.mimetype,
+        data.name
+      );
+      setNameUtiView(respIOS);
+      archDes = respIOS.status;
     }
 
     if (archDes) {
@@ -58,9 +66,8 @@ const BillsCard = (props) => {
     const path = ["usuario/getReporteFact.php", "usuario/getSoporteFact.php"];
 
     const respApi = await fetchPost(path[type], info);
-
-    if (respApi.status) {
-      const data = respApi.data;
+    const { status, data } = respApi;
+    if (status) {
       if (data.Correcto === 1) {
         // descargar archivo
         dowArchivo(data);
@@ -69,7 +76,9 @@ const BillsCard = (props) => {
         setLoaderProg(false);
       }
     } else {
-      showToast("Error en el servidor", "error");
+      data == "limitExe"
+        ? showToast("El servicio demoro más de lo normal", "error")
+        : showToast("Error en el servidor", "error");
       setLoaderProg(false);
     }
   };

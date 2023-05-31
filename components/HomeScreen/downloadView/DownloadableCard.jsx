@@ -24,13 +24,18 @@ import { Platform } from "react-native";
 import FormBillsModal from "../billView/FormBillsModal";
 import FormInicFin from "../newsView/components/FormInicFin";
 import LoaderProgContext from "../../../context/loader/LoaderProgContext";
+import WebViewContext from "../../../context/webView/WebViewContext";
+import MultipleDownloads from "./MultipleDownloads";
+import { ScrollView } from "react-native";
 const pixelDensity = parseInt(PixelRatio.get());
 
 const DownloadableCard = ({ title, desc, image, id }) => {
   const [modal, setModal] = useState(false);
   const [showForm, setShowForm] = useState("");
   const [reload, setReload] = useState(false);
+  const [multHojasVida, setMultHojasVida] = useState(null);
   const { setLoaderProg } = useContext(LoaderProgContext);
+  const { nameUtiView, setNameUtiView } = useContext(WebViewContext);
 
   const showToast = (smg, type) => {
     Toast.show({
@@ -39,6 +44,39 @@ const DownloadableCard = ({ title, desc, image, id }) => {
       position: "bottom",
       visibilityTime: 2000,
     });
+  };
+
+  const servicesDescHojaVida = async (docs) => {
+    console.log("llego info", docs);
+    setLoaderProg(true);
+    let infoLog = await AsyncStorage.getItem("logged");
+    infoLog = JSON.parse(infoLog);
+    const empSel = infoLog.empSel;
+    const codEmp = infoLog.codEmp;
+    const { CodEmpleado, IdDocumento } = docs;
+    let infoDes = `NitCliente=%&Empresa=${empSel.toUpperCase()}`;
+    infoDes += `&CodEmpleado=${CodEmpleado}&IdDocumento=${IdDocumento}`;
+    const pathDes = "usuario/getDownDoc.php";
+    const respApiDes = await fetchPost(pathDes, infoDes);
+    console.log("respApiDes", respApiDes);
+    const { status, data } = respApiDes;
+    if (status) {
+      if (data.Correcto === 1) {
+        dowArchivo(data);
+      } else {
+        showToast("No se encontro documento", "error");
+        setLoaderProg(false);
+      }
+    } else {
+      if (data == "limitExe") {
+        showToast("El servicio demoro mas de lo normal", "error");
+        setLoaderProg(false);
+        setReload(true);
+      } else {
+        showToast("Error en el servidor", "error");
+        setLoaderProg(false);
+      }
+    }
   };
 
   const getCerLaboral = async () => {
@@ -54,6 +92,7 @@ const DownloadableCard = ({ title, desc, image, id }) => {
     const respApi = await fetchPost(path, info);
 
     const { status, data } = respApi;
+    console.log("respApi", respApi);
     if (status) {
       if (data.Correcto === 1) {
         dowArchivo(data);
@@ -98,7 +137,7 @@ const DownloadableCard = ({ title, desc, image, id }) => {
       }
     } else {
       if (data == "limitExe") {
-        showToast("El servicio demoro mas de lo normal", "error");
+        showToast("El servicio demoro más de lo normal", "error");
         setLoaderProg(false);
         setReload(true);
       } else {
@@ -125,34 +164,14 @@ const DownloadableCard = ({ title, desc, image, id }) => {
     console.log("respApihoja", respApi);
     const { status, data } = respApi;
     if (status) {
-      showToast(`Se descargaran ${data.Docs.length} elementos`, "success");
-      if (data.Correcto == 1 && data.Docs.length > 0) {
-        for (let i = 0; i < data.Docs.length; i++) {
-          const docs = data.Docs[i];
-          const { CodEmpleado, IdDocumento } = docs;
-          let infoDes = `NitCliente=%&Empresa=${empSel.toUpperCase()}`;
-          infoDes += `&CodEmpleado=${CodEmpleado}&IdDocumento=${IdDocumento}`;
-          const pathDes = "usuario/getDownDoc.php";
-          const respApiDes = await fetchPost(pathDes, infoDes);
-
-          if (respApiDes.status) {
-            if (respApiDes.data.Correcto === 1) {
-              let next = i + 1 == data.Docs.length ? false : true;
-              dowArchivo(respApiDes.data, next);
-            } else {
-              showToast("No se encontro documento", "error");
-              setLoaderProg(false);
-            }
-          } else {
-            if (data == "limitExe") {
-              showToast("El servicio demoro mas de lo normal", "error");
-              setLoaderProg(false);
-              setReload(true);
-            } else {
-              showToast("Error en el servidor", "error");
-              setLoaderProg(false);
-            }
-          }
+      if (data.Correcto == 1) {
+        if (data.Docs.length > 1) {
+          console.log("dtt hojas de vida", data.Docs);
+          setLoaderProg(false);
+          setMultHojasVida(data.Docs);
+          setModal(true);
+        } else {
+          servicesDescHojaVida(data.Docs);
         }
       } else {
         showToast("No se encontro documento", "error");
@@ -303,14 +322,23 @@ const DownloadableCard = ({ title, desc, image, id }) => {
         data.name
       );
     } else {
-      archDes = await downloadArchivoIOS(data.file, data.mimetype, data.name);
+      const respIOS = await downloadArchivoIOS(
+        data.file,
+        data.mimetype,
+        data.name
+      );
+      console.log("mimetype", data.mimetype);
+      console.log("respIOS", respIOS);
+      setModal(false);
+      setNameUtiView(respIOS);
+      archDes = respIOS.status;
     }
     if (!next || next == "") {
       if (archDes) {
         showToast("Listo", "success");
         setLoaderProg(false);
       } else {
-        showToast("No se genero un archivo", "error");
+        showToast("Error al generar el archivo", "error");
         setLoaderProg(false);
       }
     }
@@ -378,10 +406,24 @@ const DownloadableCard = ({ title, desc, image, id }) => {
       </View>
       {modal && (
         <Modal animationType="slide" visible={modal} transparent={true}>
-          {showForm === "payrollFlyer" || showForm === "generalPayroll" ? (
+          {multHojasVida ? (
+            <View style={styles.modalContainer}>
+              <MultipleDownloads
+                closeModal={() => {
+                  setMultHojasVida(null);
+                  setModal(false);
+                }}
+                listDow={multHojasVida}
+                infoEmit={(e) => servicesDescHojaVida(e)}
+              />
+            </View>
+          ) : showForm === "payrollFlyer" || showForm === "generalPayroll" ? (
             <View style={styles.modalContainer}>
               <FormBillsModal
-                closeModal={() => setModal(false)}
+                closeModal={() => {
+                  setModal(false);
+                  setShowForm("");
+                }}
                 onConfirm={getPayrollFlyer}
               />
             </View>
@@ -455,5 +497,6 @@ const styles = StyleSheet.create({
   modalContainer: {
     justifyContent: "center",
     alignItems: "center",
+    transform: [{ translateY: 50 }],
   },
 });

@@ -254,6 +254,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     justifyContent: "center",
     alignItems: "center",
+    transform: [{ translateY: 50 }],
   },
   loaderContainer: {
     marginTop: heightPercentageToPx(5),

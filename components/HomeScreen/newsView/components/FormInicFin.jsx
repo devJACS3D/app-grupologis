@@ -54,6 +54,7 @@ const FormInicFin = ({ closeModal, onConfirm }) => {
           <SpecialCalendar
             placeholder={"Fecha inicio"}
             value={new Date()}
+            selectable={false}
             onChange={(e) =>
               setSelectedDates({ ...selectedDates, startDate: e.date })
             }
@@ -63,6 +64,7 @@ const FormInicFin = ({ closeModal, onConfirm }) => {
           <SpecialCalendar
             placeholder={"Fecha fin"}
             value={new Date()}
+            selectable={false}
             onChange={(e) =>
               setSelectedDates({ ...selectedDates, endDate: e.date })
             }

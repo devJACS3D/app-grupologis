@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import CardEinfo from "../components/HomeScreen/homeView/CardEinfo";
 import Layout from "../components/layout/Layout";
@@ -12,9 +12,11 @@ import {
 } from "../utils/functions";
 import { Platform } from "react-native";
 import Toast from "react-native-toast-message";
+import WebViewContext from "../context/webView/WebViewContext";
 
 const NewEntryView = (props) => {
   const { navigation } = props;
+  const { setNameUtiView } = useContext(WebViewContext);
 
   const dowArchivo = async (data) => {
     let archDes;
@@ -25,7 +27,13 @@ const NewEntryView = (props) => {
         data.name
       );
     } else {
-      archDes = await downloadArchivoIOS(data.file, data.mimetype, data.name);
+      const respIOS = await downloadArchivoIOS(
+        data.file,
+        data.mimetype,
+        data.name
+      );
+      setNameUtiView(respIOS);
+      archDes = respIOS.status;
     }
     if (archDes) {
       navigation.navigate("EmployeeManagement");

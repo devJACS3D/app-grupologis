@@ -73,7 +73,7 @@ class Formulario extends Component {
       case "select2":
         if (this.state.select1 != "Departamento") {
           console.log("1", this.state.select1);
-          console.log("2", this.state.optionAb);
+          console.log("2", this.state.select2);
           modalOptions = listMun.municipios;
           this.setState({
             modalVisible: true,
@@ -102,7 +102,15 @@ class Formulario extends Component {
           style={styles.select}
           onPress={() => this.openModal("select1")}
         >
-          <Text style={styles.selectText}>{this.state.select1}</Text>
+          <Text
+            style={
+              this.state.select1 == "Departamento"
+                ? styles.selectTextDis
+                : styles.selectText
+            }
+          >
+            {this.state.select1}
+          </Text>
           <Ionicons
             name="chevron-down-outline"
             size={24}
@@ -113,7 +121,15 @@ class Formulario extends Component {
           style={styles.select}
           onPress={() => this.openModal("select2")}
         >
-          <Text style={styles.selectText}>{this.state.select2}</Text>
+          <Text
+            style={
+              this.state.select2 == "Ciudad"
+                ? styles.selectTextDis
+                : styles.selectText
+            }
+          >
+            {this.state.select2}
+          </Text>
           <Ionicons
             name="chevron-down-outline"
             size={24}
@@ -213,10 +229,15 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 10,
   },
-  selectText: {
+  selectTextDis: {
     fontSize: 16,
     fontFamily: "Volks-Serial-Medium",
     color: colors.placeholderColor,
+  },
+  selectText: {
+    fontSize: 16,
+    fontFamily: "Volks-Serial-Medium",
+    color: colors.black,
   },
   modal: {
     // flex: 1,

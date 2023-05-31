@@ -4,7 +4,8 @@ import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import * as Permissions from "expo-permissions";
 import * as Sharing from "expo-sharing";
-import { Platform } from "react-native";
+import React, { useContext } from "react";
+import WebViewContext from "../context/webView/WebViewContext";
 
 export function validatePhone(phone) {
   phone = phone.toString();
@@ -20,6 +21,76 @@ async function getToken(limit = "") {
   } else {
     return { status: false, data };
   }
+}
+
+const getUTIFromExtension = (extension) => {
+  switch (extension) {
+    case "pdf":
+      return "com.adobe.pdf";
+    case "xls":
+      return "com.microsoft.excel.xls";
+    // Agrega más casos aquí para otras extensiones y UTIs correspondientes
+    default:
+      return null; // Retorna null si no se encuentra el UTI para la extensión
+  }
+};
+
+const getMimeFromExtension = (ext) => {
+  switch (ext) {
+    case "pdf":
+      return "application/pdf";
+    case "xls":
+      return "application/vnd.ms-excel";
+
+    default:
+      return null;
+  }
+};
+
+function reemplazarTildes(nombreArchivo) {
+  const tildes = {
+    á: "a",
+    Á: "A",
+    é: "e",
+    É: "E",
+    í: "i",
+    Í: "I",
+    ó: "o",
+    Ó: "O",
+    ú: "u",
+    Ú: "U",
+    ñ: "n",
+    Ñ: "N",
+    "/": "_",
+    "\\": "_",
+    "<": "_",
+    ">": "_",
+    "|": "_",
+    "?": "_",
+    "*": "_",
+    '"': "_",
+    "'": "_",
+    "`": "_",
+    "%": "_",
+    "#": "_",
+    "&": "_",
+    $: "_",
+    "!": "_",
+    "@": "_",
+    "+": "_",
+    "=": "_",
+    "^": "_",
+    "[": "_",
+    "]": "_",
+    "(": "_",
+    ")": "_",
+    // Agrega más caracteres y sus reemplazos según tus necesidades
+  };
+
+  return nombreArchivo.replace(
+    /[\u0080-\u024F]/g,
+    (caracter) => tildes[caracter] || caracter
+  );
 }
 
 const characteres = () => {
@@ -52,6 +123,12 @@ export async function fetchPost(path, body, limit = "") {
 
 export const downloadArchivoAndroid = async (base64, mime, name) => {
   try {
+    name = name.replaceAll(" ", "_");
+    name = reemplazarTildes(name);
+    if (decodeURIComponent(escape(name))) {
+      name = decodeURIComponent(escape(name));
+    }
+    name = reemplazarTildes(name);
     const fileUri = FileSystem.cacheDirectory + name;
 
     const data = `data:${mime};base64,${base64}`;
@@ -95,20 +172,74 @@ export const downloadArchivoAndroid = async (base64, mime, name) => {
 //   }
 // };
 
-const getUTIFromExtension = (extension) => {
-  switch (extension) {
-    case "pdf":
-      return "com.adobe.pdf";
-    case "xls":
-      return "com.microsoft.excel.xls";
-    // Agrega más casos aquí para otras extensiones y UTIs correspondientes
-    default:
-      return null; // Retorna null si no se encuentra el UTI para la extensión
+export const downloadArchivoIOS = async (base64, mime, name) => {
+  try {
+    name = name.replaceAll(" ", "_");
+    name = reemplazarTildes(name);
+    if (decodeURIComponent(escape(name))) {
+      name = decodeURIComponent(escape(name));
+    }
+    name = reemplazarTildes(name);
+    const downloadsDirectory = `${FileSystem.documentDirectory}Archivosapp/`;
+    const fileUri = `${downloadsDirectory}${name}`;
+    const base64Code = base64;
+
+    // crea el directorio de descargas si no existe
+    await FileSystem.makeDirectoryAsync(downloadsDirectory, {
+      intermediates: true,
+    });
+
+    // escribe los datos en el archivo
+    await FileSystem.writeAsStringAsync(fileUri, base64Code, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+
+    const { status: mediaLibraryStatus } = await Permissions.getAsync(
+      Permissions.MEDIA_LIBRARY
+    );
+    if (mediaLibraryStatus !== "granted") {
+      console.log(
+        "No se otorgó permiso para acceder a la biblioteca de medios"
+      );
+      alert("No se otorgó permiso para acceder a la biblioteca de medios");
+      return false;
+    }
+    const fileExtension = name
+      .substring(name.lastIndexOf(".") + 1)
+      .toLowerCase();
+
+    const uti = getUTIFromExtension(fileExtension);
+    mime =
+      mime == "application/octet-stream"
+        ? getMimeFromExtension(fileExtension)
+        : mime;
+    // Leer el contenido del archivo guardado
+    // const fileContent = await FileSystem.readAsStringAsync(fileUri, {
+    //   encoding: FileSystem.EncodingType.Base64,
+    // });
+
+    const infoFile = {
+      file: fileUri,
+      mime: mime,
+      uti: uti,
+      status: true,
+    };
+
+    return infoFile;
+    // return fileUriLocal;
+  } catch (error) {
+    console.log(error);
+    return { status: false };
   }
 };
 
+/* 
+codigo para compartir 
 export const downloadArchivoIOS = async (base64, mime, name) => {
   try {
+    name = name.replaceAll(" ", "_");
+    name = decodeURIComponent(escape(name));
+    name = reemplazarTildes(name);
     const downloadsDirectory = `${FileSystem.documentDirectory}Archivosapp/`;
     const fileUri = `${downloadsDirectory}${name}`;
     const base64Code = base64;
@@ -146,57 +277,4 @@ export const downloadArchivoIOS = async (base64, mime, name) => {
     return false;
   }
 };
-
-// export const downloadArchivoIOS = async (base64, mime, name) => {
-//   try {
-//     const downloadsDirectory = `${FileSystem.documentDirectory}Archivosapp/`;
-//     const fileUri = `${downloadsDirectory}${name}`;
-//     console.log(fileUri);
-//     // const data = `data:${mime};base64,${base64}`;
-//     // const base64Code = data.split(`data:${mime};base64,`)[1];
-//     // const base64Code = base64.replace(/^data:application\/pdf;base64,/, "");
-//     const base64Code = base64;
-//     console.log(base64Code);
-//     // crea el directorio de descargas si no existe
-//     await FileSystem.makeDirectoryAsync(downloadsDirectory, {
-//       intermediates: true,
-//     });
-
-//     // escribe los datos en el archivo
-//     await FileSystem.writeAsStringAsync(fileUri, base64Code, {
-//       encoding: FileSystem.EncodingType.Base64,
-//     });
-
-//     const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
-//     if (status !== "granted") {
-//       alert("No se otorgó permiso para acceder a la biblioteca de medios");
-//       return false;
-//     }
-
-//     const fileUriLocal = `${FileSystem.documentDirectory}Archivosapp/${name}`;
-
-//     // codigo para compartir archivo
-//     // console.log("status", status);
-//     // await Sharing.shareAsync(fileUriLocal, {
-//     //   mimeType: mime,
-//     //   UTI: "com.adobe.pdf",
-//     // });
-
-//     // const asset = await MediaLibrary.createAssetAsync(fileUri);
-//     // console.log("asset", asset);
-//     // await MediaLibrary.createAlbumAsync("Downloads", asset, false);
-
-//     // const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
-//     // if (status !== "granted") {
-//     //   alert("No se otorgó permiso para acceder a la biblioteca de medios");
-//     //   return false;
-//     // }
-
-//     // const fileInfo = await FileSystem.getInfoAsync(fileUri);
-
-//     return true;
-//   } catch (error) {
-//     console.log(error);
-//     return false;
-//   }
-// };
+*/

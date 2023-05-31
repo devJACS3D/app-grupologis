@@ -126,6 +126,7 @@ const UserForm = ({
         label={"Identificación"}
         value={userData.codEmp}
         onChange={handleChange}
+        disabled={true}
       />
       <FormInput
         name={userData.Direccion !== undefined ? "Direccion" : "dir_res"}

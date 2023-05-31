@@ -107,6 +107,7 @@ const styles = StyleSheet.create({
     height: 20,
     alignItems: "center",
     justifyContent: "center",
+    transform: [{ translateY: 50 }],
   },
   modal: {
     top: 90,

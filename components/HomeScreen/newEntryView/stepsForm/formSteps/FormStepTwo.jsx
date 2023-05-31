@@ -150,7 +150,15 @@ class FormStepTwo extends Component {
             style={styles.select}
             onPress={() => this.openModal("selContrato")}
           >
-            <Text style={styles.selectText}>{this.state.selContrato}</Text>
+            <Text
+              style={
+                this.state.selContrato2 == ""
+                  ? styles.selectTextDis
+                  : styles.selectText
+              }
+            >
+              {this.state.selContrato}
+            </Text>
             <Ionicons
               name="chevron-down-outline"
               size={24}
@@ -162,7 +170,15 @@ class FormStepTwo extends Component {
             style={styles.select}
             onPress={() => this.openModal("selTrabajador")}
           >
-            <Text style={styles.selectText}>{this.state.selTrabajador}</Text>
+            <Text
+              style={
+                this.state.selTrabajador == "Tipo de trabajador"
+                  ? styles.selectTextDis
+                  : styles.selectText
+              }
+            >
+              {this.state.selTrabajador}
+            </Text>
             <Ionicons
               name="chevron-down-outline"
               size={24}
@@ -174,7 +190,15 @@ class FormStepTwo extends Component {
             style={styles.select}
             onPress={() => this.openModal("selConvenio")}
           >
-            <Text style={styles.selectText}>{this.state.selConvenio}</Text>
+            <Text
+              style={
+                this.state.selConvenio2 == ""
+                  ? styles.selectTextDis
+                  : styles.selectText
+              }
+            >
+              {this.state.selConvenio}
+            </Text>
             <Ionicons
               name="chevron-down-outline"
               size={24}
@@ -186,7 +210,15 @@ class FormStepTwo extends Component {
             style={styles.select}
             onPress={() => this.openModal("selJornada")}
           >
-            <Text style={styles.selectText}>{this.state.selJornada}</Text>
+            <Text
+              style={
+                this.state.selJornada == "Tipo de jornada"
+                  ? styles.selectTextDis
+                  : styles.selectText
+              }
+            >
+              {this.state.selJornada}
+            </Text>
             <Ionicons
               name="chevron-down-outline"
               size={24}
@@ -212,7 +244,15 @@ class FormStepTwo extends Component {
             style={styles.select}
             onPress={() => this.openModal("selCargo")}
           >
-            <Text style={styles.selectText}>{this.state.selCargo}</Text>
+            <Text
+              style={
+                this.state.selCargo2 == "Cargo"
+                  ? styles.selectTextDis
+                  : styles.selectText
+              }
+            >
+              {this.state.selCargo}
+            </Text>
             <Ionicons
               name="chevron-down-outline"
               size={24}
@@ -373,6 +413,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   selectText: {
+    fontSize: 16,
+    fontFamily: "Volks-Serial-Medium",
+    color: colors.black,
+  },
+  selectTextDis: {
     fontSize: 16,
     fontFamily: "Volks-Serial-Medium",
     color: colors.placeholderColor,

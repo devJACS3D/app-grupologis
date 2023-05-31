@@ -121,21 +121,17 @@ const ShowInfo = ({ modul, info }) => {
             </Text>
           )}
           <View style={styles.infoBox}>
-            <View>
+            <View style={{ width: "33%" }}>
               <Text style={styles.textHead}>Año</Text>
-              <Text style={styles.descrip}>
-                {info.Fecha.trim().split("/")[2]}
-              </Text>
+              <Text>{info.Fecha.trim().split("/")[2]}</Text>
             </View>
-            <View>
+            <View style={{ width: "33%" }}>
               <Text style={styles.textHead}>Mes</Text>
-              <Text style={styles.descrip}>
-                {info.Fecha.trim().split("/")[1]}
-              </Text>
+              <Text>{info.Fecha.trim().split("/")[1]}</Text>
             </View>
-            <View>
+            <View style={{ flex: 1 }}>
               <Text style={styles.textHead}>No. Radicado</Text>
-              <Text style={styles.descrip}>{info.Documento.trim()}</Text>
+              <Text>{info.Documento.trim()}</Text>
             </View>
           </View>
 
@@ -144,17 +140,17 @@ const ShowInfo = ({ modul, info }) => {
 
           {modul == "Capac" && (
             <View style={styles.infoBox}>
-              <View>
+              <View style={{ width: "33%" }}>
                 <Text style={styles.textHead}>Personal</Text>
-                <Text style={styles.descrip}>{info.Personal.trim()}</Text>
+                <Text>{info.Personal.trim()}</Text>
               </View>
-              <View>
+              <View style={{ width: "33%" }}>
                 <Text style={styles.textHead}>Tema</Text>
-                <Text style={styles.descrip}>{info.Tema.trim()}</Text>
+                <Text>{info.Tema.trim()}</Text>
               </View>
 
               {info.Tipo != null && (
-                <View>
+                <View style={{ flex: 1 }}>
                   <Text style={styles.textHead}>Tipo</Text>
                   <Text>{info.Tipo.trim()}</Text>
                 </View>

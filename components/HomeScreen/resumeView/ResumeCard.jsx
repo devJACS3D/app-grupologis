@@ -13,9 +13,12 @@ import {
 import LoaderProgContext from "../../../context/loader/LoaderProgContext";
 import { Text } from "react-native";
 import LoaderItemSwitchDark from "../../common/loaders/LoaderItemSwitchDark";
+import WebViewContext from "../../../context/webView/WebViewContext";
 
 const ResumeCard = (props) => {
   const { setLoaderProg } = useContext(LoaderProgContext);
+  const { setNameUtiView } = useContext(WebViewContext);
+
   const initDesc = props.initDesc;
   const showToast = (smg, type) => {
     Toast.show({
@@ -35,7 +38,13 @@ const ResumeCard = (props) => {
         data.name
       );
     } else {
-      archDes = await downloadArchivoIOS(data.file, data.mimetype, data.name);
+      const respIOS = await downloadArchivoIOS(
+        data.file,
+        data.mimetype,
+        data.name
+      );
+      setNameUtiView(respIOS);
+      archDes = respIOS.status;
     }
 
     if (archDes) {
@@ -73,7 +82,9 @@ const ResumeCard = (props) => {
       }
     } else {
       initDesc(false);
-      showToast("Error en el servidor", "error");
+      data == "limitExe"
+        ? showToast("El servicio demoro más de lo normal", "error")
+        : showToast("Error en el servidor", "error");
       setLoaderProg(false);
     }
   };

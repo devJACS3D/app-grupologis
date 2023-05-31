@@ -10,12 +10,15 @@ import { fetchPost } from "../utils/functions";
 import Toast from "react-native-toast-message";
 import LoadFullScreen from "../components/common/loaders/LoadFullScreen";
 import { useFocusEffect } from "@react-navigation/native";
+import LoaderProgContext from "../context/loader/LoaderProgContext";
 
 const UserView = (props) => {
   const { navigation } = props;
   const { userData, updateUser } = useContext(authContext);
   const [dataUs, setDataUs] = useState({ ...userData });
   const [loaderComp, setLoaderComp] = useState(false);
+  const { setLoaderProg } = useContext(LoaderProgContext);
+
   const estadoCiv = [
     "DESCONOCIDO",
     "SOLTERO",
@@ -68,6 +71,7 @@ const UserView = (props) => {
 
   const handleUpdateUser = async () => {
     try {
+      setLoaderProg(true);
       let infoLog = await AsyncStorage.getItem("logged");
       infoLog = JSON.parse(infoLog);
 
@@ -92,21 +96,27 @@ const UserView = (props) => {
       }
 
       const respApi = await fetchPost(path, info);
+      console.log("actualizar per", respApi);
       const { status, data } = respApi;
       if (status) {
-        if (data == "Perfil actualizado correctamente") {
+        if (data == "Perfil actualizado correctamente" || data.Correcto == 1) {
+          setLoaderProg(false);
           showToast("Perfil actualizado correctamente", "success");
 
           await updateUser(dataUs);
           await AsyncStorage.setItem("logged", JSON.stringify(dataUs));
         } else {
+          setLoaderProg(false);
           showToast("Ocurrio un error al actualizar", "error");
         }
       } else {
+        setLoaderProg(false);
         showToast("Ocurrio un error en el servidor", "error");
       }
     } catch (error) {
       console.log(error);
+      setLoaderProg(false);
+      showToast("Ocurrio un error al actualizar", "error");
     }
   };
 

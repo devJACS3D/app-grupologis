@@ -23,7 +23,9 @@ import { InputWithIcon } from "../common/form/Input";
 import { fetchPost, validatePhone } from "../../utils/functions";
 
 import CloseLogin from "../../assets/images/auth/svg/CloseLogin";
+import IconHelp from "../../assets/images/auth/svg/IconHelp";
 import LoaderItemSwitch from "../common/loaders/LoaderItemSwitch";
+import { decode } from "base-64";
 const pixelDensity = parseInt(PixelRatio.get());
 
 const BusinessEmployeeLogin = ({ navigation, route }) => {
@@ -75,10 +77,12 @@ const BusinessEmployeeLogin = ({ navigation, route }) => {
         if (status) {
           const data = respApi.data;
           if (typeof data == "object") {
+            const codeDec = decode(data.codigo);
+            const codeVer = codeDec.slice(3, -2);
             await AsyncStorage.setItem("type", type);
             await AsyncStorage.setItem("identi", identification);
             await AsyncStorage.setItem("phone", phone);
-            await AsyncStorage.setItem("code", data.codigo);
+            await AsyncStorage.setItem("code", codeVer);
             navigation.navigate("CodeAuth", { type: "business" });
           } else {
             setLoader(false);
@@ -121,16 +125,10 @@ const BusinessEmployeeLogin = ({ navigation, route }) => {
           </View>
 
           {/* <View style={styles.descriptionContainer}> */}
-          <Text style={styles.welcomeProb}>
-            ¿Tienes problemas para iniciar sesión? Escríbenos al correo{" "}
-            {type === "business"
-              ? "contacto@grupologis.co"
-              : "info@grupologis.co"}
-          </Text>
           {/* </View> */}
           <View style={styles.descriptionContainer}>
             <Text style={styles.welcomeDesc}>
-              Por favor ingresa tu número de identificación y número de celular
+              Por favor ingrese nit cliente y número de teléfono autorizado
             </Text>
           </View>
         </View>
@@ -180,6 +178,21 @@ const BusinessEmployeeLogin = ({ navigation, route }) => {
           }
         />
       </View>
+      <View style={styles.helpContainer}>
+        <View style={styles.helpIcon}>
+          <IconHelp />
+        </View>
+        <View style={styles.helpDesc}>
+          <Text style={styles.welcomeProb}>
+            ¿Tienes problemas para iniciar sesión? Escríbenos al correo{" "}
+            <Text style={styles.emlInfo}>
+              {type === "business"
+                ? "contacto@grupologis.co"
+                : "info@grupologis.co"}
+            </Text>
+          </Text>
+        </View>
+      </View>
     </View>
   );
 };
@@ -194,7 +207,7 @@ const styles = StyleSheet.create({
       alignItems: "center",
       justifyContent: "space-between",
       paddingTop: heightPercentageToPx(4),
-      height: heightPercentageToPx(pixelDensity <= 1 ? 112 : 107),
+      height: heightPercentageToPx(pixelDensity <= 1 ? 109 : 107),
     };
   },
   formContainer: {
@@ -260,12 +273,6 @@ const styles = StyleSheet.create({
     ...getFontStyles(13, 0.7, 1.2),
     textAlign: "center",
   },
-  welcomeProb: {
-    fontFamily: "Poppins-Regular",
-    color: colors.white,
-    ...getFontStyles(13, 0.7, 0.9),
-    textAlign: "center",
-  },
   loginFormInput: {
     fontFamily: "Poppins-Regular",
     width: widthPercentageToPx(60),
@@ -303,9 +310,41 @@ const styles = StyleSheet.create({
     width: widthPercentageToPx(100),
   },
   loginBackgroundImages: {
-    height: Platform.OS === "ios" ? "90%" : heightPercentageToPx(50),
+    height: Platform.OS === "ios" ? "90%" : heightPercentageToPx(43),
     width: Platform.OS === "ios" ? "100%" : widthPercentageToPx(100),
     // height: "90%",
     // width: "100%",
+  },
+  helpContainer: {
+    position: "absolute",
+    bottom:
+      Platform.OS == "android"
+        ? heightPercentageToPx(12)
+        : heightPercentageToPx(10),
+    width: widthPercentageToPx(80),
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    height: 52,
+    display: "flex",
+    flexDirection: "row",
+    borderRadius: 10,
+  },
+  helpIcon: {
+    width: widthPercentageToPx(15),
+    height: 52,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  helpDesc: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  welcomeProb: {
+    fontFamily: "Poppins-Regular",
+    color: colors.black,
+    ...getFontStyles(13, 0.7, 0.9),
+  },
+  emlInfo: {
+    fontFamily: "Poppins-Bold",
   },
 });

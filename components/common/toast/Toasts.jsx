@@ -23,7 +23,6 @@ export const SuccessToast = (props) => {
 };
 
 export const ErrorToast = (props) => {
-  console.log("error toast", props);
   return (
     <View style={styles.toastContainer}>
       <View style={styles.error}>
