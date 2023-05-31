@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     transform: [{ translateY: 50 }],
     width: widthPercentageToPx(90),
-    height: heightPercentageToPx(70),
+    height: heightPercentageToPx(68),
   },
   goBackButton: {
     position: "relative",

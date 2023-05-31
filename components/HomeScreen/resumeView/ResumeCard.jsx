@@ -30,7 +30,6 @@ const ResumeCard = (props) => {
   };
 
   const dowArchivo = async (data) => {
-    console.log("data archivo", data);
     let archDes;
     if (Platform.OS === "android") {
       archDes = await downloadArchivoAndroid(
@@ -44,7 +43,6 @@ const ResumeCard = (props) => {
         data.mimetype,
         data.name
       );
-      console.log("respIOS", respIOS);
       setNameUtiView(respIOS);
       archDes = respIOS.status;
     }
@@ -84,7 +82,9 @@ const ResumeCard = (props) => {
       }
     } else {
       initDesc(false);
-      showToast("Error en el servidor", "error");
+      data == "limitExe"
+        ? showToast("El servicio demoro más de lo normal", "error")
+        : showToast("Error en el servidor", "error");
       setLoaderProg(false);
     }
   };

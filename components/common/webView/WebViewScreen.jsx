@@ -18,16 +18,23 @@ import {
 } from "../../../utils";
 import * as Sharing from "expo-sharing";
 import WebViewContext from "../../../context/webView/WebViewContext";
+import * as FileSystem from "expo-file-system";
+import { Modal } from "react-native";
 
 const WebViewScreen = () => {
-  const { nameUtiView } = useContext(WebViewContext);
+  const { nameUtiView, setNameUtiView } = useContext(WebViewContext);
   const [fileUri, setFileUri] = useState(null);
   //   const fileUri = null;
   // "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
 
-  const loadInfWebView = () => {
-    setFileUri(nameUtiView);
+  const loadInfWebView = async () => {
+    if (nameUtiView) {
+      setFileUri(nameUtiView);
+    } else {
+      setFileUri(nameUtiView);
+    }
   };
+
   useEffect(() => {
     loadInfWebView();
   }, [nameUtiView]);
@@ -43,10 +50,19 @@ const WebViewScreen = () => {
     }
   };
 
+  const handleClose = () => {
+    setNameUtiView(null);
+  };
+
   if (fileUri && fileUri.file) {
     return (
       <View style={styles.containerView}>
-        <WebView source={{ uri: fileUri.file }} />
+        <View style={styles.containerWeb}>
+          <WebView
+            originWhitelist={["file://"]}
+            source={{ uri: fileUri.file }}
+          />
+        </View>
         <View style={styles.footerView}>
           <View style={styles.infoBtn}>
             <View style={styles.contComp}>
@@ -66,7 +82,7 @@ const WebViewScreen = () => {
             <View style={styles.contClos}>
               <TouchableOpacity
                 style={{ backgroundColor: "transparent" }}
-                onPress={handleShare}
+                onPress={handleClose}
               >
                 <Text style={styles.btnViewClos}>Cerrar</Text>
               </TouchableOpacity>
@@ -87,6 +103,13 @@ const styles = StyleSheet.create({
     height: heightPercentageToPx(100),
     width: widthPercentageToPx(100),
     backgroundColor: colors.white,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 9999,
+  },
+  containerWeb: {
+    height: heightPercentageToPx(78),
+    width: widthPercentageToPx(100),
   },
   footerView: {
     width: widthPercentageToPx(100),

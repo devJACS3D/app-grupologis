@@ -35,19 +35,60 @@ const getUTIFromExtension = (extension) => {
   }
 };
 
+const getMimeFromExtension = (ext) => {
+  switch (ext) {
+    case "pdf":
+      return "application/pdf";
+    case "xls":
+      return "application/vnd.ms-excel";
+
+    default:
+      return null;
+  }
+};
+
 function reemplazarTildes(nombreArchivo) {
   const tildes = {
     á: "a",
+    Á: "A",
     é: "e",
+    É: "E",
     í: "i",
+    Í: "I",
     ó: "o",
+    Ó: "O",
     ú: "u",
+    Ú: "U",
     ñ: "n",
+    Ñ: "N",
+    "/": "_",
+    "\\": "_",
+    "<": "_",
+    ">": "_",
+    "|": "_",
+    "?": "_",
+    "*": "_",
+    '"': "_",
+    "'": "_",
+    "`": "_",
+    "%": "_",
+    "#": "_",
+    "&": "_",
+    $: "_",
+    "!": "_",
+    "@": "_",
+    "+": "_",
+    "=": "_",
+    "^": "_",
+    "[": "_",
+    "]": "_",
+    "(": "_",
+    ")": "_",
     // Agrega más caracteres y sus reemplazos según tus necesidades
   };
 
   return nombreArchivo.replace(
-    /[\u00C0-\u024F]/g,
+    /[\u0080-\u024F]/g,
     (caracter) => tildes[caracter] || caracter
   );
 }
@@ -83,7 +124,10 @@ export async function fetchPost(path, body, limit = "") {
 export const downloadArchivoAndroid = async (base64, mime, name) => {
   try {
     name = name.replaceAll(" ", "_");
-    name = decodeURIComponent(escape(name));
+    name = reemplazarTildes(name);
+    if (decodeURIComponent(escape(name))) {
+      name = decodeURIComponent(escape(name));
+    }
     name = reemplazarTildes(name);
     const fileUri = FileSystem.cacheDirectory + name;
 
@@ -131,7 +175,10 @@ export const downloadArchivoAndroid = async (base64, mime, name) => {
 export const downloadArchivoIOS = async (base64, mime, name) => {
   try {
     name = name.replaceAll(" ", "_");
-    name = decodeURIComponent(escape(name));
+    name = reemplazarTildes(name);
+    if (decodeURIComponent(escape(name))) {
+      name = decodeURIComponent(escape(name));
+    }
     name = reemplazarTildes(name);
     const downloadsDirectory = `${FileSystem.documentDirectory}Archivosapp/`;
     const fileUri = `${downloadsDirectory}${name}`;
@@ -147,29 +194,36 @@ export const downloadArchivoIOS = async (base64, mime, name) => {
       encoding: FileSystem.EncodingType.Base64,
     });
 
-    const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
-    if (status !== "granted") {
+    const { status: mediaLibraryStatus } = await Permissions.getAsync(
+      Permissions.MEDIA_LIBRARY
+    );
+    if (mediaLibraryStatus !== "granted") {
+      console.log(
+        "No se otorgó permiso para acceder a la biblioteca de medios"
+      );
       alert("No se otorgó permiso para acceder a la biblioteca de medios");
       return false;
     }
-
     const fileExtension = name
       .substring(name.lastIndexOf(".") + 1)
       .toLowerCase();
 
-    const fileUriLocal = `${FileSystem.documentDirectory}Archivosapp/${name}`;
     const uti = getUTIFromExtension(fileExtension);
+    mime =
+      mime == "application/octet-stream"
+        ? getMimeFromExtension(fileExtension)
+        : mime;
+    // Leer el contenido del archivo guardado
+    // const fileContent = await FileSystem.readAsStringAsync(fileUri, {
+    //   encoding: FileSystem.EncodingType.Base64,
+    // });
+
     const infoFile = {
-      file: fileUriLocal,
+      file: fileUri,
       mime: mime,
       uti: uti,
       status: true,
     };
-    // // codigo para compartir archivo
-    // await Sharing.shareAsync(fileUriLocal, {
-    //   mimeType: mime,
-    //   UTI: getUTIFromExtension(fileExtension),
-    // });
 
     return infoFile;
     // return fileUriLocal;

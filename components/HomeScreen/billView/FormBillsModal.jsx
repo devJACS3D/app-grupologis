@@ -146,14 +146,14 @@ export default FormBillsModal;
 
 const styles = StyleSheet.create({
   modalForm: {
-    top: widthPercentageToPx(25),
+    top: widthPercentageToPx(20),
     backgroundColor: colors.white,
     borderRadius: 10,
     paddingVertical: 20,
     paddingHorizontal: 15,
     transform: [{ translateY: 20 }],
     width: widthPercentageToPx(90),
-    height: heightPercentageToPx(70),
+    height: heightPercentageToPx(72),
   },
   goBackButton: {
     position: "relative",
