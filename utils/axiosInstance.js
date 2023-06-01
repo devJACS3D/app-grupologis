@@ -8,6 +8,7 @@ const urlSer = `${domain}services_app/Routes/`;
 
 let cancelToken = axios.CancelToken.source();
 const abortControllers = [];
+// guardamos los servicios
 
 // const axiosInstance = axios.create({
 //   baseURL: "https://apps.grupologis.co/WsMovilApp/",
