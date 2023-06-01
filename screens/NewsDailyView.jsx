@@ -22,9 +22,10 @@ import Toast from "react-native-toast-message";
 
 import NewsDailyCard from "../components/HomeScreen/newsDaily/newsDailyCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { get } from "../utils/axiosInstance";
+import { cancelarSolicitudesApi, get } from "../utils/axiosInstance";
 import LoaderItemSwitchDark from "../components/common/loaders/LoaderItemSwitchDark";
 import Pagination from "../components/common/pagination/Pagination";
+import { useFocusEffect } from "@react-navigation/core";
 
 const NewsDailyView = (props) => {
   const { navigation } = props;
@@ -48,6 +49,10 @@ const NewsDailyView = (props) => {
     getNews(1);
   }, []);
 
+  const reloadNot = (pag) => {
+    getNews(pag);
+  };
+
   const getNews = async (pag) => {
     setLoaderSwi(true);
     let infoLog = await AsyncStorage.getItem("logged");
@@ -59,7 +64,7 @@ const NewsDailyView = (props) => {
     let path = "noticia/getNoticiasHabilitadas.php";
     path += `?empresaId=${empSel}&tipousuarioId=${infoType}`;
     path += pag > 1 ? `&page=${pag}` : "";
-    console.log("path", path);
+
     const respApi = await get(path);
     const { status, data } = respApi;
     if (status) {
@@ -73,10 +78,13 @@ const NewsDailyView = (props) => {
         setLoaderSwi(false);
       }
     } else {
-      showToast("Error al obtener noticias", "error");
-      console.log("Error al obtener noticias", "error");
-      setListNotic([]);
-      setLoaderSwi(false);
+      if (data == "limitExe") {
+        reloadNot(pag);
+      } else if (data != "abortUs") {
+        showToast("Error al obtener noticias", "error");
+        setListNotic([]);
+        setLoaderSwi(false);
+      }
     }
   };
 
@@ -85,6 +93,14 @@ const NewsDailyView = (props) => {
     await getNews();
     setRefreshing(false);
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        cancelarSolicitudesApi();
+      };
+    }, [])
+  );
 
   return (
     <Layout props={{ ...props }}>

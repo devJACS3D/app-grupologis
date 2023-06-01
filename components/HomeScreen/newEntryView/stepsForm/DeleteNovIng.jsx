@@ -38,8 +38,13 @@ const DeleteNovIng = (props) => {
         showToast("error al eliminar el registro", "error");
       }
     } else {
-      showModal(true);
-      showToast("error al eliminar el registro", "error");
+      if (data == "limitExe") {
+        showModal(true);
+        showToast("El servicio demoro mas de lo normal", "error");
+      } else if (data != "abortUs") {
+        showModal(true);
+        showToast("error al eliminar el registro", "error");
+      }
     }
   };
   return (

@@ -28,39 +28,59 @@ const StepThree = ({ formData, onComplete, completed }) => {
     });
   };
 
+  const reloadSer = (inf) => {
+    if (inf == 1) {
+      getCenCostos();
+    } else {
+      getAuxBon();
+    }
+  };
+
+  const getCenCostos = async (pathCenCos) => {
+    const respCenCos = await getSer(pathCenCos, 30000);
+    const { status, data } = respCenCos;
+    if (status) {
+      setListCenCost(data.centro_costos);
+    } else {
+      if (data == "limitExe") {
+        reloadSer(1);
+      } else if (data != "abortUs") {
+        showToast("Error al traer listado de cargos", "error");
+      }
+    }
+  };
+
+  const getAuxBon = async (pathAuxBon) => {
+    const respAuxBon = await getSer(pathAuxBon, 30000);
+    const { status, data } = respAuxBon;
+    if (status) {
+      setListAuxBon(data.novedades);
+    } else {
+      if (data == "limitExe") {
+        reloadSer(2);
+      } else if (data != "abortUs") {
+        showToast("Error al buscar Aux / bonific", "error");
+      }
+    }
+  };
+
+  const getServiciosSel = async () => {
+    let infoLog = await AsyncStorage.getItem("logged");
+    infoLog = JSON.parse(infoLog);
+    const empSel = infoLog.empSel.toUpperCase();
+    const codEmp = infoLog.codEmp;
+    const codCon = formData.stepTwoData.select.convenio.value;
+
+    let pathCenCos = `GetDatosOrdenIngreso.php`;
+    pathCenCos += `?cod_cli=${codEmp}&empresa=${empSel}&cod_conv=${codCon}`;
+    const pathAuxBon = `GetNovedadesFijas.php?empresa=${empSel}`;
+
+    getCenCostos(pathCenCos);
+    getAuxBon(pathAuxBon);
+  };
+
   useEffect(() => {
     if (completed) {
-      const getServiciosSel = async () => {
-        let infoLog = await AsyncStorage.getItem("logged");
-        infoLog = JSON.parse(infoLog);
-        const empSel = infoLog.empSel.toUpperCase();
-        const codEmp = infoLog.codEmp;
-        const codCon = formData.stepTwoData.select.convenio.value;
-
-        let pathCenCos = `GetDatosOrdenIngreso.php`;
-        pathCenCos += `?cod_cli=${codEmp}&empresa=${empSel}&cod_conv=${codCon}`;
-        const pathAuxBon = `GetNovedadesFijas.php?empresa=${empSel}`;
-
-        const respCenCos = await getSer(pathCenCos);
-        if (respCenCos == "limitExe") {
-          console.log("limitExe");
-        } else {
-          if (respCenCos.status) {
-            const respAuxBon = await getSer(pathAuxBon);
-            if (respAuxBon.status) {
-              setListCenCost(respCenCos.data.centro_costos);
-              respAuxBon.data.Correcto === 1
-                ? setListAuxBon(respAuxBon.data.novedades)
-                : showToast("Error al buscar Aux / bonific", "error");
-            } else {
-              showToast("Error al buscar Aux / bonific", "error");
-            }
-          } else {
-            showToast("Error al listado de cargos", "error");
-          }
-        }
-      };
-
       getServiciosSel();
     }
   }, [completed]);
@@ -140,7 +160,7 @@ const StepThree = ({ formData, onComplete, completed }) => {
       {dotacion && <FormDotacion onSelectionChange={setSeleccForm} />}
       <View style={styles.btnAli}>
         <GLButton
-          onPressAction={handlePress}
+          onPressAction={() => handlePress()}
           type="default"
           placeholder={"Siguiente"}
           width={widthPercentageToPx(70)}

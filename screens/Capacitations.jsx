@@ -11,6 +11,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 import { heightPercentageToPx } from "../utils";
 import { View } from "react-native-animatable";
+import { cancelarSolicitudesApi } from "../utils/axiosInstance";
 
 const Capacitations = (props) => {
   const { navigation } = props;
@@ -60,15 +61,24 @@ const Capacitations = (props) => {
         setListCapac([]);
       }
     } else {
-      setLoader(false);
-      showToast("Error en el servidor", "error");
+      if (data == "limitExe") {
+        setLoader(false);
+        showToast("El servicio demoro mas de lo normal", "error");
+        setAllListCapac([]);
+      } else {
+        setLoader(false);
+        showToast("Error en el servidor", "error");
+        setAllListCapac([]);
+      }
     }
   };
 
   useFocusEffect(
     React.useCallback(() => {
       getCapacitations();
-      return () => {};
+      return () => {
+        cancelarSolicitudesApi();
+      };
     }, [])
   );
 
@@ -89,6 +99,7 @@ const Capacitations = (props) => {
     filteredList.sort(comparar);
     setListCapac(filteredList);
   };
+
   return (
     <Layout props={{ ...props }}>
       <ScrollView

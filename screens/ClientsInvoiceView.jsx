@@ -12,6 +12,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoaderItemSwitch from "../components/common/loaders/LoaderItemSwitch";
 import ReplyMessage from "../components/common/messages/ReplyMessage";
 import LoaderProgContext from "../context/loader/LoaderProgContext";
+import { useFocusEffect } from "@react-navigation/core";
+import { cancelarSolicitudesApi } from "../utils/axiosInstance";
 
 const ClientsInvoiceView = ({ props }) => {
   const [modal, setModal] = useState(false);
@@ -46,9 +48,8 @@ const ClientsInvoiceView = ({ props }) => {
     const path = "usuario/getFacturasClienteEmpresa.php";
 
     const respApi = await fetchPost(path, info);
-
-    if (respApi.status) {
-      const data = respApi.data;
+    const { status, data } = respApi;
+    if (status) {
       if (data != "ERROR") {
         if (typeof data == "object") {
           setAllBillsList(data);
@@ -59,10 +60,24 @@ const ClientsInvoiceView = ({ props }) => {
         }
       }
     } else {
-      message("Error del servidor", "error");
-      setLoaderProg(false);
+      if (data == "limitExe") {
+        message("El servicio demoro mas de lo normal", "error");
+        setLoaderProg(false);
+      } else if (data != "abortUs") {
+        message("Error del servidor", "error");
+        setLoaderProg(false);
+      }
     }
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        cancelarSolicitudesApi();
+        setLoaderProg(false);
+      };
+    }, [])
+  );
 
   return (
     <Layout props={{ ...props }}>

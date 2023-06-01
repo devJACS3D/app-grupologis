@@ -11,6 +11,7 @@ import Toast from "react-native-toast-message";
 import LoadFullScreen from "../components/common/loaders/LoadFullScreen";
 import { useFocusEffect } from "@react-navigation/native";
 import LoaderProgContext from "../context/loader/LoaderProgContext";
+import { cancelarSolicitudesApi } from "../utils/axiosInstance";
 
 const UserView = (props) => {
   const { navigation } = props;
@@ -48,7 +49,8 @@ const UserView = (props) => {
       setLoaderComp(true);
       getUserDataFromAsyncStorage();
       return () => {
-        console.log("desmontado");
+        cancelarSolicitudesApi();
+        setLoaderProg(false);
       };
     }, [])
   );
@@ -70,53 +72,50 @@ const UserView = (props) => {
   };
 
   const handleUpdateUser = async () => {
-    try {
-      setLoaderProg(true);
-      let infoLog = await AsyncStorage.getItem("logged");
-      infoLog = JSON.parse(infoLog);
+    setLoaderProg(true);
+    let infoLog = await AsyncStorage.getItem("logged");
+    infoLog = JSON.parse(infoLog);
 
-      let path;
-      let info;
-      if (infoLog.type === "employee") {
-        // es 1
-        if (dataUs.Id_Est_Civ == undefined) {
-          dataUs.Id_Est_Civ = estadoCiv
-            .indexOf(dataUs.Est_Civ.trim())
-            .toString();
-        }
-        path = "usuario/getLoadEditar.php";
-        info = `CodEmpleado=${dataUs.codEmp.trim()}&Direccion=${dataUs.dir_res.trim()}&Email=${dataUs.e_mail.trim()}`;
-        info += `&Telefono=${dataUs.tel_res.trim()}&Celular=${dataUs.tel_cel.trim()}`;
-        info += `&EstadoCivil=${dataUs.Id_Est_Civ.trim()}&Empresa=${dataUs.empSel.trim()}`;
-      } else {
-        // es 2
-        path = "usuario/getLoadEditarClien.php";
-        info = `NitCliente=${dataUs.codEmp.trim()}&Direccion=${dataUs.Direccion.trim()}`;
-        info += `&Email=${dataUs.Correo.trim()}&Telefono=${dataUs.Telefono.trim()}`;
+    let path;
+    let info;
+    if (infoLog.type === "employee") {
+      // es 1
+      if (dataUs.Id_Est_Civ == undefined) {
+        dataUs.Id_Est_Civ = estadoCiv.indexOf(dataUs.Est_Civ.trim()).toString();
       }
+      path = "usuario/getLoadEditar.php";
+      info = `CodEmpleado=${dataUs.codEmp.trim()}&Direccion=${dataUs.dir_res.trim()}&Email=${dataUs.e_mail.trim()}`;
+      info += `&Telefono=${dataUs.tel_res.trim()}&Celular=${dataUs.tel_cel.trim()}`;
+      info += `&EstadoCivil=${dataUs.Id_Est_Civ.trim()}&Empresa=${dataUs.empSel.trim()}`;
+    } else {
+      // es 2
+      path = "usuario/getLoadEditarClien.php";
+      info = `NitCliente=${dataUs.codEmp.trim()}&Direccion=${dataUs.Direccion.trim()}`;
+      info += `&Email=${dataUs.Correo.trim()}&Telefono=${dataUs.Telefono.trim()}`;
+    }
 
-      const respApi = await fetchPost(path, info);
-      console.log("actualizar per", respApi);
-      const { status, data } = respApi;
-      if (status) {
-        if (data == "Perfil actualizado correctamente" || data.Correcto == 1) {
-          setLoaderProg(false);
-          showToast("Perfil actualizado correctamente", "success");
+    const respApi = await fetchPost(path, info);
 
-          await updateUser(dataUs);
-          await AsyncStorage.setItem("logged", JSON.stringify(dataUs));
-        } else {
-          setLoaderProg(false);
-          showToast("Ocurrio un error al actualizar", "error");
-        }
+    const { status, data } = respApi;
+    if (status) {
+      if (data == "Perfil actualizado correctamente" || data.Correcto == 1) {
+        setLoaderProg(false);
+        showToast("Perfil actualizado correctamente", "success");
+
+        await updateUser(dataUs);
+        await AsyncStorage.setItem("logged", JSON.stringify(dataUs));
       } else {
+        setLoaderProg(false);
+        showToast("Ocurrio un error al actualizar", "error");
+      }
+    } else {
+      if (data == "limitExe") {
+        setLoaderProg(false);
+        showToast("El servicio demoro mas de lo normal", "error");
+      } else if (data != "abortUs") {
         setLoaderProg(false);
         showToast("Ocurrio un error en el servidor", "error");
       }
-    } catch (error) {
-      console.log(error);
-      setLoaderProg(false);
-      showToast("Ocurrio un error al actualizar", "error");
     }
   };
 

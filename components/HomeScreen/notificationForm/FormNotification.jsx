@@ -65,8 +65,13 @@ const NotificationForm = ({ closeM }) => {
         setLoader(false);
       }
     } else {
-      showToast("Ocurrio un error en el servidor", "error");
-      setLoader(false);
+      if (data == "limitExe") {
+        showToast("El servicio demoro mas de lo normal", "error");
+        setLoader(false);
+      } else if (data != "abortUs") {
+        showToast("Ocurrio un error en el servidor", "error");
+        setLoader(false);
+      }
     }
   };
 

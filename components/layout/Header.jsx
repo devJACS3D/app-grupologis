@@ -82,6 +82,7 @@ const Header = ({}) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener("state", (e) => {
       // La URL ha cambiado
+      console.log("notificaciones");
       getNotification();
       getUserDataFromAsyncStorage();
     });

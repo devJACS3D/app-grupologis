@@ -26,6 +26,8 @@ import CloseLogin from "../../assets/images/auth/svg/CloseLogin";
 import IconHelp from "../../assets/images/auth/svg/IconHelp";
 import LoaderItemSwitch from "../common/loaders/LoaderItemSwitch";
 import { decode } from "base-64";
+import { useFocusEffect } from "@react-navigation/core";
+import { cancelarSolicitudesApi } from "../../utils/axiosInstance";
 const pixelDensity = parseInt(PixelRatio.get());
 
 const BusinessEmployeeLogin = ({ navigation, route }) => {
@@ -71,9 +73,7 @@ const BusinessEmployeeLogin = ({ navigation, route }) => {
             &contactApp=true`;
         const path = "usuario/saveUsuarioNew.php";
         const respApi = await fetchPost(path, body);
-        console.log("respApi", respApi);
         const { status, data } = respApi;
-
         if (status) {
           const data = respApi.data;
           if (typeof data == "object") {
@@ -93,7 +93,7 @@ const BusinessEmployeeLogin = ({ navigation, route }) => {
             setLoader(false);
             showToast("El servicio demoro mas de lo normal", "error");
             setReintentar(true);
-          } else {
+          } else if (data != "abortUs") {
             setLoader(false);
             showToast("ocurrio un error en el sistema", "error");
           }
@@ -103,6 +103,14 @@ const BusinessEmployeeLogin = ({ navigation, route }) => {
       showToast("Todos los campos son requeridos", "error");
     }
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        cancelarSolicitudesApi();
+      };
+    }, [])
+  );
 
   return (
     <View style={styles.businessBackground(type)}>

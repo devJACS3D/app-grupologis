@@ -4,7 +4,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // import claimsContext from "../../../context/claims/claimsContext";
 import { colors, getFontStyles, widthPercentageToPx } from "../../../utils";
-import { fetchPost } from "../../../utils/functions";
 
 import { FontAwesome5 } from "@expo/vector-icons";
 import ClaimCard from "./ClaimCard";

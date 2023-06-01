@@ -14,6 +14,8 @@ import SvgHvida from "../assets/images/components/HomeScreen/EmployeeManagement/
 import SvgMaestroE from "../assets/images/components/HomeScreen/EmployeeManagement/SvgMaestroE";
 import SvgNovedaI from "../assets/images/components/HomeScreen/EmployeeManagement/SvgNovedaI";
 import SvgCapacitations from "../assets/images/home/downloadView/SvgCapacitations";
+import { useFocusEffect } from "@react-navigation/core";
+import { cancelarSolicitudesApi } from "../utils/axiosInstance";
 
 const displaySvg = (type) => {
   switch (type) {
@@ -52,6 +54,14 @@ const EmployeeManagement = (props) => {
         break;
     }
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        cancelarSolicitudesApi();
+      };
+    }, [])
+  );
 
   return (
     <Layout props={{ ...props }}>

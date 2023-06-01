@@ -62,7 +62,7 @@ const SpecialCalendar = ({
       const diaAdd = fechaAc.getDate();
       const mes = fechaAc.getMonth() + 1;
       const anio = fechaAc.getFullYear();
-      console.log(diaAdd, mes, anio);
+      diaAdd, mes, anio;
       setSelectedDate(selectedDate.set("M", fechaAc.getMonth()));
       result = getDaysArray(anio, mes, diaAdd, selectable);
     }

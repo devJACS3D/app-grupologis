@@ -115,7 +115,7 @@ export async function fetchPost(path, body, limit = "") {
     const encodedBody = encode(body);
     const data = `value=${carac[0]}${encodedBody}${carac[1]}`;
 
-    return await post(path, data);
+    return await post(path, data, minSec);
   } else {
     return { status: false, data: token.data };
   }

@@ -19,7 +19,11 @@ import { heightPercentageToPx, widthPercentageToPx } from "../utils";
 
 import MultiStepForm from "../components/HomeScreen/newEntryView/MultiStepForm";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getSer, postSer } from "../utils/axiosInstance";
+import {
+  cancelarSolicitudesApi,
+  getSer,
+  postSer,
+} from "../utils/axiosInstance";
 import LoaderItemSwitch from "../components/common/loaders/LoaderItemSwitch";
 import { useFocusEffect } from "@react-navigation/native";
 import LoaderItemSwitchDark from "../components/common/loaders/LoaderItemSwitchDark";
@@ -121,14 +125,11 @@ const NewEntryView = (props) => {
 
     body = JSON.stringify(body);
     const path = "CrearOrdenIngreso.php";
-
-    const respApi = await postSer(path, body);
-    if (respApi.status) {
-      const { data } = respApi;
-
+    const respApi = await postSer(path, body, 30000);
+    const { status, data } = respApi;
+    if (status) {
       if (data.status) {
         setShowForm(false);
-
         setTimeout(() => {
           setModal(false);
           setShowForm(true);
@@ -138,7 +139,11 @@ const NewEntryView = (props) => {
         showToast("Error en el servidor", "error");
       }
     } else {
-      showToast("Ocurrio un error en el servidor", "error");
+      if (data == "limitExe") {
+        showToast("El servicio demoro mas de lo normal", "error");
+      } else if (data != "abortUs") {
+        showToast("Ocurrio un error en el servidor", "error");
+      }
     }
   };
 
@@ -159,12 +164,11 @@ const NewEntryView = (props) => {
     const codEmp = infoLog.codEmp;
 
     const path = `ConsultarOrdenIngreso.php?cod_cli=${codEmp}&empresa=${empSel}`;
-    const respApi = await getSer(path);
-    if (respApi.status) {
-      const { data } = respApi;
+    const respApi = await getSer(path, 30000);
+    const { status, data } = respApi;
+    if (status) {
       if (data.orden_ingreso != null) {
         data.orden_ingreso.sort(comparar);
-
         setListNoved(data.orden_ingreso);
         setLoader(false);
       } else {
@@ -172,10 +176,15 @@ const NewEntryView = (props) => {
         setLoader(false);
       }
     } else {
-      showToast("Error al buscar las novedades", "error");
-
-      setListNoved([]);
-      setLoader(false);
+      if (data == "limitExe") {
+        showToast("El servicio demoro mas de lo normal", "error");
+        setListNoved([]);
+        setLoader(false);
+      } else if (data != "abortUs") {
+        showToast("Error al buscar las novedades", "error");
+        setListNoved([]);
+        setLoader(false);
+      }
     }
   };
 
@@ -189,7 +198,9 @@ const NewEntryView = (props) => {
   useFocusEffect(
     React.useCallback(() => {
       getNovedadesAll();
-      return () => {};
+      return () => {
+        cancelarSolicitudesApi();
+      };
     }, [])
   );
 
@@ -254,7 +265,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     justifyContent: "center",
     alignItems: "center",
-    transform: [{ translateY: 50 }],
+    transform: [{ translateY: 60 }],
   },
   loaderContainer: {
     marginTop: heightPercentageToPx(5),

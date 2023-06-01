@@ -15,17 +15,19 @@ import {
 } from "../../utils";
 import Toast from "react-native-toast-message";
 
-import { Feather } from "@expo/vector-icons";
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { decode } from "base-64";
-import { fetchPost } from "../../utils/functions";
+
 import LoaderItemSwitchDark from "../common/loaders/LoaderItemSwitchDark";
+import { useFocusEffect } from "@react-navigation/core";
+import { cancelarSolicitudesApi, post } from "../../utils/axiosInstance";
 
 const Code = ({ navigation }) => {
   let codeInputRef = useRef(null);
   const [code, setCode] = useState("");
   const [loader, setLoader] = useState(false);
+  const [msgReenv, setMsgReenv] = useState("Reenviar codigo");
+  const [reenMensDis, setReenMensDis] = useState(true);
 
   const showToast = (smg, type) => {
     Toast.show({
@@ -34,6 +36,18 @@ const Code = ({ navigation }) => {
       position: "bottom",
       visibilityTime: 2000,
     });
+  };
+
+  const messageWaiting = (time) => {
+    setTimeout(() => {
+      showToast("El mensaje llega en menos de 2 min.", "success");
+    }, time); // 20 segundos = 20000
+  };
+
+  const messageWaitingDis = (time) => {
+    setTimeout(() => {
+      setReenMensDis(true);
+    }, time); // 20 segundos = 20000
   };
 
   const handlePressCode = () => {
@@ -57,27 +71,50 @@ const Code = ({ navigation }) => {
   };
 
   const resendCode = async () => {
-    setLoader(true);
-    const phone = await AsyncStorage.getItem("phone");
-    const path = "usuario/ReenviarCodigo.php";
-    const body = `telefono=${phone}`;
-    const respApi = await fetchPost(path, body);
-    console.log("respApi code", respApi);
-    const { status, data } = respApi;
-    if (status) {
-      if (data.code) {
-        showToast("Mensaje enviado correctamente", "success");
-        AsyncStorage.setItem("code", data.code);
-        setLoader(false);
+    if (reenMensDis) {
+      setLoader(true);
+      const phone = await AsyncStorage.getItem("phone");
+      const path = "usuario/ReenviarCodigo.php";
+      const body = `telefono=${phone}`;
+
+      const respApi = await post(path, body);
+
+      const { status, data } = respApi;
+      if (status) {
+        if (data.code) {
+          showToast("Mensaje enviado correctamente", "success");
+          setReenMensDis(false);
+          messageWaiting(20000);
+          messageWaitingDis(120000);
+          setMsgReenv("Reenviar codigo");
+          AsyncStorage.setItem("code", data.code);
+          setLoader(false);
+        } else {
+          showToast("Error al enviar el codigo", "error");
+          setLoader(false);
+        }
       } else {
-        showToast("Error al enviar el codigo", "error");
-        setLoader(false);
+        if (data == "limitExe") {
+          showToast("El servicio demoro mas de lo normal", "error");
+          setMsgReenv("Reenviar");
+          setLoader(false);
+        } else if (data != "abortUs") {
+          showToast("Error al enviar el codigo", "error");
+          setLoader(false);
+        }
       }
     } else {
-      showToast("Error al enviar el codigo", "error");
-      setLoader(false);
+      showToast("El mensaje llega en menos de 2 min.", "success");
     }
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        cancelarSolicitudesApi();
+      };
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
@@ -123,8 +160,12 @@ const Code = ({ navigation }) => {
         <Pressable onPress={() => resendCode()}>
           <View style={styles.asCodeSend}>
             {!loader ? (
-              <Text style={{ color: colors.blueIndicator }}>
-                Reenviar codigo
+              <Text
+                style={{
+                  color: !reenMensDis ? colors.gray : colors.blueIndicator,
+                }}
+              >
+                {msgReenv}
               </Text>
             ) : (
               <LoaderItemSwitchDark />

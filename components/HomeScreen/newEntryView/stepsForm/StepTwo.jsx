@@ -42,35 +42,57 @@ const StepTwo = ({ formData, onComplete, completed }) => {
     });
   };
 
+  const reloadSer = (inf) => {
+    if (inf == 1) {
+      getContrato();
+    } else {
+      getOrdIng();
+    }
+  };
+
+  const getContrato = async (pathReg) => {
+    const respReg = await getSer(pathReg, 30000);
+    const { status, data } = respReg;
+    if (status) {
+      setListCont(data.tipcontratos);
+    } else {
+      if (data == "limitExe") {
+        reloadSer(1);
+      } else if (data != "abortUs") {
+        showToast("Error al traer tipos contrato", "error");
+      }
+    }
+  };
+
+  const getOrdIng = async (pathOrd) => {
+    const respOrd = await getSer(pathOrd);
+    const { status, data } = respOrd;
+    if (status) {
+      setConvenio(data.convenios);
+    } else {
+      if (data == "limitExe") {
+        reloadSer(2);
+      } else if (data != "abortUs") {
+        showToast("Error al traer orden ingreso", "error");
+      }
+    }
+  };
+
+  const getServiciosSel = async () => {
+    let infoLog = await AsyncStorage.getItem("logged");
+    infoLog = JSON.parse(infoLog);
+    const empSel = infoLog.empSel.toUpperCase();
+    const codEmp = infoLog.codEmp;
+
+    const pathReg = `GetTiposContrato.php?empresa=${empSel}`;
+    const pathOrd = `GetDatosOrdenIngreso.php?cod_cli=${codEmp}&empresa=${empSel}`;
+
+    getContrato(pathReg);
+    getOrdIng(pathOrd);
+  };
+
   useEffect(() => {
     if (completed) {
-      const getServiciosSel = async () => {
-        let infoLog = await AsyncStorage.getItem("logged");
-        infoLog = JSON.parse(infoLog);
-        const empSel = infoLog.empSel.toUpperCase();
-        const codEmp = infoLog.codEmp;
-
-        const pathReg = `GetTiposContrato.php?empresa=${empSel}`;
-        const pathOrd = `GetDatosOrdenIngreso.php?cod_cli=${codEmp}&empresa=${empSel}`;
-
-        const respReg = await getSer(pathReg);
-        if (respReg == "limitExe") {
-          console.log("limitExe");
-        } else {
-          const respOrd = await getSer(pathOrd);
-          if (respOrd == "limitExe") {
-            console.log("limitExe");
-          } else {
-            respReg.status
-              ? setListCont(respReg.data.tipcontratos)
-              : showToast("Error al traer tipos contrato", "error");
-
-            respOrd.status
-              ? setConvenio(respOrd.data.convenios)
-              : showToast("Error al traer orden ingreso", "error");
-          }
-        }
-      };
       getServiciosSel();
     }
   }, [completed]);
@@ -163,7 +185,7 @@ const StepTwo = ({ formData, onComplete, completed }) => {
       />
       <View style={styles.btnAli}>
         <GLButton
-          onPressAction={handlePress}
+          onPressAction={() => handlePress()}
           type="default"
           placeholder={"Siguiente"}
           width={widthPercentageToPx(70)}

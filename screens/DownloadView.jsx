@@ -31,8 +31,12 @@ import SvgPayrollFlyer from "../assets/images/home/downloadView/SvgPayrollFlyer"
 import SvgAusentism from "../assets/images/home/downloadView/SvgAusentism";
 import SvgCapacitations from "../assets/images/home/downloadView/SvgCapacitations";
 import SvgHumanResourcesIndicator from "../assets/images/home/downloadView/SvgHumanResourcesIndicator";
-import { LoaderProgContextProvider } from "../context/loader/LoaderProgContext";
+import LoaderProgContext, {
+  LoaderProgContextProvider,
+} from "../context/loader/LoaderProgContext";
 import { Dimensions } from "react-native";
+import { useFocusEffect } from "@react-navigation/core";
+import { cancelarSolicitudesApi } from "../utils/axiosInstance";
 
 const displaySvg = (type) => {
   switch (type) {
@@ -65,6 +69,7 @@ const Download = (props) => {
   const [scrollViewWidth, setScrollViewWidth] = useState(0);
   const scrollRef = useRef(null);
   const animation = useRef(new Animated.Value(0)).current;
+  const { setLoaderProg } = useContext(LoaderProgContext);
 
   useEffect(() => {
     // Animar el contenido del ScrollView horizontal cuando la anchura del ScrollView se haya establecido
@@ -83,6 +88,15 @@ const Download = (props) => {
       });
     }
   }, [scrollViewWidth]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        cancelarSolicitudesApi();
+        setLoaderProg(false);
+      };
+    }, [])
+  );
 
   const translateX = animation;
 

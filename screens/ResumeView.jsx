@@ -5,6 +5,7 @@ import ResumeList from "../components/HomeScreen/resumeView/ResumeList";
 import Layout from "../components/layout/Layout";
 import { heightPercentageToPx, widthPercentageToPx } from "../utils";
 import { useFocusEffect } from "@react-navigation/native";
+import { cancelarSolicitudesApi } from "../utils/axiosInstance";
 
 const ResumeView = (props) => {
   const { navigation } = props;
@@ -14,7 +15,9 @@ const ResumeView = (props) => {
   useFocusEffect(
     React.useCallback(() => {
       handleInputChange("");
-      return () => {};
+      return () => {
+        cancelarSolicitudesApi();
+      };
     }, [])
   );
 

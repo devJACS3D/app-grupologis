@@ -72,8 +72,6 @@ class Formulario extends Component {
         break;
       case "select2":
         if (this.state.select1 != "Departamento") {
-          console.log("1", this.state.select1);
-          console.log("2", this.state.select2);
           modalOptions = listMun.municipios;
           this.setState({
             modalVisible: true,

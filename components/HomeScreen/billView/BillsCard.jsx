@@ -76,10 +76,13 @@ const BillsCard = (props) => {
         setLoaderProg(false);
       }
     } else {
-      data == "limitExe"
-        ? showToast("El servicio demoro más de lo normal", "error")
-        : showToast("Error en el servidor", "error");
-      setLoaderProg(false);
+      if (data == "limitExe") {
+        showToast("El servicio demoro más de lo normal", "error");
+        setLoaderProg(false);
+      } else if (data != "abortUs") {
+        showToast("Error en el servidor", "error");
+        setLoaderProg(false);
+      }
     }
   };
 

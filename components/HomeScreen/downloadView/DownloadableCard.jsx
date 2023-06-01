@@ -47,7 +47,6 @@ const DownloadableCard = ({ title, desc, image, id }) => {
   };
 
   const servicesDescHojaVida = async (docs) => {
-    console.log("llego info", docs);
     setLoaderProg(true);
     let infoLog = await AsyncStorage.getItem("logged");
     infoLog = JSON.parse(infoLog);
@@ -58,7 +57,7 @@ const DownloadableCard = ({ title, desc, image, id }) => {
     infoDes += `&CodEmpleado=${CodEmpleado}&IdDocumento=${IdDocumento}`;
     const pathDes = "usuario/getDownDoc.php";
     const respApiDes = await fetchPost(pathDes, infoDes);
-    console.log("respApiDes", respApiDes);
+
     const { status, data } = respApiDes;
     if (status) {
       if (data.Correcto === 1) {
@@ -72,7 +71,7 @@ const DownloadableCard = ({ title, desc, image, id }) => {
         showToast("El servicio demoro mas de lo normal", "error");
         setLoaderProg(false);
         setReload(true);
-      } else {
+      } else if (data != "abortUs") {
         showToast("Error en el servidor", "error");
         setLoaderProg(false);
       }
@@ -92,7 +91,7 @@ const DownloadableCard = ({ title, desc, image, id }) => {
     const respApi = await fetchPost(path, info);
 
     const { status, data } = respApi;
-    console.log("respApi", respApi);
+
     if (status) {
       if (data.Correcto === 1) {
         dowArchivo(data);
@@ -105,7 +104,7 @@ const DownloadableCard = ({ title, desc, image, id }) => {
         showToast("El servicio demoro mas de lo normal", "error");
         setLoaderProg(false);
         setReload(true);
-      } else {
+      } else if (data != "abortUs") {
         showToast("Error en el servidor", "error");
         setLoaderProg(false);
       }
@@ -140,7 +139,7 @@ const DownloadableCard = ({ title, desc, image, id }) => {
         showToast("El servicio demoro más de lo normal", "error");
         setLoaderProg(false);
         setReload(true);
-      } else {
+      } else if (data != "abortUs") {
         showToast("Error en el servidor", "error");
         setLoaderProg(false);
       }
@@ -161,12 +160,11 @@ const DownloadableCard = ({ title, desc, image, id }) => {
     const path = "usuario/getHojaDeVidaEmpleado.php";
 
     const respApi = await fetchPost(path, info);
-    console.log("respApihoja", respApi);
+
     const { status, data } = respApi;
     if (status) {
       if (data.Correcto == 1) {
         if (data.Docs.length > 1) {
-          console.log("dtt hojas de vida", data.Docs);
           setLoaderProg(false);
           setMultHojasVida(data.Docs);
           setModal(true);
@@ -182,7 +180,7 @@ const DownloadableCard = ({ title, desc, image, id }) => {
         showToast("El servicio demoro mas de lo normal", "error");
         setLoaderProg(false);
         setReload(true);
-      } else {
+      } else if (data != "abortUs") {
         showToast("Error en el servidor", "error");
         setLoaderProg(false);
       }
@@ -218,7 +216,7 @@ const DownloadableCard = ({ title, desc, image, id }) => {
         showToast("El servicio demoro mas de lo normal", "error");
         setLoaderProg(false);
         setReload(true);
-      } else {
+      } else if (data != "abortUs") {
         showToast("Error en el servidor", "error");
         setLoaderProg(false);
       }
@@ -262,7 +260,7 @@ const DownloadableCard = ({ title, desc, image, id }) => {
         showToast("El servicio demoro mas de lo normal", "error");
         setLoaderProg(false);
         setReload(true);
-      } else {
+      } else if (data != "abortUs") {
         showToast("Error en el servidor", "error");
         setLoaderProg(false);
       }
@@ -306,7 +304,7 @@ const DownloadableCard = ({ title, desc, image, id }) => {
         showToast("El servicio demoro mas de lo normal", "error");
         setLoaderProg(false);
         setReload(true);
-      } else {
+      } else if (data != "abortUs") {
         showToast("Error en el servidor", "error");
         setLoaderProg(false);
       }
@@ -327,8 +325,7 @@ const DownloadableCard = ({ title, desc, image, id }) => {
         data.mimetype,
         data.name
       );
-      console.log("mimetype", data.mimetype);
-      console.log("respIOS", respIOS);
+
       setModal(false);
       setNameUtiView(respIOS);
       archDes = respIOS.status;

@@ -53,6 +53,7 @@ class FormStepTwo extends Component {
         break;
       case "selTrabajador":
         modalOptions = [
+          "Operativo",
           "Manejo y confianza",
           "Direccion manejo y confianza",
           "Aprendiz etapa productiva",
@@ -85,6 +86,10 @@ class FormStepTwo extends Component {
     this.setState({ modalVisible: false });
   };
 
+  reloadListCar = (codCon) => {
+    this.getListCargos(codCon);
+  };
+
   getListCargos = async (codCon) => {
     this.setState({ selCargo: "Buscando convenio" });
     let infoLog = await AsyncStorage.getItem("logged");
@@ -96,15 +101,15 @@ class FormStepTwo extends Component {
     pathCarg += `?cod_cli=${codEmp}&empresa=${empSel}&cod_conv=${codCon}`;
 
     const respReg = await getSer(pathCarg);
-    if (respReg == "limitExe") {
-      console.log("limitExe");
+    const { status, data } = respReg;
+    if (status) {
+      this.state.modalOptionsCargo = data.cargos;
+      this.setState({ selCargo: "Seleccione convenio" });
     } else {
-      if (respReg.status) {
-        const { data } = respReg;
-        this.state.modalOptionsCargo = data.cargos;
-        this.setState({ selCargo: "Seleccione convenio" });
-      } else {
-        this.showToast("Error al buscar listado de cargos", "error");
+      if (data == "limitExe") {
+        this.reloadListCar(codCon);
+      } else if (data != "abortUs") {
+        this.showToast("Error al traer listado de cargos", "error");
       }
     }
   };

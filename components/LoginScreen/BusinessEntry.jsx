@@ -15,7 +15,7 @@ import {
 } from "../../utils";
 // cambiar vista Download al terminar vista claim
 import { Picker } from "@react-native-picker/picker";
-import { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import authContext from "../../context/auth/authContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -26,6 +26,8 @@ import LoaderItemSwitch from "../common/loaders/LoaderItemSwitch";
 import LoadFullScreen from "../../components/common/loaders/LoadFullScreen";
 import Toast from "react-native-toast-message";
 import CloseLogin from "../../assets/images/auth/svg/CloseLogin";
+import { useFocusEffect } from "@react-navigation/core";
+import { cancelarSolicitudesApi } from "../../utils/axiosInstance";
 
 const BusinessE = ({ navigation }) => {
   const { setBusiness } = useContext(authContext);
@@ -52,6 +54,10 @@ const BusinessE = ({ navigation }) => {
     navigation.navigate("Login");
   };
 
+  const reloadFun = () => {
+    getOptionsBusiness();
+  };
+
   const getOptionsBusiness = async () => {
     setLoaderComp(true);
     const type = await AsyncStorage.getItem("type");
@@ -62,17 +68,20 @@ const BusinessE = ({ navigation }) => {
     let body = `tipousuarioId=${typeCli}&identificacionId=${identification}`;
     body += `&contactNumeroTelefonico=${phone}`;
     const path = "usuario/getEmpresa.php";
-    const respApi = await fetchPost(path, body);
-
-    if (respApi.status) {
-      const data = respApi.data;
+    const respApi = await fetchPost(path, body, 30000);
+    const { status, data } = respApi;
+    if (status) {
       if (data != "falseEmpresa") {
         setOptionsHtml(data);
       } else {
         showToast("No tiene acceso al sistema", "error");
       }
     } else {
-      showToast("Error en el sistema", "error");
+      if (data == "limitExe") {
+        reloadFun();
+      } else if (data != "abortUs") {
+        showToast("Error en el sistema", "error");
+      }
     }
   };
 
@@ -135,7 +144,7 @@ const BusinessE = ({ navigation }) => {
           setLoader(false);
           showToast("El servicio demoro mas de lo normal", "error");
           setReintentar(true);
-        } else {
+        } else if (data != "abortUs") {
           setLoader(false);
           showToast("ocurrio un error en el sistema", "error");
         }
@@ -144,6 +153,14 @@ const BusinessE = ({ navigation }) => {
       showToast("Seleccione una empresa", "error");
     }
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        cancelarSolicitudesApi();
+      };
+    }, [])
+  );
 
   return (
     <KeyboardAvoidingView

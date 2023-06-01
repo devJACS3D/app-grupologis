@@ -82,6 +82,7 @@ const FormDateStepTwo = ({ changeResultDate }) => {
                 placeholder={`Fecha de ${dateSel}`}
                 value={new Date()}
                 dia={dateSel == "ingreso" ? fechaAc.getDate() + 3 : ""}
+                selectable={false}
                 onChange={(e) => {
                   dateSel == "ingreso"
                     ? setTextDateIng(e.date)

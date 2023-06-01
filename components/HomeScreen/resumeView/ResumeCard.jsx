@@ -81,13 +81,18 @@ const ResumeCard = (props) => {
         setLoaderProg(false);
       }
     } else {
-      initDesc(false);
-      data == "limitExe"
-        ? showToast("El servicio demoro más de lo normal", "error")
-        : showToast("Error en el servidor", "error");
-      setLoaderProg(false);
+      if (data == "limitExe") {
+        initDesc(false);
+        showToast("El servicio demoro más de lo normal", "error");
+        setLoaderProg(false);
+      } else if (data != "abortUs") {
+        initDesc(false);
+        showToast("Error en el servidor", "error");
+        setLoaderProg(false);
+      }
     }
   };
+
   return (
     <View style={styles.cardContainer}>
       <View style={styles.leftContent}>

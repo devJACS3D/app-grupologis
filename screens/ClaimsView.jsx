@@ -21,6 +21,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import LoaderProgContext from "../context/loader/LoaderProgContext";
 import Toast from "react-native-toast-message";
 import LoaderItemSwitchDark from "../components/common/loaders/LoaderItemSwitchDark";
+import { cancelarSolicitudesApi } from "../utils/axiosInstance";
 
 const Claim = (props) => {
   const [modal, setModal] = useState(false);
@@ -60,10 +61,8 @@ const Claim = (props) => {
 
     const path = "usuario/getListadoQuejas.php";
     const respApi = await fetchPost(path, info);
-
-    if (respApi.status) {
-      const data = respApi.data;
-
+    const { status, data } = respApi;
+    if (status) {
       if (data.Correcto === 1) {
         if (data.Programa != undefined && data.Programa.length > 0) {
           const lis = data.Programa.sort(comparar);
@@ -78,25 +77,32 @@ const Claim = (props) => {
         setLoader(false);
       }
     } else {
-      showToast("error en el servidor", "error");
-      setLoader(false);
+      if (data == "limitExe") {
+        setLoader(false);
+        showToast("El servicio demoro mas de lo normal", "error");
+      } else if (data != "abortUs") {
+        setLoader(false);
+        showToast("ocurrio un error en el sistema", "error");
+      }
     }
   };
 
   useFocusEffect(
     React.useCallback(() => {
       getQuejas();
-      return () => {};
+      return () => {
+        cancelarSolicitudesApi();
+        setLoaderProg(false);
+      };
     }, [])
   );
 
   const sendMailQueja = async (idQueja, empl, tipo) => {
     const info = `idQuejas=${idQueja}&tipousuarioId=${tipo}&IdUsuario=${empl}`;
     const path = "usuario/SendMailQuejas.php";
-    const respApi = await fetchPost(path, info);
-
-    if (respApi.status) {
-      const data = respApi.data;
+    const respApi = await fetchPost(path, info, 30000);
+    const { status, data } = respApi;
+    if (status) {
       if (data === "TRUE") {
         setShowForm(false);
         setTimeout(() => {
@@ -111,10 +117,15 @@ const Claim = (props) => {
         setLoaderProg(false);
       }
     } else {
-      setModal(false);
-
-      showToast("Error al enviar el correo electronico", "error");
-      setLoaderProg(false);
+      if (data == "limitExe") {
+        setModal(false);
+        setLoader(false);
+        showToast("El servicio demoro mas de lo normal", "error");
+      } else if (data != "abortUs") {
+        setModal(false);
+        setLoader(false);
+        showToast("Error al enviar el correo electronico", "error");
+      }
     }
   };
 
@@ -128,9 +139,8 @@ const Claim = (props) => {
     const info = `Asunto=${infoPqr.asunto}&Detalle=${infoPqr.description}&Empresa=${empSel}&IdUsuario=${codEmp}&tipousuarioId=${typeCli}`;
     const path = "usuario/getQuejas.php";
     const respApi = await fetchPost(path, info);
-
-    if (respApi.status) {
-      const data = respApi.data;
+    const { status, data } = respApi;
+    if (status) {
       if (data.Correcto === 1) {
         if (data.Msg === "Usuario no Encontrado") {
           setModal(false);
@@ -147,10 +157,15 @@ const Claim = (props) => {
         setLoaderProg(false);
       }
     } else {
-      setModal(false);
-
-      showToast("Error en el servidor", "error");
-      setLoaderProg(false);
+      if (data == "limitExe") {
+        setModal(false);
+        setLoaderProg(false);
+        showToast("El servicio demoro mas de lo normal", "error");
+      } else if (data != "abortUs") {
+        setModal(false);
+        setLoaderProg(false);
+        showToast("Error en el servidor", "error");
+      }
     }
   };
 

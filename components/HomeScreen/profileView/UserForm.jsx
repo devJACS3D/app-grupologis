@@ -59,33 +59,36 @@ const UserForm = ({
     }
   };
 
-  const updateFoto = async (b64All, mime, b64) => {
-    try {
-      let infoLog = await AsyncStorage.getItem("logged");
-      infoLog = JSON.parse(infoLog);
-      const { codEmp, empSel } = infoLog;
+  const reloadPhoto = (b64All, mime, b64) => {
+    updateFoto(b64All, mime, b64);
+  };
 
-      const info = `CodEmpleado=${codEmp}&Empresa=${empSel}&filename=${nomImg}&fileBase64=${b64All}`;
-      const path = "usuario/updatePhotoPer.php";
-      const respApi = await fetchPost(path, info);
-      const { data, status } = respApi;
-      if (!status) {
-        showToast("Error al actualizar foto", "error");
-        return;
-      }
-      if (data.Correcto == 1) {
-        infoLog.foto.file = b64;
-        infoLog.foto.mimetype = mime;
-        infoLog.foto.name = nomImg;
-        const loggedIn = JSON.stringify(infoLog);
-        await AsyncStorage.setItem("logged", loggedIn);
-        showToast("Foto actualizada correctamente", "success");
-        handleImgUser();
-      } else {
+  const updateFoto = async (b64All, mime, b64) => {
+    let infoLog = await AsyncStorage.getItem("logged");
+    infoLog = JSON.parse(infoLog);
+    const { codEmp, empSel } = infoLog;
+
+    const info = `CodEmpleado=${codEmp}&Empresa=${empSel}&filename=${nomImg}&fileBase64=${b64All}`;
+    const path = "usuario/updatePhotoPer.php";
+    const respApi = await fetchPost(path, info);
+    const { data, status } = respApi;
+    if (!status) {
+      if (data == "limitExe") {
+        reloadPhoto(b64All, mime, b64);
+      } else if (data != "abortUs") {
         showToast("Error al actualizar foto", "error");
       }
-    } catch (error) {
-      console.log("todo mal", error);
+      return;
+    }
+    if (data.Correcto == 1) {
+      infoLog.foto.file = b64;
+      infoLog.foto.mimetype = mime;
+      infoLog.foto.name = nomImg;
+      const loggedIn = JSON.stringify(infoLog);
+      await AsyncStorage.setItem("logged", loggedIn);
+      showToast("Foto actualizada correctamente", "success");
+      handleImgUser();
+    } else {
       showToast("Error al actualizar foto", "error");
     }
   };

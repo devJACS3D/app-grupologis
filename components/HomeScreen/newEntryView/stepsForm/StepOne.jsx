@@ -83,6 +83,10 @@ const StepOne = ({ formData, onComplete }) => {
     setMunic(idMun);
   };
 
+  const reloadIdent = () => {
+    getIdentificacionSer();
+  };
+
   const getIdentificacionSer = async () => {
     let infoLog = await AsyncStorage.getItem("logged");
     infoLog = JSON.parse(infoLog);
@@ -90,9 +94,9 @@ const StepOne = ({ formData, onComplete }) => {
     const codEmp = infoLog.codEmp;
     let path = "GetRegistroEmpleado.php";
     path += `?cod_emp=${id}&empresa=${empSel}`;
-    const respApi = await getSer(path);
-    if (respApi.status) {
-      const { data } = respApi;
+    const respApi = await getSer(path, 30000);
+    const { status, data } = respApi;
+    if (status) {
       if (data.Existe === 1) {
         const { Perfil } = data;
         setNombre(Perfil.nom1_emp.trim());
@@ -102,6 +106,12 @@ const StepOne = ({ formData, onComplete }) => {
         setEmail(Perfil.e_mail.trim());
         setTel(Perfil.tel_cel.trim());
         await getMunicipio(Perfil.ciulabora.trim());
+      }
+    } else {
+      if (data == "limitExe") {
+        reloadIdent();
+      } else if (data != "abortUs") {
+        showToast("Error al consultar identificación", "error");
       }
     }
   };
@@ -165,7 +175,7 @@ const StepOne = ({ formData, onComplete }) => {
       <FormCountry onSelectionChange={setSelCountry} dep={depar} ciu={munic} />
       <View style={styles.btnAli}>
         <GLButton
-          onPressAction={handlePress}
+          onPressAction={() => handlePress()}
           type="default"
           placeholder={"Siguiente"}
           width={widthPercentageToPx(70)}

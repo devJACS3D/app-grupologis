@@ -20,7 +20,6 @@ const StepIdent = ({ formData, onComplete }) => {
   };
 
   //   useEffect(() => {
-  //     console.log("useEffect", identification);
   //     // if (identification !== null) {
   //     //   onComplete({ stepIdentData: identification });
   //     // }

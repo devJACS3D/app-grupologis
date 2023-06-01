@@ -80,9 +80,13 @@ const ResumeList = (props) => {
               setLoading(false);
             }
           } else {
-            showToast("Error al buscar las hojas de vida", "error");
-
-            setLoading(false);
+            if (data == "limitExe") {
+              showToast("El servicio demoro mas de lo normal", "error");
+              setLoading(false);
+            } else if (data != "abortUs") {
+              showToast("Error al buscar las hojas de vida", "error");
+              setLoading(false);
+            }
           }
         };
         getHojaVida(codEmpleado);
@@ -91,8 +95,6 @@ const ResumeList = (props) => {
   }, [idenHoja, prevIdenHoja, codEmpleado, loading]);
 
   const blockDownloads = (itemDesc) => {
-    console.log("itemDesc2", itemDesc);
-    console.log("itemDesc2", typeof itemDesc);
     if (typeof itemDesc == "boolean") {
       setShowInfDesc(false);
     } else {

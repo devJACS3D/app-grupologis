@@ -59,9 +59,15 @@ const newsDailyHome = ({ closeM }) => {
         setLoaderSwi(false);
       }
     } else {
-      showToast("Error al obtener noticias", "error");
-      setListNotic([]);
-      setLoaderSwi(false);
+      if (data == "limitExe") {
+        showToast("El servicio demoro mas de lo normal", "error");
+        setListNotic([]);
+        setLoaderSwi(false);
+      } else if (data != "abortUs") {
+        showToast("Error al obtener noticias", "error");
+        setListNotic([]);
+        setLoaderSwi(false);
+      }
     }
   };
 
