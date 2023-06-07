@@ -9,6 +9,7 @@ import GLButton from "../../../common/buttons/GLButton";
 import Toast from "react-native-toast-message";
 import LoaderItemSwitch from "../../../common/loaders/LoaderItemSwitch";
 import { useFocusEffect } from "@react-navigation/native";
+import { validateEmail } from "../../../../utils/functions";
 
 const StepOne = ({ formData, onComplete }) => {
   // const [completed, setCompleted] = useState(false);
@@ -44,6 +45,12 @@ const StepOne = ({ formData, onComplete }) => {
       munic == "Ciudad"
     ) {
       showToast("Por favor, rellene todos los campos", "error");
+      return;
+    }
+
+    const isValidMail = validateEmail(email);
+    if (!isValidMail) {
+      showToast("El correo no es valido", "error");
       return;
     }
     onComplete({
@@ -170,6 +177,13 @@ const StepOne = ({ formData, onComplete }) => {
         placeholder="Telefono"
         style={styles.input}
         keyboardType="numeric"
+        placeholderTextColor={colors.placeholderColor}
+      />
+      <TextInput
+        value={email}
+        onChangeText={setEmail}
+        placeholder="Correo Electronico"
+        style={styles.input}
         placeholderTextColor={colors.placeholderColor}
       />
       <FormCountry onSelectionChange={setSelCountry} dep={depar} ciu={munic} />

@@ -34,7 +34,8 @@ const ShowInfo = ({ modul, info }) => {
 
               <Text style={styles.textHead}>Nombre</Text>
               <Text style={styles.textContent}>
-                {info.nom1_emp.trim()} {info.nom2_emp.trim()}
+                {info.nom1_emp.trim()}{" "}
+                {info.nom2_emp ? info.nom2_emp.trim() : ""}
               </Text>
 
               <Text style={styles.textHead}>Celular</Text>

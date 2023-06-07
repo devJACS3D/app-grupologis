@@ -39,7 +39,7 @@ const SpecialCalendar = ({
   const [showMonthPicker, setShowMonthPicker] = useState(false);
   const [selectedDay, setSelectedDay] = useState(null);
   const [selectedMonthYear, setSelectedMonthYear] = useState({
-    month: value.getMonth() + 1,
+    month: value.getMonth(),
     year: value.getFullYear(),
   });
   const [dayOptions, setDayOptions] = useState([]);

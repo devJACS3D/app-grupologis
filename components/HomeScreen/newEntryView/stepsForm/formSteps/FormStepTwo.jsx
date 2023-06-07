@@ -74,7 +74,7 @@ class FormStepTwo extends Component {
       case "selCargo":
         this.state.modalOptionsCargo[0] != null
           ? (modalOptions = this.state.modalOptionsCargo)
-          : this.showToast("Seleccione el convenio", "error");
+          : this.showToast("Seleccione el cargo", "error");
         break;
       default:
         break;
@@ -91,7 +91,7 @@ class FormStepTwo extends Component {
   };
 
   getListCargos = async (codCon) => {
-    this.setState({ selCargo: "Buscando convenio" });
+    this.setState({ selCargo: "Buscando cargo" });
     let infoLog = await AsyncStorage.getItem("logged");
     infoLog = JSON.parse(infoLog);
     const empSel = infoLog.empSel.toUpperCase();
@@ -104,7 +104,7 @@ class FormStepTwo extends Component {
     const { status, data } = respReg;
     if (status) {
       this.state.modalOptionsCargo = data.cargos;
-      this.setState({ selCargo: "Seleccione convenio" });
+      this.setState({ selCargo: "Seleccione el cargo" });
     } else {
       if (data == "limitExe") {
         this.reloadListCar(codCon);

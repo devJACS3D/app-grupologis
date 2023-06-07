@@ -75,6 +75,35 @@ class Formulario extends Component {
     });
   };
 
+  formatValue = (value) => {
+    // Elimina cualquier separador decimal existente
+    const cleanedValue = value.replace(",", ".");
+
+    // Formatea el valor con el separador decimal deseado
+    const formatted = parseFloat(cleanedValue).toLocaleString("es-ES", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+
+    return formatted;
+  };
+
+  handleSalBase = () => {
+    const value = this.state.inputValSal;
+    if (value != "") {
+      const formatted = this.formatValue(value);
+      this.setState({ inputValSal: formatted });
+    }
+  };
+
+  handleAuxBonif = () => {
+    const value = this.state.inputValBon;
+    if (value != "") {
+      const formatted = this.formatValue(value);
+      this.setState({ inputValBon: formatted });
+    }
+  };
+
   render() {
     return (
       <View style={styles.container}>
@@ -126,6 +155,7 @@ class Formulario extends Component {
             keyboardType="numeric"
             placeholderTextColor={colors.placeholderColor}
             value={this.state.inputValSal}
+            onBlur={this.handleSalBase}
             onChangeText={(text) =>
               this.setState({ inputValSal: text }, () => {
                 this.handleSelection();
@@ -159,6 +189,7 @@ class Formulario extends Component {
             keyboardType="numeric"
             placeholderTextColor={colors.placeholderColor}
             value={this.state.inputValBon}
+            onBlur={this.handleAuxBonif}
             onChangeText={(text) =>
               this.setState({ inputValBon: text }, () => {
                 this.handleSelection();
