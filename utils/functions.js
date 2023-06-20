@@ -11,6 +11,10 @@ export function validatePhone(phone) {
   phone = phone.toString();
   return phone.length != 10 ? false : /^\d+$/.test(phone);
 }
+export const validateEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
 
 async function getToken(limit = "") {
   const path = "usuario/GetToken.php";
@@ -114,7 +118,6 @@ export async function fetchPost(path, body, limit = "") {
     body += `&token=${token.data}`;
     const encodedBody = encode(body);
     const data = `value=${carac[0]}${encodedBody}${carac[1]}`;
-
     return await post(path, data, minSec);
   } else {
     return { status: false, data: token.data };

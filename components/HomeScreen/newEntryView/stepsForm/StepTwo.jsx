@@ -30,7 +30,7 @@ const StepTwo = ({ formData, onComplete, completed }) => {
   const [dateIng, setDateIng] = useState("");
   const [dateEgr, setDateEgr] = useState("");
   const [isDay31, setIsDay31] = useState(false);
-  const [infoForm, setInfoForm] = useState({});
+  const [infoForm, setInfoForm] = useState(null);
   const toggleSwitchDay = () => setIsDay31((previousState) => !previousState);
 
   const showToast = (smg, type) => {
@@ -107,6 +107,36 @@ const StepTwo = ({ formData, onComplete, completed }) => {
   };
 
   const handlePress = () => {
+    if (!laborOrden || !dateIng || !dateEgr || !infoForm) {
+      showToast("Por favor, rellene todos los campos", "error");
+      return;
+    }
+
+    const { cargo, contrato, convenio, jornada, trabajador, jornadaPer } =
+      infoForm;
+
+    if (
+      contrato.label == "Tipo de contrato" ||
+      cargo.label == "Cargo - Seleccione convenio" ||
+      cargo.label == "Seleccione el cargo" ||
+      cargo.label == "Cargo" ||
+      convenio.label == "Convenio" ||
+      jornada.label == "Tipo de jornada" ||
+      trabajador.label == "Tipo de trabajador"
+    ) {
+      showToast("Por favor, rellene todos los campos", "error");
+      return;
+    }
+
+    if (
+      jornada.label == "Jonada incompleta (Especificar la jornada)" &&
+      jornadaPer.label == ""
+    ) {
+      showToast("Por favor, especifique la jornada", "error");
+      return;
+    }
+
+    // validamos que la fecha cumpla con la validacion
     const { year, month, day } = dateIng;
     let fechaIng = new Date(parseInt(year), parseInt(month - 1), parseInt(day));
 
@@ -120,38 +150,19 @@ const StepTwo = ({ formData, onComplete, completed }) => {
     limiteFecha.setSeconds(0);
     limiteFecha.setMilliseconds(0);
 
-    const { cargo, contrato, convenio, jornada, trabajador, jornadaPer } =
-      infoForm;
-    if (
-      !laborOrden ||
-      !dateIng ||
-      !dateEgr ||
-      contrato.label == "Tipo de contrato" ||
-      cargo.label == "Cargo" ||
-      convenio.label == "Convenio" ||
-      jornada.label == "Tipo de jornada" ||
-      trabajador.label == "Tipo de trabajador"
-    ) {
-      showToast("Por favor, rellene todos los campos", "error");
-    } else if (
-      jornada.label == "Jonada incompleta (Especificar la jornada)" &&
-      jornadaPer.label == ""
-    ) {
-      showToast("Por favor, rellene todos los campos", "error");
+    if (fechaIng.getTime() >= limiteFecha.getTime()) {
+      onComplete({
+        stepTwoData: {
+          select: infoForm,
+          laborOrden: laborOrden,
+          pago31: isDay31,
+          fecIngreso: dateIng.date,
+          fecEgreso: dateEgr.date,
+        },
+      });
     } else {
-      if (fechaIng.getTime() >= limiteFecha.getTime()) {
-        onComplete({
-          stepTwoData: {
-            select: infoForm,
-            laborOrden: laborOrden,
-            pago31: isDay31,
-            fecIngreso: dateIng.date,
-            fecEgreso: dateEgr.date,
-          },
-        });
-      } else {
-        showToast("La fecha de ingreso es incorrecta", "error");
-      }
+      showToast("La fecha de ingreso es incorrecta", "error");
+      return;
     }
   };
 

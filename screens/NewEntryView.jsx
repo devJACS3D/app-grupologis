@@ -75,6 +75,16 @@ const NewEntryView = (props) => {
         ? stepTwoData.select.jornadaPer.label
         : stepTwoData.select.jornada.label.toUpperCase();
 
+    // Remueve los separadores de miles
+    const auxBon = stepThreeData.select.valorAuxBonifi.label.replace(/\./g, "");
+    // Remueve el separador decimal
+    const auxBonVal = auxBon.replace(",", "");
+
+    // Remueve los separadores de miles
+    const salBase = stepThreeData.select.valorSalario.label.replace(/\./g, "");
+    // Remueve el separador decimal
+    const salBaseVal = salBase.replace(",", "");
+
     let body = {
       cod_emp: stepOneData.identificacion,
       nom1_emp: stepOneData.nombre,
@@ -97,9 +107,9 @@ const NewEntryView = (props) => {
       cco_cli: stepThreeData.select.centCostos.value,
       tip_sal: stepThreeData.select.salario.label.toUpperCase(),
       nov_con: stepThreeData.select.auxBonif.value,
-      nov_val: stepThreeData.select.valorAuxBonifi.label,
+      nov_val: parseInt(auxBonVal, 10),
       nov_per: "0",
-      sal_bas: stepThreeData.select.valorSalario.label,
+      sal_bas: parseInt(salBaseVal, 10),
       dot_emp: stepThreeData.dotacion ? "1" : "0",
       empresa: empSel,
       cod_cli: codEmp,

@@ -3,7 +3,8 @@ import axios from "axios";
 import { useEffect } from "react";
 
 const domain = "https://appgrupologis.com/";
-const urlApi = `${domain}prod/app/managers/`;
+const urlApi = `${domain}prod2023/app/managers/`;
+// const urlApi = `${domain}prod/app/managers/`;
 const urlSer = `${domain}services_app/Routes/`;
 
 let cancelToken = axios.CancelToken.source();
