@@ -2,7 +2,7 @@
   "expo": {
     "name": "grupologis-app",
     "slug": "grupologis-app",
-    "version": "1.7.3",
+    "version": "1.7.6",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -22,7 +22,7 @@
     ],
     "ios": {
       "icon": "./assets/icon-120.png",
-      "buildNumber": "1.7.3",
+      "buildNumber": "1.7.6",
       "bundleIdentifier": "mglio.com",
       "supportsTablet": true,
 
