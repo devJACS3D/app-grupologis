@@ -167,6 +167,7 @@ export default function App() {
   }
   console.log("🚀 ~ reloading");
 
+  // vista de la aplicacion
   return (
     <AuthState>
       <NewsState>
