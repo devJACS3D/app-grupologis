@@ -24,7 +24,7 @@ const ShowInfo = ({ modul, info }) => {
               <Text style={styles.textContent}>
                 {info.ap1_emp.trim()} {info.ap2_emp.trim()}
               </Text>
-              <Text style={styles.textHead}>Correo</Text>
+              <Text style={styles.textHead}>Correo electrónico</Text>
               <Text style={styles.textContent}>{info.e_mail.trim()}</Text>
             </View>
 

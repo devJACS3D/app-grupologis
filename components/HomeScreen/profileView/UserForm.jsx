@@ -141,7 +141,7 @@ const UserForm = ({
       <FormInput
         name={userData.Correo !== undefined ? "Correo" : "e_mail"}
         type="email-address"
-        label={"Email"}
+        label={"Correo electrónico"}
         value={userData.Correo ?? userData.e_mail}
         onChange={handleChange}
         disabled={false}

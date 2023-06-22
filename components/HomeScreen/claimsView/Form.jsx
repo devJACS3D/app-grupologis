@@ -67,8 +67,8 @@ const Form = ({ closeModal, onConfirm }) => {
 
       <Pressable onPress={handlePress}>
         <FormTitle
-          title={"Nueva Quejas"}
-          subtitle="y reclamos"
+          title={"Nueva PQR"}
+
           description={
             "Puedes interponer una queja o reclamo por este medio o hacer seguimiento de las mismas"
           }
@@ -77,7 +77,7 @@ const Form = ({ closeModal, onConfirm }) => {
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.titleContainer}
-            placeholder="Asunto"
+            placeholder="Selecciona el asunto"
             value={infoForm.asunto}
             onChangeText={(asu) => setInfoForm({ ...infoForm, asunto: asu })}
           ></TextInput>

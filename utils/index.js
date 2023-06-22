@@ -82,6 +82,9 @@ export const images = {
   certificadoImage4:
     "https://firebasestorage.googleapis.com/v0/b/grupologis-app.appspot.com/o/images%2FGrupo%2063.png?alt=media&token=0d6c5a70-2c24-42a3-aa79-46e8096b3ddc",
   employeeNimage: "../assets/images/home/banners/imgEmployees.png",
+  bannerTwo: "../assets/images/home/banners/bannerTwo.png",
+  bannerThree: "../assets/images/home/banners/bannerThree.png",
+  bannerFour: "../assets/images/home/banners/bannerFour.png",
   checkImage:
     "https://firebasestorage.googleapis.com/v0/b/grupologis-app.appspot.com/o/images%2FcheckImage.png?alt=media&token=66e7b9e5-9079-4dc8-829a-ebff3d983334",
 };

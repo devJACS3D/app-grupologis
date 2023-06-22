@@ -109,13 +109,13 @@ const Download = (props) => {
         <View style={styles.downloadContainer}>
           <View style={styles.infoContainer}>
             <View style={styles.title}>
-              <Text style={styles.welcomeText}>Descarga!</Text>
-              <Text style={styles.subtitle}>Certificados</Text>
-              <Text style={styles.subtitle}>y documentos</Text>
+              <Text style={styles.welcomeText}>¡Bienvenido </Text>
+              <Text style={styles.subtitle}>al portal Grupo Logis!</Text>
 
               <View style={styles.descriptionContainer}>
-                <Text style={styles.welcomeDesc}>Trabajamos para mejorar</Text>
-                <Text style={styles.welcomeDesc}>tu experiencia</Text>
+                <Text style={styles.welcomeDesc}>Aquí podrás autogestionar</Text>
+                <Text style={styles.welcomeDesc}>tus solicitudes de una</Text>
+                <Text style={styles.welcomeDesc}>forma sencilla y ágil.</Text>
               </View>
             </View>
             <Image

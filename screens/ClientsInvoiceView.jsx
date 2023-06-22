@@ -91,12 +91,12 @@ const ClientsInvoiceView = ({ props }) => {
         showsVerticalScrollIndicator={false}
       >
         <MainCardInfo
-          firstTitle={"Descarga"}
-          secondTitle="facturas clientes"
+          firstTitle={"Buscar "}
+          secondTitle="facturas"
           description={
-            "Podrás conocer el estado o trazabilidad de tus novedades"
+            "Mantén la información importante siempre a la mano"
           }
-          image={images.employeeNimage}
+          image={images.bannerTwo}
         />
 
         {allBillsList[0] !== null ? (

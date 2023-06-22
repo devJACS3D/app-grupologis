@@ -179,7 +179,7 @@ const Claim = (props) => {
     <Layout props={{ ...props }}>
       <ViewTitleCard
         title={"Quejas y reclamos"}
-        buttonText="+ Nueva"
+        buttonText="  Nueva"
         onPressAction={() => setModal(!modal)}
       />
       <ScrollView
@@ -190,12 +190,12 @@ const Claim = (props) => {
         }
       >
         <MainCardInfo
-          firstTitle={"Quejas"}
-          secondTitle="y reclamos"
+          firstTitle={"PQR"}
+          secondTitle=""
           description={
             "Podrás conocer el estado o trazabilidad de tus novedades"
           }
-          image={images.employeeNimage}
+          image={images.bannerFour}
         />
         {!loader ? (
           claimsList.length > 0 ? (
@@ -225,7 +225,7 @@ const Claim = (props) => {
                 }}
                 title="Su queja o reclamo ha sido enviada"
                 description="Recuerde estar pendiente a su correo para recibir la respuesta"
-                image={images.checkImage}
+                image={images.bannerFour}
               />
             )}
           </View>

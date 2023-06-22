@@ -96,7 +96,7 @@ const FormBillsModal = ({ closeModal, onConfirm }) => {
         >
           <View style={styles.selectorOption}>
             <Text style={styles.selectorText}>
-              {hasChangedYear ? values.year : "Seleccione año"}
+              {hasChangedYear ? values.year : "Selecciona año"}
             </Text>
             <Ionicons name="calendar" size={20} color={colors.boldGray} />
           </View>
@@ -118,7 +118,7 @@ const FormBillsModal = ({ closeModal, onConfirm }) => {
             <Text style={styles.selectorText}>
               {hasChangedMonth
                 ? validDates().validMonths[period.start.get("M")]
-                : "Seleccione mes / periodo"}
+                : "Selecciona mes / periodo"}
             </Text>
             <Ionicons name="calendar" size={20} color={colors.boldGray} />
           </View>

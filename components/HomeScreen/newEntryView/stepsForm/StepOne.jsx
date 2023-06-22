@@ -174,7 +174,7 @@ const StepOne = ({ formData, onComplete }) => {
       <TextInput
         value={tel}
         onChangeText={setTel}
-        placeholder="Telefono"
+        placeholder="Teléfono"
         style={styles.input}
         keyboardType="numeric"
         placeholderTextColor={colors.placeholderColor}
@@ -182,7 +182,7 @@ const StepOne = ({ formData, onComplete }) => {
       <TextInput
         value={email}
         onChangeText={setEmail}
-        placeholder="Correo Electronico"
+        placeholder="Correo Electrónico"
         style={styles.input}
         placeholderTextColor={colors.placeholderColor}
       />
