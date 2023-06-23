@@ -127,47 +127,6 @@ const toastConfig = {
 };
 
 const HomeScreens = () => {
-  const navigation = useNavigation();
-  const navigationState = useNavigationState((state) => state);
-
-  // const handleBackButton = () => {
-  //   // Obtener la ruta a la que va al presionar el botón de retroceso
-  //   const targetRouteName = navigationState.routes[navigationState.index].state
-  //     ? navigationState.routes[navigationState.index].state.routes[
-  //         navigationState.routes[navigationState.index].state.index
-  //       ].name
-  //     : navigationState.routes[navigationState.index - 1].name;
-
-  //   // const currentRouteName =
-  //   //   navigationState.routes[navigationState.index].state.routes[
-  //   //     navigationState.routes[navigationState.index].state.index
-  //   //   ];
-
-  //   console.log("nombre ruta", targetRouteName);
-  //   console.log("navigationState", navigationState);
-  //   // // Realizar acciones personalizadas en función de la ruta actual
-  //   // if (currentRouteName === "Screen1") {
-  //   //   // Acciones personalizadas para Screen1
-  //   // } else if (currentRouteName === "Screen2") {
-  //   //   // Acciones personalizadas para Screen2
-  //   // }
-
-  //   // // Navegar hacia atrás
-  //   // navigation.goBack();
-
-  //   // Si se devuelve 'true', el evento de retroceso no se propagará más
-  //   return false;
-  // };
-
-  // useEffect(() => {
-  //   const backHandler = BackHandler.addEventListener(
-  //     "hardwareBackPress",
-  //     handleBackButton
-  //   );
-
-  //   return () => backHandler.remove();
-  // }, []);
-
   return (
     <Tab.Navigator
       screenOptions={{
@@ -199,27 +158,6 @@ const HomeScreens = () => {
 };
 
 export default function App() {
-  // const handleBackButton = (targetRoute) => {
-  //   console.log("2");
-  //   // console.log("handleBackButton");
-  //   const navigation = useNavigation();
-
-  //   // Obtener la ruta anterior utilizando React Navigation
-  //   const previousRoute =
-  //     navigation.getState().routes[navigation.getState().index - 1];
-
-  //   // Puedes acceder a la información de la ruta anterior, como el nombre de la pantalla
-  //   console.log("Ruta anterior:", previousRoute.name);
-
-  //   if (previousRoute.name === targetRoute) {
-  //     // Si la ruta anterior es "DownloadView", salir de la aplicación
-  //     BackHandler.exitApp();
-  //     return false;
-  //   }
-
-  //   return true;
-  // };
-
   useBackHandler(() => {
     // Verificar si el usuario está en la pantalla de inicio
     const currentRoute = navigationRef.current
