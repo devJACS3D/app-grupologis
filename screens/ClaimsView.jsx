@@ -54,7 +54,7 @@ const Claim = (props) => {
     setLoader(true);
     let infoLog = await AsyncStorage.getItem("logged");
     infoLog = JSON.parse(infoLog);
-    const empSel = infoLog.empSel;
+    const empSel = infoLog.empSel.toUpperCase();
     const codEmp = infoLog.codEmp;
 
     const info = `Empresa=${empSel}&CodEmpleado=${codEmp}`;
@@ -62,6 +62,7 @@ const Claim = (props) => {
     const path = "usuario/getListadoQuejas.php";
     const respApi = await fetchPost(path, info);
     const { status, data } = respApi;
+    console.log("respQueja", respApi);
     if (status) {
       if (data.Correcto === 1) {
         if (data.Programa != undefined && data.Programa.length > 0) {

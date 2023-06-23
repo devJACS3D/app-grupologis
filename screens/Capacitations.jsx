@@ -49,6 +49,7 @@ const Capacitations = (props) => {
 
     const respApi = await fetchPost(path, info);
     const { status, data } = respApi;
+    console.log("capacitaciones", respApi);
     if (status) {
       if (data.Correcto == 1 && data.Programa.length > 0) {
         setLoader(false);

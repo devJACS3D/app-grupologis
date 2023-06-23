@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
   newsListContainer: {
     width: widthPercentageToPx(90),
     height: "100%",
+    marginBottom: 70,
   },
   titleContainer: {
     paddingVertical: 10,

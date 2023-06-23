@@ -7,6 +7,11 @@ import SvgInfoCapacitations from "../../../../assets/images/components/infoModal
 import InfoNovedadIng from "../../../../assets/images/components/infoModal/InfoNovedadIng";
 
 const ShowInfo = ({ modul, info }) => {
+  if (info.Estado == "Approve") {
+    info.Estado = "Aprobar";
+  } else if (info.Estado == "Realize") {
+    info.Estado = "Realizar";
+  }
   return (
     <View>
       {modul == "NovIngreso" ? (
@@ -117,9 +122,7 @@ const ShowInfo = ({ modul, info }) => {
               <StatusLine status={info.Estado} />
             </View>
           ) : (
-            <Text style={styles.textStyle}>
-              {info.Estado == "Approve" ? "Aprobado" : info.Estado}
-            </Text>
+            <Text style={styles.textStyle}>{info.Estado}</Text>
           )}
           <View style={styles.infoBox}>
             <View style={{ width: "33%" }}>

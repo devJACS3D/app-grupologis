@@ -3,6 +3,7 @@ import { useState } from "react";
 import {
   FlatList,
   Modal,
+  Platform,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -275,7 +276,8 @@ const styles = StyleSheet.create({
   modalContainer: {
     justifyContent: "center",
     alignItems: "center",
-    transform: [{ translateY: 60 }],
+    transform:
+      Platform.OS == "android" ? [{ translateY: 45 }] : [{ translateY: 60 }],
   },
   loaderContainer: {
     marginTop: heightPercentageToPx(5),

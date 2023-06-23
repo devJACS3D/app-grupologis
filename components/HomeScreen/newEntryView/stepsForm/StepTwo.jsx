@@ -107,7 +107,7 @@ const StepTwo = ({ formData, onComplete, completed }) => {
   };
 
   const handlePress = () => {
-    if (!laborOrden || !dateIng || !dateEgr || !infoForm) {
+    if (!dateIng || !dateEgr || !infoForm) {
       showToast("Por favor, rellene todos los campos", "error");
       return;
     }
@@ -177,7 +177,7 @@ const StepTwo = ({ formData, onComplete, completed }) => {
       />
 
       <TextInput
-        placeholder="Labor / Orden"
+        placeholder="Obra / labor"
         onChangeText={setLaborOrden}
         style={styles.input}
         placeholderTextColor={colors.placeholderColor}

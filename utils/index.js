@@ -258,10 +258,16 @@ export const employeeManagement = [
   },
 ];
 
-export const validDatesSup = () => {
+export const validDatesSup = (addYear) => {
   let actualDate = new Date();
   let currentYear = actualDate.getFullYear();
   let validYears = [];
+
+  if (Array.isArray(addYear)) {
+    validYears.push(...addYear);
+  } else {
+    validYears.push(addYear);
+  }
 
   for (let i = currentYear; i <= currentYear + 10; i++) {
     validYears.push(i);
@@ -285,10 +291,16 @@ export const validDatesSup = () => {
   };
 };
 
-export const validDates = () => {
+export const validDates = (addYear) => {
   let actualDate = new Date();
   let currentYear = actualDate.getFullYear();
   let validYears = [];
+
+  if (Array.isArray(addYear)) {
+    validYears.push(...addYear);
+  } else {
+    validYears.push(addYear);
+  }
 
   for (let i = currentYear; i > currentYear - 10; i--) {
     validYears.push(i);

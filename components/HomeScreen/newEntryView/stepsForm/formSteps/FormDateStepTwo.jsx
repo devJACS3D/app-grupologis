@@ -7,6 +7,7 @@ import {
 } from "../../../../../utils";
 import React, { useEffect, useState } from "react";
 import SpecialCalendar from "../../../../common/form/SpecialCalendar";
+import GLButton from "../../../../common/buttons/GLButton";
 
 const FormDateStepTwo = ({ changeResultDate }) => {
   const [modal, setModal] = useState(false);
@@ -89,7 +90,16 @@ const FormDateStepTwo = ({ changeResultDate }) => {
                     : setTextDateEgr(e.date);
                   resDate(e);
                 }}
+                addYears={dateSel == "ingreso" ? [] : fechaAc.getFullYear() + 1}
               />
+              <View style={styles.modalContainer}>
+                <GLButton
+                  type={"default"}
+                  placeholder="Continuar"
+                  width={widthPercentageToPx(70)}
+                  onPressAction={() => setModal(false)}
+                />
+              </View>
             </View>
           </View>
         </Modal>
@@ -141,7 +151,7 @@ const styles = StyleSheet.create({
   },
   infoForm: {
     width: widthPercentageToPx(90),
-    height: heightPercentageToPx(25),
+    height: heightPercentageToPx(35),
     backgroundColor: "rgb(255,255,255)",
     borderRadius: 10,
     paddingVertical: 10,

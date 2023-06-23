@@ -1,4 +1,11 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  Linking,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useContext, useState } from "react";
 import FormInput from "./FormInput";
 import GLButton from "../../common/buttons/GLButton";
@@ -93,11 +100,25 @@ const UserForm = ({
     }
   };
 
+  const openAppSettings = () => {
+    Linking.openSettings();
+  };
+
   const selectPhoto = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (status !== "granted") {
-      console.log("Permiso denegado para acceder a la biblioteca de medios");
+      Alert.alert(
+        "Permiso denegado",
+        "Se requiere permiso para acceder la biblioteca multimedia y asi poder seleccionar la imagen",
+        [
+          {
+            text: "Aceptar",
+            onPress: () => console.log("Botón Aceptar presionado"),
+          },
+          { text: "Ir a Configuración", onPress: openAppSettings },
+        ]
+      );
       return;
     }
 
@@ -169,7 +190,7 @@ const UserForm = ({
             label={"Empresa"}
             value={userData.empSel}
             onChange={handleChange}
-            disabled={false}
+            disabled={true}
           />
           <View style={styles.formInputContainer}>
             <Text style={styles.label}>Estado Civil</Text>

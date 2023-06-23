@@ -26,6 +26,7 @@ const MonthYearPicker = ({
   showYear = true,
   showMonth = true,
   yearSup = false,
+  addYears = [],
 }) => {
   return (
     <Modal visible={visible} animationType="fade" transparent={true}>
@@ -69,7 +70,7 @@ const MonthYearPicker = ({
                 showsVerticalScrollIndicator={false}
               >
                 {!yearSup
-                  ? validDates().validYears.map((e, idx) => (
+                  ? validDates(addYears).validYears.map((e, idx) => (
                       <Pressable key={idx} onPress={() => changeYear(e)}>
                         <View
                           style={styles.dayElement(
@@ -80,7 +81,7 @@ const MonthYearPicker = ({
                         </View>
                       </Pressable>
                     ))
-                  : validDatesSup().validYears.map((e, idx) => (
+                  : validDatesSup(addYears).validYears.map((e, idx) => (
                       <Pressable key={idx} onPress={() => changeYear(e)}>
                         <View
                           style={styles.dayElement(

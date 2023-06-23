@@ -105,10 +105,8 @@ const StepThree = ({ formData, onComplete, completed }) => {
       } = value;
 
       if (
-        auxBonif.label == "Aux / bonificaciones" ||
         centCostos.label == "Centro de costos" ||
         salario.label == "Tipo de salario" ||
-        valorAuxBonifi.label == "" ||
         valorSalario.label == ""
       ) {
         showToast("Por favor, rellene todos los campos", "error");

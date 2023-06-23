@@ -6,6 +6,7 @@ import * as Permissions from "expo-permissions";
 import * as Sharing from "expo-sharing";
 import React, { useContext } from "react";
 import WebViewContext from "../context/webView/WebViewContext";
+import { Alert, Linking, PermissionsAndroid, Platform } from "react-native";
 
 export function validatePhone(phone) {
   phone = phone.toString();
@@ -124,7 +125,55 @@ export async function fetchPost(path, body, limit = "") {
   }
 }
 
+const openAppSettings = () => {
+  Linking.openSettings();
+};
+
+function getMediaLibraryPermission() {
+  Alert.alert(
+    "Permiso denegado",
+    "Se requiere permiso para acceder la biblioteca multimedia y asi poder guardar los documentos que usted descargue desde la aplicación",
+    [
+      {
+        text: "Aceptar",
+        onPress: () => console.log("Botón Aceptar presionado"),
+      },
+      { text: "Ir a Configuración", onPress: openAppSettings },
+    ]
+  );
+}
+
+const showRestartAlert = () => {
+  Alert.alert(
+    "Reiniciar la aplicación",
+    "Es necesario reiniciar la aplicación para que los cambios de permisos surtan efecto.",
+    [
+      {
+        text: "Aceptar",
+        onPress: () => {},
+      },
+    ],
+    { cancelable: false }
+  );
+};
+
+const checkStoragePermission = async () => {
+  if (Platform.OS === "android") {
+    try {
+      const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+      if (status !== "granted") {
+        return false;
+      } else {
+        return true;
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+};
+
 export const downloadArchivoAndroid = async (base64, mime, name) => {
+  let permReq;
   try {
     name = name.replaceAll(" ", "_");
     name = reemplazarTildes(name);
@@ -137,6 +186,9 @@ export const downloadArchivoAndroid = async (base64, mime, name) => {
     const data = `data:${mime};base64,${base64}`;
     const base64Code = data.split(`data:${mime};base64,`)[1];
 
+    // Verificar los permisos antes de descargar el archivo
+    permReq = await checkStoragePermission();
+
     await FileSystem.writeAsStringAsync(fileUri, base64Code, {
       encoding: FileSystem.EncodingType.Base64,
     });
@@ -145,6 +197,14 @@ export const downloadArchivoAndroid = async (base64, mime, name) => {
     return true;
   } catch (error) {
     console.log(error);
+    if (error.code == "ERR_PERMISSIONS") {
+      if (permReq) {
+        // reiniciar aplicacion
+        showRestartAlert();
+      } else {
+        getMediaLibraryPermission();
+      }
+    }
     return false;
   }
 };

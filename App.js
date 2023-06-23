@@ -1,6 +1,14 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  useFocusEffect,
+  useNavigation,
+  useNavigationState,
+  useRoute,
+} from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useBackHandler } from "@react-native-community/hooks";
+
 import * as ScreenOrientation from "expo-screen-orientation";
 import { useFonts } from "expo-font";
 
@@ -10,6 +18,7 @@ import {
   Platform,
   View,
   Modal,
+  BackHandler,
 } from "react-native";
 import * as MediaLibrary from "expo-media-library";
 import * as Permissions from "expo-permissions";
@@ -47,17 +56,32 @@ import NewsState from "./context/news/newsState";
 import ResumeState from "./context/resume/resumeState";
 
 import moment from "moment";
-import { useEffect } from "react";
+import React, { createRef, useEffect, useRef, useState } from "react";
 import { LoaderProgContextProvider } from "./context/loader/LoaderProgContext";
 import Capacitations from "./screens/Capacitations";
 import WebViewScreen from "./components/common/webView/WebViewScreen";
 import { WebViewContextProvider } from "./context/webView/WebViewContext";
+import { Linking } from "react-native";
+import { Alert } from "react-native";
+
+const openAppSettings = () => {
+  Linking.openSettings();
+};
 
 async function getMediaLibraryPermission() {
   const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
-  console.log("status al", status);
   if (status !== "granted") {
-    alert("Se requiere permiso para acceder la biblioteca multimedia");
+    Alert.alert(
+      "Permiso denegado",
+      "Se requiere permiso para acceder la biblioteca multimedia y asi poder guardar los documentos que usted descargue desde la aplicación",
+      [
+        {
+          text: "Aceptar",
+          onPress: () => console.log("Botón Aceptar presionado"),
+        },
+        { text: "Ir a Configuración", onPress: openAppSettings },
+      ]
+    );
   }
 }
 async function requestStoragePermission() {
@@ -95,6 +119,7 @@ moment().utcOffset("-05:00");
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+const navigationRef = createRef();
 
 const toastConfig = {
   success: (props) => <SuccessToast {...props} />,
@@ -102,6 +127,47 @@ const toastConfig = {
 };
 
 const HomeScreens = () => {
+  const navigation = useNavigation();
+  const navigationState = useNavigationState((state) => state);
+
+  // const handleBackButton = () => {
+  //   // Obtener la ruta a la que va al presionar el botón de retroceso
+  //   const targetRouteName = navigationState.routes[navigationState.index].state
+  //     ? navigationState.routes[navigationState.index].state.routes[
+  //         navigationState.routes[navigationState.index].state.index
+  //       ].name
+  //     : navigationState.routes[navigationState.index - 1].name;
+
+  //   // const currentRouteName =
+  //   //   navigationState.routes[navigationState.index].state.routes[
+  //   //     navigationState.routes[navigationState.index].state.index
+  //   //   ];
+
+  //   console.log("nombre ruta", targetRouteName);
+  //   console.log("navigationState", navigationState);
+  //   // // Realizar acciones personalizadas en función de la ruta actual
+  //   // if (currentRouteName === "Screen1") {
+  //   //   // Acciones personalizadas para Screen1
+  //   // } else if (currentRouteName === "Screen2") {
+  //   //   // Acciones personalizadas para Screen2
+  //   // }
+
+  //   // // Navegar hacia atrás
+  //   // navigation.goBack();
+
+  //   // Si se devuelve 'true', el evento de retroceso no se propagará más
+  //   return false;
+  // };
+
+  // useEffect(() => {
+  //   const backHandler = BackHandler.addEventListener(
+  //     "hardwareBackPress",
+  //     handleBackButton
+  //   );
+
+  //   return () => backHandler.remove();
+  // }, []);
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -133,6 +199,42 @@ const HomeScreens = () => {
 };
 
 export default function App() {
+  // const handleBackButton = (targetRoute) => {
+  //   console.log("2");
+  //   // console.log("handleBackButton");
+  //   const navigation = useNavigation();
+
+  //   // Obtener la ruta anterior utilizando React Navigation
+  //   const previousRoute =
+  //     navigation.getState().routes[navigation.getState().index - 1];
+
+  //   // Puedes acceder a la información de la ruta anterior, como el nombre de la pantalla
+  //   console.log("Ruta anterior:", previousRoute.name);
+
+  //   if (previousRoute.name === targetRoute) {
+  //     // Si la ruta anterior es "DownloadView", salir de la aplicación
+  //     BackHandler.exitApp();
+  //     return false;
+  //   }
+
+  //   return true;
+  // };
+
+  useBackHandler(() => {
+    // Verificar si el usuario está en la pantalla de inicio
+    const currentRoute = navigationRef.current
+      ?.getRootState()
+      .routes.find((route) => route.name === "Home");
+    if (currentRoute) {
+      // Si el usuario está en la pantalla de inicio, no hacer nada y evitar salir de la aplicación
+      console.log("inicio", currentRoute);
+      return currentRoute.state.history.length <= 1 ? true : false;
+      // return handleBackButton("DownloadView");
+    }
+    // Si el usuario no está en la pantalla de inicio, dejar que el comportamiento de retroceso predeterminado se maneje
+    return false;
+  });
+
   const lockScreenOrientation = async () => {
     Platform.OS == "android"
       ? await ScreenOrientation.lockAsync(
@@ -177,7 +279,7 @@ export default function App() {
               <NewingState>
                 <WebViewContextProvider>
                   <LoaderProgContextProvider>
-                    <NavigationContainer>
+                    <NavigationContainer ref={navigationRef}>
                       <StatusBar style="auto" hidden={false} />
                       <Stack.Navigator
                         initialRouteName="Login"

@@ -34,6 +34,7 @@ const SpecialCalendar = ({
   value,
   dia = "",
   selectable = true,
+  addYears = [],
 }) => {
   const [selectedDate, setSelectedDate] = useState(moment(value));
   const [showMonthPicker, setShowMonthPicker] = useState(false);
@@ -192,6 +193,7 @@ const SpecialCalendar = ({
           setVisible={setShowMonthPicker}
           selectedMonthYear={selectedMonthYear}
           yearSup={typeof dia == "string" ? false : true}
+          addYears={addYears}
         />
       </View>
       <ScrollView

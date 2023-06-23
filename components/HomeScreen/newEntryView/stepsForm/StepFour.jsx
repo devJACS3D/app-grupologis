@@ -81,8 +81,10 @@ const StepFour = ({ formData, onComplete, completed }) => {
               {stepTwoData.select.trabajador.label}
             </Text>
 
-            <Text style={styles.textHead}>Labor/Obra</Text>
-            <Text style={styles.textContent}>{stepTwoData.laborOrden}</Text>
+            <Text style={styles.textHead}>Obra/labor</Text>
+            <Text style={styles.textContent}>
+              {stepTwoData.laborOrden == "" ? "N/A" : stepTwoData.laborOrden}
+            </Text>
           </View>
         </View>
         {/* Resumen numero 3 */}
@@ -90,7 +92,11 @@ const StepFour = ({ formData, onComplete, completed }) => {
           <View style={styles.resume}>
             <Text style={styles.textHead}>Auxilio bonificacion</Text>
             <Text style={styles.textContent}>
-              {stepThreeData.select.auxBonif.label}
+              {
+                (stepThreeData.select.auxBonif.label = "Aux / bonificaciones"
+                  ? "Sin bonificacion"
+                  : stepThreeData.select.auxBonif.label)
+              }
             </Text>
 
             <Text style={styles.textHead}>Tipo Salario</Text>
@@ -106,7 +112,9 @@ const StepFour = ({ formData, onComplete, completed }) => {
           <View style={styles.resume}>
             <Text style={styles.textHead}>Valor bonificacion</Text>
             <Text style={styles.textContent}>
-              {stepThreeData.select.valorAuxBonifi.label}
+              {stepThreeData.select.valorAuxBonifi.label == ""
+                ? "Sin bonificacion"
+                : stepThreeData.select.valorAuxBonifi.label}
             </Text>
 
             <Text style={styles.textHead}>Valor Salario</Text>

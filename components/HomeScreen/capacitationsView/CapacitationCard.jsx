@@ -25,6 +25,12 @@ const CapacitationsCard = (props) => {
     setModal(false);
   };
 
+  if (props.Estado == "Approve") {
+    props.Estado = "Aprobar";
+  } else if (props.Estado == "Realize") {
+    props.Estado = "Realizar";
+  }
+
   return (
     <View style={styles.cardContainer}>
       <View style={styles.topContent}>
