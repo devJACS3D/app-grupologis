@@ -10,7 +10,7 @@ const ShowInfo = ({ modul, info }) => {
   if (info.Estado == "Approve") {
     info.Estado = "Aprobar";
   } else if (info.Estado == "Realize") {
-    info.Estado = "Realizar";
+    info.Estado = "Realizado";
   }
   return (
     <View>

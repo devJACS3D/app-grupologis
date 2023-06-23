@@ -2,7 +2,7 @@
   "expo": {
     "name": "grupologis-app",
     "slug": "grupologis-app",
-    "version": "1.7.6",
+    "version": "1.7.7",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -22,7 +22,7 @@
     ],
     "ios": {
       "icon": "./assets/icon-120.png",
-      "buildNumber": "1.7.6",
+      "buildNumber": "1.7.7",
       "bundleIdentifier": "mglio.com",
       "supportsTablet": true,
 
@@ -37,7 +37,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "io.cordova.grupologis",
-      "versionCode": 1 
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -47,6 +47,6 @@
         "projectId": "00c0fd79-69a5-4fc0-9d1e-c64f5d218927"
       }
     },
-    "sdkVersion": "48.0.4" 
+    "sdkVersion": "48.0.4"
   }
 }
