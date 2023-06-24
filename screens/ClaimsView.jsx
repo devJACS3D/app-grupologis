@@ -179,7 +179,7 @@ const Claim = (props) => {
   return (
     <Layout props={{ ...props }}>
       <ViewTitleCard
-        title={"Quejas y reclamos"}
+        title={"PQR"}
         buttonText="  Nueva"
         onPressAction={() => setModal(!modal)}
       />

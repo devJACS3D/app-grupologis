@@ -22,8 +22,8 @@ class Formulario extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      select1: props.dep === "" ? "Departamento" : props.dep,
-      select2: props.ciu === "" ? "Ciudad" : props.ciu,
+      select1: props.dep === "" ? "Selecciona departamento" : props.dep,
+      select2: props.ciu === "" ? "Selecciona municipio" : props.ciu,
       optionAb: null,
       modalVisible: false,
       modalOptions: [],
@@ -43,12 +43,14 @@ class Formulario extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.dep !== prevProps.dep || this.props.ciu !== prevProps.ciu) {
       this.setState({
-        select1: this.props.dep === "" ? "Departamento" : this.props.dep,
-        select2: this.props.ciu === "" ? "Ciudad" : this.props.ciu,
+        select1:
+          this.props.dep === "" ? "Selecciona departamento" : this.props.dep,
+        select2:
+          this.props.ciu === "" ? "Selecciona municipio" : this.props.ciu,
       });
     } else if (this.state.select1 !== prevState.select1) {
       this.setState({
-        select2: "Ciudad",
+        select2: "Selecciona municipio",
       });
     }
   }
@@ -71,7 +73,7 @@ class Formulario extends Component {
         });
         break;
       case "select2":
-        if (this.state.select1 != "Departamento") {
+        if (this.state.select1 != "Selecciona departamento") {
           modalOptions = listMun.municipios;
           this.setState({
             modalVisible: true,
@@ -80,7 +82,7 @@ class Formulario extends Component {
             modalSelect: select,
           });
         } else {
-          this.showToast("Seleccione un departamento", "error");
+          this.showToast("Selecciona departamento", "error");
         }
         break;
       default:
@@ -102,7 +104,7 @@ class Formulario extends Component {
         >
           <Text
             style={
-              this.state.select1 == "Departamento"
+              this.state.select1 == "Selecciona departamento"
                 ? styles.selectTextDis
                 : styles.selectText
             }
@@ -121,7 +123,7 @@ class Formulario extends Component {
         >
           <Text
             style={
-              this.state.select2 == "Ciudad"
+              this.state.select2 == "Selecciona municipio"
                 ? styles.selectTextDis
                 : styles.selectText
             }
@@ -172,13 +174,16 @@ class Formulario extends Component {
                           optionAb: null,
                           modalSelect: "",
                         });
-                        this.handleSelection(option.nombre, "Ciudad");
+                        this.handleSelection(
+                          option.nombre,
+                          "Selecciona municipio"
+                        );
                       }}
                     >
                       <Text style={styles.modalOption}>{option.nombre}</Text>
                     </TouchableOpacity>
                   ) : (
-                    this.state.select1 != "Departamento" &&
+                    this.state.select1 != "Selecciona departamento" &&
                     option.nombreDepart == this.state.select1 && (
                       <TouchableOpacity
                         key={option.nombre}

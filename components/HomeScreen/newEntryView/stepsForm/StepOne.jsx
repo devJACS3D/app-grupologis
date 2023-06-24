@@ -42,7 +42,7 @@ const StepOne = ({ formData, onComplete }) => {
       !tel ||
       !depar ||
       !munic ||
-      munic == "Ciudad"
+      munic == "Selecciona municipio"
     ) {
       showToast("Por favor, rellene todos los campos", "error");
       return;
@@ -139,7 +139,7 @@ const StepOne = ({ formData, onComplete }) => {
         value={id}
         onChangeText={handleIdentificationChange}
         keyboardType="numeric"
-        placeholder="Número de ID"
+        placeholder="Número de identificación"
         style={styles.input}
         placeholderTextColor={colors.placeholderColor}
       />

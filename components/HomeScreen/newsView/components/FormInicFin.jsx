@@ -52,7 +52,7 @@ const FormInicFin = ({ closeModal, onConfirm }) => {
         </Pressable>
         <View style={styles.infoForm}>
           <SpecialCalendar
-            placeholder={"Fecha inicio"}
+            placeholder={"Selecciona fecha inicial"}
             value={new Date()}
             selectable={false}
             onChange={(e) =>
@@ -62,7 +62,7 @@ const FormInicFin = ({ closeModal, onConfirm }) => {
         </View>
         <View style={styles.infoForm}>
           <SpecialCalendar
-            placeholder={"Fecha fin"}
+            placeholder={"Selecciona fecha final"}
             value={new Date()}
             selectable={false}
             onChange={(e) =>
@@ -92,9 +92,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    transform: [{ translateY: 50 }],
+    // transform: [{ translateY: 50 }],
     width: widthPercentageToPx(90),
-    height: heightPercentageToPx(72),
+    height: heightPercentageToPx(68),
   },
   goBackButton: {
     position: "relative",

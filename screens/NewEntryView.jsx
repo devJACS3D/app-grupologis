@@ -225,7 +225,7 @@ const NewEntryView = (props) => {
         }
       >
         <CardEinfo
-          title={"Novedades ingreso"}
+          title={"Orden de ingreso"}
           buttonText="Generar"
           showButton={true}
           showInput={false}
