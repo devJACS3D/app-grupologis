@@ -179,6 +179,17 @@ export const employeeDownloadables = [
     description:
       "Descargar tu hoja de vida sin necesidad de pedirlo a Grupologis",
   },
+  {
+    id: "rincapacidad",
+    title: "Registro de incapacidades",
+    description: "Accede aquí al enlace para registrar tus incapacidades.",
+  },
+  {
+    id: "adatos",
+    title: "Actualizar mis de datos",
+    description:
+      "Mantén tus datos actualizados para que estás al día con noticias, cambios y novedades.",
+  },
 ];
 export const businessDownloadables = [
   {
@@ -200,6 +211,12 @@ export const businessDownloadables = [
     id: "ausentism",
     title: "Ausentismos",
     description: "Ahora puedes descargar tus certificados desde la App",
+  },
+  {
+    id: "ndiscip",
+    title: "Reporte de novedades disciplinarias",
+    description:
+      "Accede aquí al enlace para registrar procesos disciplinarios.",
   },
 ];
 export const newsInfo = [

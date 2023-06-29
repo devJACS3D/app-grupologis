@@ -31,6 +31,11 @@ import SvgPayrollFlyer from "../assets/images/home/downloadView/SvgPayrollFlyer"
 import SvgAusentism from "../assets/images/home/downloadView/SvgAusentism";
 import SvgCapacitations from "../assets/images/home/downloadView/SvgCapacitations";
 import SvgHumanResourcesIndicator from "../assets/images/home/downloadView/SvgHumanResourcesIndicator";
+import SvgAdatos from "../assets/images/home/downloadView/adatos"
+import SvgNdisciplinarias from "../assets/images/home/downloadView/ndisciplinarias"
+import SvgRincapacidad from "../assets/images/home/downloadView/rincapacidad"
+
+
 import LoaderProgContext, {
   LoaderProgContextProvider,
 } from "../context/loader/LoaderProgContext";
@@ -56,6 +61,12 @@ const displaySvg = (type) => {
       return <SvgCapacitations />;
     case "ausentism":
       return <SvgAusentism />;
+      case "ndiscip":
+        return <SvgNdisciplinarias />;
+        case "rincapacidad":
+          return <SvgRincapacidad  />;
+          case "adatos":
+            return <SvgAdatos />;
     default:
       return null;
   }
