@@ -119,6 +119,7 @@ export async function fetchPost(path, body, limit = "") {
     body += `&token=${token.data}`;
     const encodedBody = encode(body);
     const data = `value=${carac[0]}${encodedBody}${carac[1]}`;
+    console.log("data", data);
     return await post(path, data, minSec);
   } else {
     return { status: false, data: token.data };
@@ -171,43 +172,77 @@ const checkStoragePermission = async () => {
     }
   }
 };
-
 export const downloadArchivoAndroid = async (base64, mime, name) => {
-  let permReq;
   try {
-    name = name.replaceAll(" ", "_");
-    name = reemplazarTildes(name);
-    if (decodeURIComponent(escape(name))) {
-      name = decodeURIComponent(escape(name));
-    }
-    name = reemplazarTildes(name);
-    const fileUri = FileSystem.cacheDirectory + name;
+    const downloadsDir = FileSystem.documentDirectory + "Descargas/";
 
-    const data = `data:${mime};base64,${base64}`;
-    const base64Code = data.split(`data:${mime};base64,`)[1];
+    // Crear la carpeta de descargas si no existe
+    await FileSystem.makeDirectoryAsync(downloadsDir, { intermediates: true });
 
-    // Verificar los permisos antes de descargar el archivo
-    permReq = await checkStoragePermission();
+    const fileUri = downloadsDir + name;
 
-    await FileSystem.writeAsStringAsync(fileUri, base64Code, {
+    await FileSystem.writeAsStringAsync(fileUri, base64, {
       encoding: FileSystem.EncodingType.Base64,
     });
-    await MediaLibrary.saveToLibraryAsync(fileUri);
 
     return true;
   } catch (error) {
-    console.log(error);
-    if (error.code == "ERR_PERMISSIONS") {
-      if (permReq) {
-        // reiniciar aplicacion
-        showRestartAlert();
-      } else {
-        getMediaLibraryPermission();
-      }
-    }
+    console.error(error);
     return false;
   }
 };
+// async function saveFileToDownloads() {
+//   const fileUri = FileSystem.documentDirectory + "archivo.pdf"; // Ruta y nombre del archivo a guardar
+//   const content = "Contenido del archivo PDF"; // Contenido del archivo que deseas guardar
+
+//   try {
+//     await FileSystem.writeAsStringAsync(fileUri, content);
+//     const downloadsUri = FileSystem.documentDirectory + "Descargas/"; // Ruta a la carpeta de descargas
+//     const newFileUri = downloadsUri + "archivo.pdf"; // Ruta y nombre del archivo en la carpeta de descargas
+
+//     await FileSystem.moveAsync({ from: fileUri, to: newFileUri });
+//     console.log("Archivo guardado en Descargas exitosamente");
+//   } catch (error) {
+//     console.log("Error al guardar el archivo:", error);
+//   }
+// }
+
+// export const downloadArchivoAndroid = async (base64, mime, name) => {
+//   let permReq;
+//   try {
+//     name = name.replaceAll(" ", "_");
+//     name = reemplazarTildes(name);
+//     if (decodeURIComponent(escape(name))) {
+//       name = decodeURIComponent(escape(name));
+//     }
+//     name = reemplazarTildes(name);
+//     const fileUri = FileSystem.cacheDirectory + name;
+
+//     const data = `data:${mime};base64,${base64}`;
+//     const base64Code = data.split(`data:${mime};base64,`)[1];
+
+//     // Verificar los permisos antes de descargar el archivo
+//     permReq = await checkStoragePermission();
+
+//     await FileSystem.writeAsStringAsync(fileUri, base64Code, {
+//       encoding: FileSystem.EncodingType.Base64,
+//     });
+//     await MediaLibrary.saveToLibraryAsync(fileUri);
+
+//     return true;
+//   } catch (error) {
+//     console.log(error);
+//     if (error.code == "ERR_PERMISSIONS") {
+//       if (permReq) {
+//         // reiniciar aplicacion
+//         showRestartAlert();
+//       } else {
+//         getMediaLibraryPermission();
+//       }
+//     }
+//     return false;
+//   }
+// };
 
 // export const downloadArchivoAndroid = async (base64, mime, name) => {
 //   try {
@@ -341,3 +376,32 @@ export const downloadArchivoIOS = async (base64, mime, name) => {
   }
 };
 */
+
+export const htmlChatBot = `
+<html>
+  <body>
+    <p>Hola</p>
+    <script type="text/javascript" src="https://static.zdassets.com/ekr/snippet.js?key=e1180f20-f981-4a7b-bbc7-6a42560dd999"></script>
+
+    <script type="text/javascript">
+      window.zESettings = {
+        webWidget: {
+          chat: {
+            zIndex: 10000
+          }
+        }
+      };
+
+      function openChat() {
+        setTimeout(function() {
+          zE("messenger", "open");
+          alert('llego')
+        }, 5000); // 5 segundos
+      }
+
+      openChat();
+    </script>
+      
+  </body>
+</html>
+      `;

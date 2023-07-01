@@ -31,10 +31,9 @@ import SvgPayrollFlyer from "../assets/images/home/downloadView/SvgPayrollFlyer"
 import SvgAusentism from "../assets/images/home/downloadView/SvgAusentism";
 import SvgCapacitations from "../assets/images/home/downloadView/SvgCapacitations";
 import SvgHumanResourcesIndicator from "../assets/images/home/downloadView/SvgHumanResourcesIndicator";
-import SvgAdatos from "../assets/images/home/downloadView/adatos"
-import SvgNdisciplinarias from "../assets/images/home/downloadView/ndisciplinarias"
-import SvgRincapacidad from "../assets/images/home/downloadView/rincapacidad"
-
+import SvgAdatos from "../assets/images/home/downloadView/adatos";
+import SvgNdisciplinarias from "../assets/images/home/downloadView/ndisciplinarias";
+import SvgRincapacidad from "../assets/images/home/downloadView/rincapacidad";
 
 import LoaderProgContext, {
   LoaderProgContextProvider,
@@ -42,6 +41,7 @@ import LoaderProgContext, {
 import { Dimensions } from "react-native";
 import { useFocusEffect } from "@react-navigation/core";
 import { cancelarSolicitudesApi } from "../utils/axiosInstance";
+import HelpBox from "../components/common/helpBox/HelpBox";
 
 const displaySvg = (type) => {
   switch (type) {
@@ -61,12 +61,12 @@ const displaySvg = (type) => {
       return <SvgCapacitations />;
     case "ausentism":
       return <SvgAusentism />;
-      case "ndiscip":
-        return <SvgNdisciplinarias />;
-        case "rincapacidad":
-          return <SvgRincapacidad  />;
-          case "adatos":
-            return <SvgAdatos />;
+    case "ndiscip":
+      return <SvgNdisciplinarias />;
+    case "rincapacidad":
+      return <SvgRincapacidad />;
+    case "adatos":
+      return <SvgAdatos />;
     default:
       return null;
   }
@@ -124,7 +124,9 @@ const Download = (props) => {
               <Text style={styles.subtitle}>al portal Grupo Logis!</Text>
 
               <View style={styles.descriptionContainer}>
-                <Text style={styles.welcomeDesc}>Aquí podrás autogestionar</Text>
+                <Text style={styles.welcomeDesc}>
+                  Aquí podrás autogestionar
+                </Text>
                 <Text style={styles.welcomeDesc}>tus solicitudes de una</Text>
                 <Text style={styles.welcomeDesc}>forma sencilla y ágil.</Text>
               </View>
@@ -161,6 +163,9 @@ const Download = (props) => {
             </ScrollView>
           </View>
         </View>
+        <View style={styles.botContainer}>
+          <HelpBox />
+        </View>
         <View style={styles.newsDailyContainer}>
           <NewsDailyHome />
         </View>
@@ -173,6 +178,11 @@ const styles = StyleSheet.create({
   downloadContainer: {
     display: "flex",
     alignItems: "center",
+  },
+  botContainer: {
+    display: "flex",
+    width: widthPercentageToPx(90),
+    paddingVertical: heightPercentageToPx(4),
   },
   newsDailyContainer: {
     display: "flex",

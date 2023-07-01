@@ -108,6 +108,7 @@ const BusinessEmployeeLogin = ({ navigation, route }) => {
     React.useCallback(() => {
       return () => {
         cancelarSolicitudesApi();
+        setLoader(false);
       };
     }, [])
   );
