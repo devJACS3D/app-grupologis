@@ -148,70 +148,6 @@ function getMediaLibraryPermission(isConf = true) {
   );
 }
 
-const showRestartAlert = () => {
-  Alert.alert(
-    "Reiniciar la aplicación",
-    "Es necesario reiniciar la aplicación para que los cambios de permisos surtan efecto.",
-    [
-      {
-        text: "Aceptar",
-        onPress: () => {},
-      },
-    ],
-    { cancelable: false }
-  );
-};
-
-// const checkStoragePermissionVerSup11 = async (uri) => {
-//   // pedimos el permiso para acceder a un directorio especifico
-//   const permi = await StorageAccessFramework.requestDirectoryPermissionsAsync(
-//     uri
-//   );
-//   if (!permi.granted) {
-//     getMediaLibraryPermission(false);
-//     return null;
-//   }
-//   return permi.directoryUri;
-// };
-
-const checkStoragePermissionVerSup11 = async (uri) => {
-  // pedimos el permiso para acceder a un directorio especifico
-  // const permi = await StorageAccessFramework.requestDirectoryPermissionsAsync(
-  //   uri
-  // );
-  // if (!permi.granted) {
-  //   getMediaLibraryPermission(false);
-  //   return null;
-  // }
-
-  // return permi.directoryUri;
-
-  const { status } = await PermissionsAndroid.request(
-    PermissionsAndroid.PERMISSIONS.ACTION_CREATE_DOCUMENT,
-    {
-      title: "Permission to create documents",
-      message: "This permission is required to create documents.",
-    }
-  );
-  console.log("permiso", status);
-  if (status != "granted") {
-    getMediaLibraryPermission(false);
-    return false;
-  }
-  return true;
-};
-
-// const convertContentUriToFileUri = async (contentUri, name) => {
-//   try {
-//     console.log("entro 1");
-//     const fileInfo = await FileSystem.getInfoAsync(contentUri);
-//     console.log("fileInfo", fileInfo);
-//   } catch (error) {
-//     console.error(error);
-//     return null;
-//   }
-// };
-
 const checkStoragePermissionVerPost11 = async () => {
   if (Platform.OS === "android") {
     try {
@@ -230,6 +166,13 @@ const checkStoragePermissionVerPost11 = async () => {
 
 export const downloadArchivoAndroid = async (base64, mime, name) => {
   try {
+    name = name.replaceAll(" ", "_");
+    name = reemplazarTildes(name);
+    if (decodeURIComponent(escape(name))) {
+      name = decodeURIComponent(escape(name));
+    }
+    name = reemplazarTildes(name);
+
     const version = parseInt(Platform.Version, 10);
     const downloadsDir = `${FileSystem.documentDirectory}Archivosapp/`;
 
@@ -240,13 +183,7 @@ export const downloadArchivoAndroid = async (base64, mime, name) => {
       intermediates: true,
     });
 
-    let infoFile;
     if (version >= 30) {
-      // await checkStoragePermissionVerSup11(downloadsDir);
-      // fileUri = await convertContentUriToFileUri(direct, name);
-      // console.log("fileUri", fileUri);
-      // fileUri = direct + "/" + name;
-
       await FileSystem.writeAsStringAsync(fileUri, base64, {
         encoding: FileSystem.EncodingType.Base64,
       });
@@ -265,13 +202,6 @@ export const downloadArchivoAndroid = async (base64, mime, name) => {
         mimeType: mime,
         UTI: uti,
       });
-      infoFile = true;
-      // infoFile = {
-      //   file: fileUri,
-      //   mime: mime,
-      //   uti: uti,
-      //   status: true,
-      // };
     } else {
       // pedimos los permisos correspondente a la version
       await checkStoragePermissionVerPost11();
@@ -280,54 +210,21 @@ export const downloadArchivoAndroid = async (base64, mime, name) => {
         encoding: FileSystem.EncodingType.Base64,
       });
 
-      console.log("fileUri", fileUri);
-      console.log("mime", mime);
-
       await MediaLibrary.createAssetAsync(fileUri, {
         MimeType: mime,
         filename: name,
       });
-
-      infoFile = true;
     }
 
-    // const fileExists = await FileSystem.getInfoAsync(destinationUri);
-    // if (fileExists.exists) {
-    //   console.log("El archivo existe:", destinationUri);
-    // } else {
-    //   console.log("El archivo no existe:", destinationUri);
-    // }
-
-    // await MediaLibrary.saveToLibraryAsync(fileUri);
-
-    // await FileSystem.copyAsync({
-    //   from: fileUri,
-    //   to: destinationUri,
-    // });
-
-    // await MediaLibrary.create;
     return true;
   } catch (error) {
-    console.error(error);
+    console.log(error);
+    if (error.code == "ERR_PERMISSIONS") {
+      getMediaLibraryPermission();
+    }
     return false;
   }
 };
-
-// async function saveFileToDownloads() {
-//   const fileUri = FileSystem.documentDirectory + "archivo.pdf"; // Ruta y nombre del archivo a guardar
-//   const content = "Contenido del archivo PDF"; // Contenido del archivo que deseas guardar
-
-//   try {
-//     await FileSystem.writeAsStringAsync(fileUri, content);
-//     const downloadsUri = FileSystem.documentDirectory + "Descargas/"; // Ruta a la carpeta de descargas
-//     const newFileUri = downloadsUri + "archivo.pdf"; // Ruta y nombre del archivo en la carpeta de descargas
-
-//     await FileSystem.moveAsync({ from: fileUri, to: newFileUri });
-//     console.log("Archivo guardado en Descargas exitosamente");
-//   } catch (error) {
-//     console.log("Error al guardar el archivo:", error);
-//   }
-// }
 
 // export const downloadArchivoAndroid = async (base64, mime, name) => {
 //   let permReq;
