@@ -14,15 +14,29 @@ import Layout from "../../layout/Layout";
 import CardEinfo from "../../HomeScreen/homeView/CardEinfo";
 import ZendeskChat from "../../../utils/Zendesk";
 import { useFocusEffect } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // import * as Zendesk from "react-native-zendesk-messaging";
 
 const HelpBox = (props) => {
   const { navigation } = props;
   const [isShowChat, setIsShowChat] = useState(false);
+  const [infoUs, setInfoUs] = useState(null);
+
+  const getInfoUser = async () => {
+    let infoLog = await AsyncStorage.getItem("logged");
+    infoLog = JSON.parse(infoLog);
+    const info = {
+      name: infoLog.Nombre != undefined ? infoLog.Nombre : infoLog.nom1_emp,
+      email: infoLog.Correo,
+      phone: infoLog.Telefono,
+    };
+    setInfoUs(info);
+    setIsShowChat(true);
+  };
 
   useFocusEffect(
     React.useCallback(() => {
-      setIsShowChat(true);
+      getInfoUser();
       return () => {
         setIsShowChat(false);
       };
@@ -31,7 +45,9 @@ const HelpBox = (props) => {
 
   return (
     <Layout props={{ ...props }}>
-      <View style={styles.contenBox}>{isShowChat && <ZendeskChat />}</View>
+      <View style={styles.contenBox}>
+        {isShowChat && <ZendeskChat user={infoUs} title="text2" />}
+      </View>
     </Layout>
   );
 };
