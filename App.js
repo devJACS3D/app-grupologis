@@ -63,6 +63,7 @@ import WebViewScreen from "./components/common/webView/WebViewScreen";
 import { WebViewContextProvider } from "./context/webView/WebViewContext";
 import { Linking } from "react-native";
 import { Alert } from "react-native";
+import HelpBox from "./components/common/helpBox/HelpBox";
 
 const openAppSettings = () => {
   Linking.openSettings();
@@ -92,19 +93,19 @@ async function requestStoragePermission() {
       const writePermission =
         PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
 
-      console.log("readPermission", readPermission);
-      console.log("writePermission", writePermission);
-      console.log("version", Platform.Version);
-      // if (
-      //   granted["android.permission.READ_EXTERNAL_STORAGE"] ===
-      //     PermissionsAndroid.RESULTS.GRANTED &&
-      //   granted["android.permission.WRITE_EXTERNAL_STORAGE"] ===
-      //     PermissionsAndroid.RESULTS.GRANTED
-      // ) {
-      //   console.log("Storage permissions granted");
-      // } else {
-      //   console.log("Storage permissions denied");
-      // }
+      const granted = await PermissionsAndroid.requestMultiple([
+        readPermission,
+        writePermission,
+      ]);
+
+      if (
+        granted[readPermission] === PermissionsAndroid.RESULTS.GRANTED &&
+        granted[writePermission] === PermissionsAndroid.RESULTS.GRANTED
+      ) {
+        console.log("Storage permissions granted");
+      } else {
+        console.log("Storage permissions denied");
+      }
     } catch (err) {
       console.warn(err);
     }
@@ -159,6 +160,7 @@ const HomeScreens = () => {
       />
       <Tab.Screen name="MasterEmployee" component={MasterEmployee} />
       <Tab.Screen name="Capacitations" component={Capacitations} />
+      <Tab.Screen name="HelpBox" component={HelpBox} />
     </Tab.Navigator>
   );
 };

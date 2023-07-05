@@ -47,6 +47,12 @@ const Footer = (props) => {
       screen: "ProfileView",
       show: true,
     },
+    {
+      id: "bot",
+      icon: "user",
+      screen: "HelpBox",
+      show: true,
+    },
   ];
 
   const handleChangeScreen = (screen) => {

@@ -1,12 +1,16 @@
-import { get, getDes, post } from "./axiosInstance";
-import { decode, encode } from "base-64";
+import React, { useContext } from "react";
+import { Alert, Linking, PermissionsAndroid, Platform } from "react-native";
+
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import * as Permissions from "expo-permissions";
 import * as Sharing from "expo-sharing";
-import React, { useContext } from "react";
+
 import WebViewContext from "../context/webView/WebViewContext";
-import { Alert, Linking, PermissionsAndroid, Platform } from "react-native";
+import { get, getDes, post } from "./axiosInstance";
+import { decode, encode } from "base-64";
+
+const { StorageAccessFramework } = FileSystem;
 
 export function validatePhone(phone) {
   phone = phone.toString();
@@ -130,7 +134,7 @@ const openAppSettings = () => {
   Linking.openSettings();
 };
 
-function getMediaLibraryPermission() {
+function getMediaLibraryPermission(isConf = true) {
   Alert.alert(
     "Permiso denegado",
     "Se requiere permiso para acceder la biblioteca multimedia y asi poder guardar los documentos que usted descargue desde la aplicación",
@@ -139,7 +143,7 @@ function getMediaLibraryPermission() {
         text: "Aceptar",
         onPress: () => console.log("Botón Aceptar presionado"),
       },
-      { text: "Ir a Configuración", onPress: openAppSettings },
+      isConf && { text: "Ir a Configuración", onPress: openAppSettings },
     ]
   );
 }
@@ -158,11 +162,60 @@ const showRestartAlert = () => {
   );
 };
 
-const checkStoragePermission = async () => {
+// const checkStoragePermissionVerSup11 = async (uri) => {
+//   // pedimos el permiso para acceder a un directorio especifico
+//   const permi = await StorageAccessFramework.requestDirectoryPermissionsAsync(
+//     uri
+//   );
+//   if (!permi.granted) {
+//     getMediaLibraryPermission(false);
+//     return null;
+//   }
+//   return permi.directoryUri;
+// };
+
+const checkStoragePermissionVerSup11 = async (uri) => {
+  // pedimos el permiso para acceder a un directorio especifico
+  // const permi = await StorageAccessFramework.requestDirectoryPermissionsAsync(
+  //   uri
+  // );
+  // if (!permi.granted) {
+  //   getMediaLibraryPermission(false);
+  //   return null;
+  // }
+
+  // return permi.directoryUri;
+
+  const { status } = await PermissionsAndroid.request(
+    PermissionsAndroid.PERMISSIONS.ACTION_CREATE_DOCUMENT,
+    {
+      title: "Permission to create documents",
+      message: "This permission is required to create documents.",
+    }
+  );
+  console.log("permiso", status);
+  if (status != "granted") {
+    getMediaLibraryPermission(false);
+  }
+};
+
+// const convertContentUriToFileUri = async (contentUri, name) => {
+//   try {
+//     console.log("entro 1");
+//     const fileInfo = await FileSystem.getInfoAsync(contentUri);
+//     console.log("fileInfo", fileInfo);
+//   } catch (error) {
+//     console.error(error);
+//     return null;
+//   }
+// };
+
+const checkStoragePermissionVerPost11 = async () => {
   if (Platform.OS === "android") {
     try {
       const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
       if (status !== "granted") {
+        getMediaLibraryPermission();
         return false;
       } else {
         return true;
@@ -172,25 +225,66 @@ const checkStoragePermission = async () => {
     }
   }
 };
+
 export const downloadArchivoAndroid = async (base64, mime, name) => {
   try {
-    const downloadsDir = FileSystem.documentDirectory + "Descargas/";
+    const version = parseInt(Platform.Version, 10);
+    const downloadsDir = FileSystem.documentDirectory;
 
-    // Crear la carpeta de descargas si no existe
-    await FileSystem.makeDirectoryAsync(downloadsDir, { intermediates: true });
+    let fileUri = downloadsDir + name;
 
-    const fileUri = downloadsDir + name;
+    // Crear la carpeta de documentos si no existe
+    await FileSystem.makeDirectoryAsync(downloadsDir, {
+      intermediates: true,
+    });
+    await FileSystem.makeDirectoryAsync(downloadsDir, {
+      intermediates: true,
+    });
+
+    // pedimos los permisos correspondente a la version
+    if (version >= 30) {
+      await checkStoragePermissionVerSup11(downloadsDir);
+      // fileUri = await convertContentUriToFileUri(direct, name);
+      // console.log("fileUri", fileUri);
+      // fileUri = direct + "/" + name;
+    } else {
+      await checkStoragePermissionVerPost11();
+    }
 
     await FileSystem.writeAsStringAsync(fileUri, base64, {
       encoding: FileSystem.EncodingType.Base64,
     });
 
+    console.log("fileUri", fileUri);
+    console.log("mime", mime);
+
+    await MediaLibrary.createAssetAsync(fileUri, {
+      MimeType: mime,
+      filename: name,
+    });
+
+    // const fileExists = await FileSystem.getInfoAsync(destinationUri);
+    // if (fileExists.exists) {
+    //   console.log("El archivo existe:", destinationUri);
+    // } else {
+    //   console.log("El archivo no existe:", destinationUri);
+    // }
+
+    // await MediaLibrary.saveToLibraryAsync(fileUri);
+
+    // await FileSystem.copyAsync({
+    //   from: fileUri,
+    //   to: destinationUri,
+    // });
+
+    // await MediaLibrary.create;
     return true;
   } catch (error) {
     console.error(error);
     return false;
   }
 };
+
 // async function saveFileToDownloads() {
 //   const fileUri = FileSystem.documentDirectory + "archivo.pdf"; // Ruta y nombre del archivo a guardar
 //   const content = "Contenido del archivo PDF"; // Contenido del archivo que deseas guardar

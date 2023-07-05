@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Pressable, StyleSheet } from "react-native";
+import { Modal, Pressable, ScrollView, StyleSheet } from "react-native";
 import { Image, Text, View } from "react-native";
-import { colors, getFontStyles } from "../../../utils";
+import { colors, getFontStyles, heightPercentageToPx } from "../../../utils";
 import { htmlChatBot } from "../../../utils/functions";
 import imgBot from "../../../assets/images/components/helpBox/bot-info.png";
 import WebView from "react-native-webview";
+import Layout from "../../layout/Layout";
+import CardEinfo from "../../HomeScreen/homeView/CardEinfo";
+// import * as Zendesk from "react-native-zendesk-messaging";
 
-const HelpBox = () => {
+const HelpBox = (props) => {
+  const { navigation } = props;
   const [showBot, setShowBot] = useState(false);
 
   const getHelp = () => {
@@ -14,11 +18,27 @@ const HelpBox = () => {
     setShowBot(true);
   };
 
-  useEffect(() => {}, []);
+  // useEffect(() => {
+  //   Zendesk.initialize({
+  //     channelKey: "e1180f20-f981-4a7b-bbc7-6a42560dd999",
+  //   })
+  //     .then(() => console.log("success"))
+  //     .catch((error) => console.error("failed", error));
+  // }, []);
 
   return (
     <View>
-      <Pressable onPress={() => getHelp()}>
+      <Layout props={{ ...props }}>
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.contenBox}>
+            <View style={styles.contenBoxChat}></View>
+          </View>
+        </ScrollView>
+      </Layout>
+      {/* <Pressable onPress={() => getHelp()}>
         <View style={styles.contenBox}>
           <View style={styles.contenBoxImg}>
             <Image style={styles.image} source={imgBot} />
@@ -38,7 +58,7 @@ const HelpBox = () => {
             <WebView source={{ html: htmlChatBot }} style={{ flex: 1 }} />
           </Modal>
         )}
-      </View>
+      </View> */}
     </View>
   );
 };
@@ -47,15 +67,14 @@ export default HelpBox;
 
 const styles = StyleSheet.create({
   contenBox: {
-    width: "100%",
-    backgroundColor: colors.white,
-    borderRadius: 17,
-    paddingVertical: 13,
-    paddingHorizontal: 13,
-    alignItems: "center",
-    flexDirection: "row",
     display: "flex",
-    marginBottom: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  contenBoxChat: {
+    width: "100%",
+    backgroundColor: colors.red,
+    height: heightPercentageToPx(50),
   },
   contenBoxImg: {
     width: "35%",

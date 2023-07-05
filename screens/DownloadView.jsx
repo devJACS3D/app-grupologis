@@ -163,9 +163,9 @@ const Download = (props) => {
             </ScrollView>
           </View>
         </View>
-        <View style={styles.botContainer}>
+        {/* <View style={styles.botContainer}>
           <HelpBox />
-        </View>
+        </View> */}
         <View style={styles.newsDailyContainer}>
           <NewsDailyHome />
         </View>
