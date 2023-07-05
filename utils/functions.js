@@ -261,12 +261,17 @@ export const downloadArchivoAndroid = async (base64, mime, name) => {
           ? getMimeFromExtension(fileExtension)
           : mime;
 
-      infoFile = {
-        file: fileUri,
-        mime: mime,
-        uti: uti,
-        status: true,
-      };
+      await Sharing.shareAsync(fileUri, {
+        mimeType: mime,
+        UTI: uti,
+      });
+      infoFile = true;
+      // infoFile = {
+      //   file: fileUri,
+      //   mime: mime,
+      //   uti: uti,
+      //   status: true,
+      // };
     } else {
       // pedimos los permisos correspondente a la version
       await checkStoragePermissionVerPost11();
@@ -301,7 +306,7 @@ export const downloadArchivoAndroid = async (base64, mime, name) => {
     // });
 
     // await MediaLibrary.create;
-    return infoFile;
+    return true;
   } catch (error) {
     console.error(error);
     return false;
