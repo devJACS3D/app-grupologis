@@ -21,6 +21,10 @@ const imgDownloadDocuments = require("../assets/images/home/banners/imgDownloadD
 const imgBussines = require("../assets/images/auth/img-bussines-login.png");
 const imgEmployee = require("../assets/images/auth/img-employee.png");
 const loginImage = require("../assets/images/auth/login-img.png");
+const employeeNimage = require("../assets/images/home/banners/imgEmployees.png");
+const bannerTwo = require("../assets/images/home/banners/bannerTwo.png");
+const bannerThree = require("../assets/images/home/banners/bannerTwo.png");
+const bannerFour = require("../assets/images/home/banners/bannerFour.png");
 
 export const getFontStyles = (
   size,
@@ -81,10 +85,10 @@ export const images = {
     "https://firebasestorage.googleapis.com/v0/b/grupologis-app.appspot.com/o/images%2Ficons-sidebar-m-03.svg.png?alt=media&token=0e81171e-bf75-48a7-b321-542940756328",
   certificadoImage4:
     "https://firebasestorage.googleapis.com/v0/b/grupologis-app.appspot.com/o/images%2FGrupo%2063.png?alt=media&token=0d6c5a70-2c24-42a3-aa79-46e8096b3ddc",
-  employeeNimage: "../assets/images/home/banners/imgEmployees.png",
-  bannerTwo: "../assets/images/home/banners/bannerTwo.png",
-  bannerThree: "../assets/images/home/banners/bannerThree.png",
-  bannerFour: "../assets/images/home/banners/bannerFour.png",
+  employeeNimage: employeeNimage,
+  bannerTwo: bannerTwo,
+  bannerThree: bannerThree,
+  bannerFour: bannerFour,
   checkImage:
     "https://firebasestorage.googleapis.com/v0/b/grupologis-app.appspot.com/o/images%2FcheckImage.png?alt=media&token=66e7b9e5-9079-4dc8-829a-ebff3d983334",
 };
@@ -175,6 +179,17 @@ export const employeeDownloadables = [
     description:
       "Descargar tu hoja de vida sin necesidad de pedirlo a Grupologis",
   },
+  {
+    id: "rincapacidad",
+    title: "Registro de incapacidades",
+    description: "Accede aquí al enlace para registrar tus incapacidades.",
+  },
+  {
+    id: "adatos",
+    title: "Actualizar mis de datos",
+    description:
+      "Mantén tus datos actualizados para que estás al día con noticias, cambios y novedades.",
+  },
 ];
 export const businessDownloadables = [
   {
@@ -196,6 +211,12 @@ export const businessDownloadables = [
     id: "ausentism",
     title: "Ausentismos",
     description: "Ahora puedes descargar tus certificados desde la App",
+  },
+  {
+    id: "ndiscip",
+    title: "Reporte de novedades disciplinarias",
+    description:
+      "Accede aquí al enlace para registrar procesos disciplinarios.",
   },
 ];
 export const newsInfo = [
@@ -240,7 +261,7 @@ export const employeeManagement = [
   },
   {
     id: "novedai",
-    title: "Novedad ingresos",
+    title: "Orden de ingreso",
     description: "Ahora puedes generar una novedad de ingreso desde la App",
     // image: svg.
   },

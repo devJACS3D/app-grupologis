@@ -59,7 +59,8 @@ const styles = StyleSheet.create({
     fontFamily: "Volks-Serial-Light",
     color: colors.descriptionColors,
     ...getFontStyles(12, 0.9, 1),
-    flex: 1,
+
+    // height: 50,
   },
   downloadButton: {
     backgroundColor: colors.buttonsColor,

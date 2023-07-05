@@ -88,20 +88,11 @@ const Claim = (props) => {
     }
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      getQuejas();
-      return () => {
-        cancelarSolicitudesApi();
-        setLoaderProg(false);
-      };
-    }, [])
-  );
-
   const sendMailQueja = async (idQueja, empl, tipo) => {
     const info = `idQuejas=${idQueja}&tipousuarioId=${tipo}&IdUsuario=${empl}`;
     const path = "usuario/SendMailQuejas.php";
     const respApi = await fetchPost(path, info, 30000);
+    console.log("respApi mail", respApi);
     const { status, data } = respApi;
     if (status) {
       if (data === "TRUE") {
@@ -139,6 +130,7 @@ const Claim = (props) => {
     const info = `Asunto=${infoPqr.asunto}&Detalle=${infoPqr.description}&Empresa=${empSel}&IdUsuario=${codEmp}&tipousuarioId=${typeCli}`;
     const path = "usuario/getQuejas.php";
     const respApi = await fetchPost(path, info);
+    console.log("respApi guardar", respApi);
     const { status, data } = respApi;
     if (status) {
       if (data.Correcto === 1) {
@@ -176,10 +168,20 @@ const Claim = (props) => {
     setRefreshing(false);
   }, []);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      getQuejas();
+      return () => {
+        cancelarSolicitudesApi();
+        setLoaderProg(false);
+      };
+    }, [])
+  );
+
   return (
     <Layout props={{ ...props }}>
       <ViewTitleCard
-        title={"Quejas y reclamos"}
+        title={"PQR"}
         buttonText="  Nueva"
         onPressAction={() => setModal(!modal)}
       />
@@ -226,7 +228,7 @@ const Claim = (props) => {
                 }}
                 title="Su queja o reclamo ha sido enviada"
                 description="Recuerde estar pendiente a su correo para recibir la respuesta"
-                image={images.bannerFour}
+                image={images.checkImage}
               />
             )}
           </View>

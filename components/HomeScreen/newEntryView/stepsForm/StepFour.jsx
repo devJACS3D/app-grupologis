@@ -21,7 +21,7 @@ const StepFour = ({ formData, onComplete, completed }) => {
               {stepOneData.apellido} {stepOneData.segundoApellido}
             </Text>
 
-            <Text style={styles.textHead}>Correo electronico</Text>
+            <Text style={styles.textHead}>Correo electrónico</Text>
             <Text style={styles.textContent}>{stepOneData.email}</Text>
           </View>
           <View style={styles.resume}>

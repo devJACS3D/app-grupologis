@@ -21,13 +21,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoaderItemSwitchDark from "../common/loaders/LoaderItemSwitchDark";
 import { useFocusEffect } from "@react-navigation/core";
 import { cancelarSolicitudesApi, post } from "../../utils/axiosInstance";
+import { decode } from "base-64";
+import { fetchPost } from "../../utils/functions";
 
 const Code = ({ navigation }) => {
   let codeInputRef = useRef(null);
   const [code, setCode] = useState("");
   const [loader, setLoader] = useState(false);
-  const [msgReenv, setMsgReenv] = useState("Reenviar codigo");
+  const [loaderEmail, setLoaderEmail] = useState(false);
+  const [msgReenv, setMsgReenv] = useState("Enviar código sms");
   const [reenMensDis, setReenMensDis] = useState(true);
+  const [medioSedMens, setMedioSedMens] = useState("celular");
 
   const showToast = (smg, type) => {
     Toast.show({
@@ -38,10 +42,15 @@ const Code = ({ navigation }) => {
     });
   };
 
+  let timeout;
   const messageWaiting = (time) => {
-    setTimeout(() => {
-      showToast("El mensaje llega en menos de 2 min.", "success");
-    }, time); // 20 segundos = 20000
+    if (typeof time == "number") {
+      timeout = setTimeout(() => {
+        showToast("El mensaje llega en menos de 2 min.", "success");
+      }, time); // 20 segundos = 20000
+    } else if (typeof time === "boolean" && !time) {
+      clearTimeout(timeout);
+    }
   };
 
   const messageWaitingDis = (time) => {
@@ -61,7 +70,7 @@ const Code = ({ navigation }) => {
 
   const handleContinueToSelectBusiness = async () => {
     const codeVer = await AsyncStorage.getItem("code");
-
+    console.log("codigo", codeVer);
     if (code.length !== 4 || code != codeVer) {
       showToast("El código no es válido", "error");
       return;
@@ -83,10 +92,11 @@ const Code = ({ navigation }) => {
       if (status) {
         if (data.code) {
           showToast("Mensaje enviado correctamente", "success");
+          setMedioSedMens("celular");
           setReenMensDis(false);
           messageWaiting(20000);
           messageWaitingDis(120000);
-          setMsgReenv("Reenviar codigo");
+          setMsgReenv("Código sms");
           AsyncStorage.setItem("code", data.code);
           setLoader(false);
         } else {
@@ -96,7 +106,7 @@ const Code = ({ navigation }) => {
       } else {
         if (data == "limitExe") {
           showToast("El servicio demoro mas de lo normal", "error");
-          setMsgReenv("Reenviar");
+          setMsgReenv("Código sms");
           setLoader(false);
         } else if (data != "abortUs") {
           showToast("Error al enviar el codigo", "error");
@@ -108,10 +118,60 @@ const Code = ({ navigation }) => {
     }
   };
 
+  const resendCodeEmail = async () => {
+    setLoaderEmail(true);
+    const ident = await AsyncStorage.getItem("identi");
+    const type = await AsyncStorage.getItem("type");
+    const typeCli = type === "business" ? 2 : 1;
+
+    const path = "usuario/sendCodeEmail.php";
+    const body = `identificacion=${ident}&contactTipoClienteField=${typeCli}`;
+
+    const respApi = await fetchPost(path, body);
+    console.log("respApi", respApi);
+    const { status, data } = respApi;
+
+    if (status && data.status) {
+      const codeDec = decode(data.message.codigo);
+      const codeVer = codeDec.slice(3, -2);
+
+      await AsyncStorage.setItem("code", codeVer);
+      setMedioSedMens(data.message.correo);
+      showToast("Codigo reenviado correctamente", "success");
+      setLoaderEmail(false);
+      return;
+    }
+
+    if (status && !data.status) {
+      showToast(data.message, "error");
+      setLoaderEmail(false);
+      return;
+    }
+
+    if (!status && data == "limitExe") {
+      showToast("El servicio demoro mas de lo normal", "error");
+      setLoaderEmail(false);
+      return;
+    }
+
+    if (!status) {
+      showToast("Ocurrio un error en el servidor", "error");
+      setLoaderEmail(false);
+      return;
+    }
+  };
+
+  const additionalStyles = {
+    borderLeftWidth: 1,
+    borderLeftColor: colors.gray,
+  };
+
   useFocusEffect(
     React.useCallback(() => {
       return () => {
         cancelarSolicitudesApi();
+        messageWaiting(false);
+        setLoader(false);
       };
     }, [])
   );
@@ -126,7 +186,8 @@ const Code = ({ navigation }) => {
 
           <View style={styles.descriptionContainer}>
             <Text style={styles.welcomeDesc}>
-              Ingrese el código de 4 digitos que fue enviado a su celular.
+              Ingrese el código de 4 digitos que fue enviado a su {medioSedMens}
+              .
             </Text>
           </View>
         </View>
@@ -157,21 +218,44 @@ const Code = ({ navigation }) => {
             <Text style={{ color: colors.white }}>Ingresar</Text>
           </View>
         </Pressable>
-        <Pressable onPress={() => resendCode()}>
-          <View style={styles.asCodeSend}>
-            {!loader ? (
-              <Text
-                style={{
-                  color: !reenMensDis ? colors.gray : colors.blueIndicator,
-                }}
-              >
-                {msgReenv}
-              </Text>
-            ) : (
-              <LoaderItemSwitchDark />
-            )}
+        <View style={styles.contextButtReen}>
+          <View style={styles.reenvCode}>
+            <Pressable onPress={() => resendCode()}>
+              <View style={styles.asCodeSend}>
+                {!loader ? (
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: !reenMensDis ? colors.gray : colors.blueIndicator,
+                    }}
+                  >
+                    {msgReenv}
+                  </Text>
+                ) : (
+                  <LoaderItemSwitchDark />
+                )}
+              </View>
+            </Pressable>
           </View>
-        </Pressable>
+          <View style={styles.reenvCode}>
+            <Pressable onPress={() => resendCodeEmail()}>
+              <View style={[[styles.asCodeSend, additionalStyles]]}>
+                {!loaderEmail ? (
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: !reenMensDis ? colors.gray : colors.blueIndicator,
+                    }}
+                  >
+                    Código por correo
+                  </Text>
+                ) : (
+                  <LoaderItemSwitchDark />
+                )}
+              </View>
+            </Pressable>
+          </View>
+        </View>
       </View>
       <View style={styles.imageContainer}>
         <Image
@@ -204,10 +288,10 @@ const styles = StyleSheet.create({
     width: widthPercentageToPx(100),
   },
   logoImage: {
-    width: widthPercentageToPx(35),
+    width: widthPercentageToPx(36),
     height: heightPercentageToPx(9),
     marginTop: 50,
-    marginBottom: 50,
+    marginBottom: 40,
     overflow: "visible",
   },
   welcomeText: {
@@ -225,7 +309,7 @@ const styles = StyleSheet.create({
   welcomeDesc: {
     fontFamily: "Poppins-Regular",
     color: colors.descriptionColors,
-    marginTop: 20,
+    marginTop: 3,
     ...getFontStyles(14, 0.5, 0.9),
   },
   buttonsContainer: {
@@ -257,10 +341,21 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 20,
   },
+  contextButtReen: {
+    width: widthPercentageToPx(80),
+    display: "flex",
+    flexDirection: "row",
+    height: 60,
+    marginTop: 7,
+  },
+  reenvCode: {
+    flex: 1,
+    height: 100,
+  },
   asCodeSend: {
     fontFamily: "Poppins-Regular",
-    height: 55,
-    width: widthPercentageToPx(65),
+    height: 50,
+    textAlign: "center",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",

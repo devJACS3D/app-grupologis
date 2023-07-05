@@ -1,6 +1,6 @@
 {
   "name": "grupologis-app",
-  "version": "1.7.7",
+  "version": "1.7.8",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -25,6 +25,7 @@
     "expo-font": "~11.1.1",
     "expo-image-picker": "~14.1.1",
     "expo-media-library": "~15.2.3",
+    "expo-modules-core": "~1.2.7",
     "expo-permissions": "^14.1.1",
     "expo-screen-orientation": "~5.1.1",
     "expo-sharing": "~11.2.2",
@@ -44,6 +45,7 @@
     "react-native-toast-message": "^2.1.6",
     "react-native-toast-notifications": "^3.3.1",
     "react-native-webview": "11.26.0",
+    "react-native-zendesk-messaging": "^0.1.1",
     "rn-fetch-blob": "^0.12.0"
   },
   "devDependencies": {

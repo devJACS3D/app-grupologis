@@ -106,7 +106,7 @@ const MultiStepForm = ({ onConfirm, closeModal }) => {
         </Pressable>
         <Pressable onPress={() => handlePress()}>
           <View>
-            <Text style={styles.ttlFormStep}>NUEVA NOVEDADES INGRESO</Text>
+            <Text style={styles.ttlFormStep}>NUEVA ORDEN DE INGRESO</Text>
           </View>
         </Pressable>
       </View>

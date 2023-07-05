@@ -15,7 +15,16 @@ import {
 } from "../../../utils";
 const pixelDensity = parseInt(PixelRatio.get());
 
-const MainCardInfo = ({ firstTitle, secondTitle, description }) => {
+const MainCardInfo = ({
+  firstTitle,
+  secondTitle,
+  description,
+  image = null,
+}) => {
+  /*const imagePath = image
+    ? require(image)
+    : require("../../../assets/images/home/banners/imgEmployees.png");*/
+
   return (
     <View style={styles.cardContainer}>
       <View style={styles.infoContainer}>
@@ -30,10 +39,7 @@ const MainCardInfo = ({ firstTitle, secondTitle, description }) => {
           </View>
         </View>
       </View>
-      <Image
-        style={styles.workersImage}
-        source={require("../../../assets/images/home/banners/imgEmployees.png")}
-      />
+      <Image style={styles.workersImage} source={image} />
     </View>
   );
 };

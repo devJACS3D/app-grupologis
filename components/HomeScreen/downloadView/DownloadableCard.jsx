@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
+  Linking,
   Modal,
   PixelRatio,
   Pressable,
@@ -380,6 +381,18 @@ const DownloadableCard = ({ title, desc, image, id }) => {
         case "ausentism":
           setModal(true);
           break;
+        case "rincapacidad":
+          Linking.openURL("https://forms.office.com/r/hdJnqUvTZ0");
+          setShowForm("");
+          break;
+        case "adatos":
+          Linking.openURL("https://forms.office.com/r/VS0VGLmKwk");
+          setShowForm("");
+          break;
+        case "ndiscip":
+          Linking.openURL("https://forms.office.com/r/XzKHTNk6Zp");
+          setShowForm("");
+          break;
 
         default:
           break;
@@ -396,7 +409,11 @@ const DownloadableCard = ({ title, desc, image, id }) => {
         <Pressable onPress={() => setShowForm(id)}>
           <View style={styles.downloadButton}>
             <Text style={{ color: colors.light, fontFamily: "Volks-Bold" }}>
-              {reload ? "Reintentar" : "Descargar"}
+              {id == "rincapacidad" || id == "adatos" || id == "ndiscip"
+                ? "Acceder"
+                : reload
+                ? "Reintentar"
+                : "Descargar"}
             </Text>
           </View>
         </Pressable>

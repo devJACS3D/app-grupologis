@@ -28,7 +28,7 @@ const CapacitationsCard = (props) => {
   if (props.Estado == "Approve") {
     props.Estado = "Aprobar";
   } else if (props.Estado == "Realize") {
-    props.Estado = "Realizar";
+    props.Estado = "Realizado";
   }
 
   return (

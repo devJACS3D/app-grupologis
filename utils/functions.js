@@ -1,12 +1,16 @@
-import { get, getDes, post } from "./axiosInstance";
-import { decode, encode } from "base-64";
+import React, { useContext } from "react";
+import { Alert, Linking, PermissionsAndroid, Platform } from "react-native";
+
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import * as Permissions from "expo-permissions";
 import * as Sharing from "expo-sharing";
-import React, { useContext } from "react";
+
 import WebViewContext from "../context/webView/WebViewContext";
-import { Alert, Linking, PermissionsAndroid, Platform } from "react-native";
+import { get, getDes, post } from "./axiosInstance";
+import { decode, encode } from "base-64";
+
+const { StorageAccessFramework } = FileSystem;
 
 export function validatePhone(phone) {
   phone = phone.toString();
@@ -119,6 +123,7 @@ export async function fetchPost(path, body, limit = "") {
     body += `&token=${token.data}`;
     const encodedBody = encode(body);
     const data = `value=${carac[0]}${encodedBody}${carac[1]}`;
+    console.log("data", data);
     return await post(path, data, minSec);
   } else {
     return { status: false, data: token.data };
@@ -129,7 +134,7 @@ const openAppSettings = () => {
   Linking.openSettings();
 };
 
-function getMediaLibraryPermission() {
+function getMediaLibraryPermission(isConf = true) {
   Alert.alert(
     "Permiso denegado",
     "Se requiere permiso para acceder la biblioteca multimedia y asi poder guardar los documentos que usted descargue desde la aplicación",
@@ -138,30 +143,17 @@ function getMediaLibraryPermission() {
         text: "Aceptar",
         onPress: () => console.log("Botón Aceptar presionado"),
       },
-      { text: "Ir a Configuración", onPress: openAppSettings },
+      isConf && { text: "Ir a Configuración", onPress: openAppSettings },
     ]
   );
 }
 
-const showRestartAlert = () => {
-  Alert.alert(
-    "Reiniciar la aplicación",
-    "Es necesario reiniciar la aplicación para que los cambios de permisos surtan efecto.",
-    [
-      {
-        text: "Aceptar",
-        onPress: () => {},
-      },
-    ],
-    { cancelable: false }
-  );
-};
-
-const checkStoragePermission = async () => {
+const checkStoragePermissionVerPost11 = async () => {
   if (Platform.OS === "android") {
     try {
       const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
       if (status !== "granted") {
+        getMediaLibraryPermission();
         return false;
       } else {
         return true;
@@ -173,7 +165,6 @@ const checkStoragePermission = async () => {
 };
 
 export const downloadArchivoAndroid = async (base64, mime, name) => {
-  let permReq;
   try {
     name = name.replaceAll(" ", "_");
     name = reemplazarTildes(name);
@@ -181,33 +172,96 @@ export const downloadArchivoAndroid = async (base64, mime, name) => {
       name = decodeURIComponent(escape(name));
     }
     name = reemplazarTildes(name);
-    const fileUri = FileSystem.cacheDirectory + name;
 
-    const data = `data:${mime};base64,${base64}`;
-    const base64Code = data.split(`data:${mime};base64,`)[1];
+    const version = parseInt(Platform.Version, 10);
+    const downloadsDir = `${FileSystem.documentDirectory}Archivosapp/`;
 
-    // Verificar los permisos antes de descargar el archivo
-    permReq = await checkStoragePermission();
+    let fileUri = downloadsDir + name;
 
-    await FileSystem.writeAsStringAsync(fileUri, base64Code, {
-      encoding: FileSystem.EncodingType.Base64,
+    // Crear la carpeta de Archivosapp si no existe
+    await FileSystem.makeDirectoryAsync(downloadsDir, {
+      intermediates: true,
     });
-    await MediaLibrary.saveToLibraryAsync(fileUri);
+
+    if (version >= 30) {
+      await FileSystem.writeAsStringAsync(fileUri, base64, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      const fileExtension = name
+        .substring(name.lastIndexOf(".") + 1)
+        .toLowerCase();
+
+      const uti = getUTIFromExtension(fileExtension);
+      mime =
+        mime == "application/octet-stream"
+          ? getMimeFromExtension(fileExtension)
+          : mime;
+
+      await Sharing.shareAsync(fileUri, {
+        mimeType: mime,
+        UTI: uti,
+      });
+    } else {
+      // pedimos los permisos correspondente a la version
+      await checkStoragePermissionVerPost11();
+
+      await FileSystem.writeAsStringAsync(fileUri, base64, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      await MediaLibrary.createAssetAsync(fileUri, {
+        MimeType: mime,
+        filename: name,
+      });
+    }
 
     return true;
   } catch (error) {
     console.log(error);
     if (error.code == "ERR_PERMISSIONS") {
-      if (permReq) {
-        // reiniciar aplicacion
-        showRestartAlert();
-      } else {
-        getMediaLibraryPermission();
-      }
+      getMediaLibraryPermission();
     }
     return false;
   }
 };
+
+// export const downloadArchivoAndroid = async (base64, mime, name) => {
+//   let permReq;
+//   try {
+//     name = name.replaceAll(" ", "_");
+//     name = reemplazarTildes(name);
+//     if (decodeURIComponent(escape(name))) {
+//       name = decodeURIComponent(escape(name));
+//     }
+//     name = reemplazarTildes(name);
+//     const fileUri = FileSystem.cacheDirectory + name;
+
+//     const data = `data:${mime};base64,${base64}`;
+//     const base64Code = data.split(`data:${mime};base64,`)[1];
+
+//     // Verificar los permisos antes de descargar el archivo
+//     permReq = await checkStoragePermission();
+
+//     await FileSystem.writeAsStringAsync(fileUri, base64Code, {
+//       encoding: FileSystem.EncodingType.Base64,
+//     });
+//     await MediaLibrary.saveToLibraryAsync(fileUri);
+
+//     return true;
+//   } catch (error) {
+//     console.log(error);
+//     if (error.code == "ERR_PERMISSIONS") {
+//       if (permReq) {
+//         // reiniciar aplicacion
+//         showRestartAlert();
+//       } else {
+//         getMediaLibraryPermission();
+//       }
+//     }
+//     return false;
+//   }
+// };
 
 // export const downloadArchivoAndroid = async (base64, mime, name) => {
 //   try {
@@ -341,3 +395,32 @@ export const downloadArchivoIOS = async (base64, mime, name) => {
   }
 };
 */
+
+export const htmlChatBot = `
+<html>
+  <body>
+    <p>Hola</p>
+    <script type="text/javascript" src="https://static.zdassets.com/ekr/snippet.js?key=e1180f20-f981-4a7b-bbc7-6a42560dd999"></script>
+
+    <script type="text/javascript">
+      window.zESettings = {
+        webWidget: {
+          chat: {
+            zIndex: 10000
+          }
+        }
+      };
+
+      function openChat() {
+        setTimeout(function() {
+          zE("messenger", "open");
+          alert('llego')
+        }, 5000); // 5 segundos
+      }
+
+      openChat();
+    </script>
+      
+  </body>
+</html>
+      `;

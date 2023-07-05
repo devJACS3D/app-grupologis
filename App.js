@@ -63,6 +63,7 @@ import WebViewScreen from "./components/common/webView/WebViewScreen";
 import { WebViewContextProvider } from "./context/webView/WebViewContext";
 import { Linking } from "react-native";
 import { Alert } from "react-native";
+import HelpBox from "./components/common/helpBox/HelpBox";
 
 const openAppSettings = () => {
   Linking.openSettings();
@@ -85,23 +86,29 @@ async function getMediaLibraryPermission() {
   }
 }
 async function requestStoragePermission() {
-  try {
-    const granted = await PermissionsAndroid.requestMultiple([
-      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-    ]);
-    if (
-      granted["android.permission.READ_EXTERNAL_STORAGE"] ===
-        PermissionsAndroid.RESULTS.GRANTED &&
-      granted["android.permission.WRITE_EXTERNAL_STORAGE"] ===
-        PermissionsAndroid.RESULTS.GRANTED
-    ) {
-      console.log("Storage permissions granted");
-    } else {
-      console.log("Storage permissions denied");
+  if (Platform.OS === "android") {
+    try {
+      const readPermission =
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE;
+      const writePermission =
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
+
+      const granted = await PermissionsAndroid.requestMultiple([
+        readPermission,
+        writePermission,
+      ]);
+
+      if (
+        granted[readPermission] === PermissionsAndroid.RESULTS.GRANTED &&
+        granted[writePermission] === PermissionsAndroid.RESULTS.GRANTED
+      ) {
+        console.log("Storage permissions granted");
+      } else {
+        console.log("Storage permissions denied");
+      }
+    } catch (err) {
+      console.warn(err);
     }
-  } catch (err) {
-    console.warn(err);
   }
 }
 
@@ -153,6 +160,7 @@ const HomeScreens = () => {
       />
       <Tab.Screen name="MasterEmployee" component={MasterEmployee} />
       <Tab.Screen name="Capacitations" component={Capacitations} />
+      <Tab.Screen name="HelpBox" component={HelpBox} />
     </Tab.Navigator>
   );
 };
@@ -184,7 +192,7 @@ export default function App() {
   };
 
   useEffect(() => {
-    getMediaLibraryPermission();
+    // getMediaLibraryPermission();
     requestStoragePermission();
     lockScreenOrientation();
   }, []);
