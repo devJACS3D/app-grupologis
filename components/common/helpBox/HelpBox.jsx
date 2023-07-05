@@ -13,16 +13,25 @@ import WebView from "react-native-webview";
 import Layout from "../../layout/Layout";
 import CardEinfo from "../../HomeScreen/homeView/CardEinfo";
 import ZendeskChat from "../../../utils/Zendesk";
+import { useFocusEffect } from "@react-navigation/native";
 // import * as Zendesk from "react-native-zendesk-messaging";
 
 const HelpBox = (props) => {
   const { navigation } = props;
+  const [isShowChat, setIsShowChat] = useState(false);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setIsShowChat(true);
+      return () => {
+        setIsShowChat(false);
+      };
+    }, [])
+  );
 
   return (
     <Layout props={{ ...props }}>
-      <View style={styles.contenBox}>
-        <ZendeskChat />
-      </View>
+      <View style={styles.contenBox}>{isShowChat && <ZendeskChat />}</View>
     </Layout>
   );
 };

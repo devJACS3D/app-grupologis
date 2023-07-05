@@ -43,7 +43,7 @@ class ZendeskChat extends Component {
                 <script id="ze-snippet"
                     src="https://static.zdassets.com/ekr/snippet.js?key=${zendesk_chat_key}"> </script>
                 <!-- End of Zendesk Widget script -->
-                <style type="text/css">html { background: #000; }</style>
+                <style type="text/css">html { background: transparent; }</style>
             </head>
             <body>
                 <script>
@@ -56,6 +56,7 @@ class ZendeskChat extends Component {
                         // zE('webWidget', 'identify', { name: "${user.name}", email: "${user.email}" });
                         zE('messenger', 'open');
                         zE('webWidget:on', 'close', () => window.ReactNativeWebView.postMessage("close"));
+                        
                     });
                 </script>
             </body>

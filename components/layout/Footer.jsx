@@ -1,4 +1,4 @@
-import { Feather } from "@expo/vector-icons";
+import { Feather, AntDesign } from "@expo/vector-icons";
 import React, { useContext, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { colors, heightPercentageToPx, widthPercentageToPx } from "../../utils";
@@ -49,7 +49,7 @@ const Footer = (props) => {
     },
     {
       id: "bot",
-      icon: "user",
+      icon: "customerservice",
       screen: "HelpBox",
       show: true,
     },
@@ -66,11 +66,19 @@ const Footer = (props) => {
         .map((sc) => (
           <Pressable key={sc.id} onPress={() => handleChangeScreen(sc.screen)}>
             <View style={styles.navbarOption(screen === sc.screen)}>
-              <Feather
-                name={sc.icon}
-                size={24}
-                color={screen === sc.screen ? "white" : "#999AF6"}
-              />
+              {sc.id != "bot" ? (
+                <Feather
+                  name={sc.icon}
+                  size={24}
+                  color={screen === sc.screen ? "white" : "#999AF6"}
+                />
+              ) : (
+                <AntDesign
+                  name={sc.icon}
+                  size={24}
+                  color={screen === sc.screen ? "white" : "#999AF6"}
+                />
+              )}
             </View>
           </Pressable>
         ))}
