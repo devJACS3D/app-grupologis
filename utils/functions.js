@@ -196,7 +196,9 @@ const checkStoragePermissionVerSup11 = async (uri) => {
   console.log("permiso", status);
   if (status != "granted") {
     getMediaLibraryPermission(false);
+    return false;
   }
+  return true;
 };
 
 // const convertContentUriToFileUri = async (contentUri, name) => {
@@ -229,39 +231,60 @@ const checkStoragePermissionVerPost11 = async () => {
 export const downloadArchivoAndroid = async (base64, mime, name) => {
   try {
     const version = parseInt(Platform.Version, 10);
-    const downloadsDir = FileSystem.documentDirectory;
+    const downloadsDir = `${FileSystem.documentDirectory}Archivosapp/`;
 
     let fileUri = downloadsDir + name;
 
-    // Crear la carpeta de documentos si no existe
-    await FileSystem.makeDirectoryAsync(downloadsDir, {
-      intermediates: true,
-    });
+    // Crear la carpeta de Archivosapp si no existe
     await FileSystem.makeDirectoryAsync(downloadsDir, {
       intermediates: true,
     });
 
-    // pedimos los permisos correspondente a la version
+    let infoFile;
     if (version >= 30) {
-      await checkStoragePermissionVerSup11(downloadsDir);
+      // await checkStoragePermissionVerSup11(downloadsDir);
       // fileUri = await convertContentUriToFileUri(direct, name);
       // console.log("fileUri", fileUri);
       // fileUri = direct + "/" + name;
+
+      await FileSystem.writeAsStringAsync(fileUri, base64, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      const fileExtension = name
+        .substring(name.lastIndexOf(".") + 1)
+        .toLowerCase();
+
+      const uti = getUTIFromExtension(fileExtension);
+      mime =
+        mime == "application/octet-stream"
+          ? getMimeFromExtension(fileExtension)
+          : mime;
+
+      infoFile = {
+        file: fileUri,
+        mime: mime,
+        uti: uti,
+        status: true,
+      };
     } else {
+      // pedimos los permisos correspondente a la version
       await checkStoragePermissionVerPost11();
+
+      await FileSystem.writeAsStringAsync(fileUri, base64, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      console.log("fileUri", fileUri);
+      console.log("mime", mime);
+
+      await MediaLibrary.createAssetAsync(fileUri, {
+        MimeType: mime,
+        filename: name,
+      });
+
+      infoFile = true;
     }
-
-    await FileSystem.writeAsStringAsync(fileUri, base64, {
-      encoding: FileSystem.EncodingType.Base64,
-    });
-
-    console.log("fileUri", fileUri);
-    console.log("mime", mime);
-
-    await MediaLibrary.createAssetAsync(fileUri, {
-      MimeType: mime,
-      filename: name,
-    });
 
     // const fileExists = await FileSystem.getInfoAsync(destinationUri);
     // if (fileExists.exists) {
@@ -278,7 +301,7 @@ export const downloadArchivoAndroid = async (base64, mime, name) => {
     // });
 
     // await MediaLibrary.create;
-    return true;
+    return infoFile;
   } catch (error) {
     console.error(error);
     return false;

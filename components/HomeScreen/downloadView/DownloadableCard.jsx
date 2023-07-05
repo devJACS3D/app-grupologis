@@ -315,11 +315,13 @@ const DownloadableCard = ({ title, desc, image, id }) => {
   const dowArchivo = async (data, next = "") => {
     let archDes;
     if (Platform.OS === "android") {
-      archDes = await downloadArchivoAndroid(
+      const respAnd = await downloadArchivoAndroid(
         data.file,
         data.mimetype,
         data.name
       );
+      setNameUtiView(respAnd);
+      archDes = respAnd.status;
     } else {
       const respIOS = await downloadArchivoIOS(
         data.file,
