@@ -70,21 +70,32 @@ const openAppSettings = () => {
 };
 
 async function getMediaLibraryPermission() {
-  const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
-  if (status !== "granted") {
-    Alert.alert(
-      "Permiso denegado",
-      "Se requiere permiso para acceder la biblioteca multimedia y asi poder guardar los documentos que usted descargue desde la aplicación",
-      [
-        {
-          text: "Aceptar",
-          onPress: () => console.log("Botón Aceptar presionado"),
-        },
-        { text: "Ir a Configuración", onPress: openAppSettings },
-      ]
-    );
+  if (
+    Platform.OS === "ios" ||
+    (Platform.OS === "android" && parseInt(Platform.Version, 10) < 30)
+  ) {
+    console.log("entro permiso");
+    const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+    if (status !== "granted") {
+      const msg =
+        "Se requiere permiso para acceder la biblioteca multimedia y asi poder guardar los documentos que usted descargue desde la aplicación";
+      Alert.alert(
+        "Permiso denegado",
+        Platform.OS === "ios"
+          ? "Se requiere permiso para acceder la biblioteca multimedia y asi poder seleccionar imagenes"
+          : `${msg}.`,
+        [
+          {
+            text: "Aceptar",
+            onPress: () => console.log("Botón Aceptar presionado"),
+          },
+          { text: "Ir a Configuración", onPress: openAppSettings },
+        ]
+      );
+    }
   }
 }
+
 async function requestStoragePermission() {
   if (Platform.OS === "android") {
     try {
@@ -192,7 +203,7 @@ export default function App() {
   };
 
   useEffect(() => {
-    // getMediaLibraryPermission();
+    getMediaLibraryPermission();
     requestStoragePermission();
     lockScreenOrientation();
   }, []);

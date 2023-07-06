@@ -123,7 +123,7 @@ export async function fetchPost(path, body, limit = "") {
     body += `&token=${token.data}`;
     const encodedBody = encode(body);
     const data = `value=${carac[0]}${encodedBody}${carac[1]}`;
-    console.log("data", data);
+
     return await post(path, data, minSec);
   } else {
     return { status: false, data: token.data };
@@ -135,9 +135,13 @@ const openAppSettings = () => {
 };
 
 function getMediaLibraryPermission(isConf = true) {
+  const msg =
+    "Se requiere permiso para acceder la biblioteca multimedia y asi poder guardar los documentos que usted descargue desde la aplicación";
   Alert.alert(
     "Permiso denegado",
-    "Se requiere permiso para acceder la biblioteca multimedia y asi poder guardar los documentos que usted descargue desde la aplicación",
+    Platform.OS === "ios"
+      ? `${msg}, dandole el permiso a las fotos`
+      : `${msg}.`,
     [
       {
         text: "Aceptar",
@@ -149,18 +153,16 @@ function getMediaLibraryPermission(isConf = true) {
 }
 
 const checkStoragePermissionVerPost11 = async () => {
-  if (Platform.OS === "android") {
-    try {
-      const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
-      if (status !== "granted") {
-        getMediaLibraryPermission();
-        return false;
-      } else {
-        return true;
-      }
-    } catch (err) {
-      console.warn(err);
+  try {
+    const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+    if (status !== "granted") {
+      getMediaLibraryPermission();
+      return false;
+    } else {
+      return true;
     }
+  } catch (err) {
+    console.warn(err);
   }
 };
 
@@ -311,16 +313,9 @@ export const downloadArchivoIOS = async (base64, mime, name) => {
       encoding: FileSystem.EncodingType.Base64,
     });
 
-    const { status: mediaLibraryStatus } = await Permissions.getAsync(
-      Permissions.MEDIA_LIBRARY
-    );
-    if (mediaLibraryStatus !== "granted") {
-      console.log(
-        "No se otorgó permiso para acceder a la biblioteca de medios"
-      );
-      alert("No se otorgó permiso para acceder a la biblioteca de medios");
-      return false;
-    }
+    // pedimos el permiso para guardar el archivo
+    // await checkStoragePermissionVerPost11();
+
     const fileExtension = name
       .substring(name.lastIndexOf(".") + 1)
       .toLowerCase();
