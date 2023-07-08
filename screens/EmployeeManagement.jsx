@@ -1,5 +1,5 @@
 import { default as React } from "react";
-import { Platform, ScrollView, StyleSheet, View } from "react-native";
+import { Linking, Platform, ScrollView, StyleSheet, View } from "react-native";
 import EmployeeMcard from "../components/HomeScreen/EmployeeManagement/EmployeeMcard";
 import MainCardInfo from "../components/HomeScreen/homeView/MainCardInfo";
 import Layout from "../components/layout/Layout";
@@ -14,6 +14,7 @@ import SvgHvida from "../assets/images/components/HomeScreen/EmployeeManagement/
 import SvgMaestroE from "../assets/images/components/HomeScreen/EmployeeManagement/SvgMaestroE";
 import SvgNovedaI from "../assets/images/components/HomeScreen/EmployeeManagement/SvgNovedaI";
 import SvgCapacitations from "../assets/images/home/downloadView/SvgCapacitations";
+import SvgNdisciplinarias from "../assets/images/home/downloadView/ndisciplinarias";
 import { useFocusEffect } from "@react-navigation/core";
 import { cancelarSolicitudesApi } from "../utils/axiosInstance";
 
@@ -27,6 +28,8 @@ const displaySvg = (type) => {
       return <SvgMaestroE />;
     case "capacit":
       return <SvgCapacitations />;
+    case "ndiscip":
+      return <SvgNdisciplinarias />;
     default:
       return null;
   }
@@ -49,6 +52,8 @@ const EmployeeManagement = (props) => {
         navigation.navigate("MasterEmployee");
       case "capacit":
         navigation.navigate("Capacitations");
+      case "ndiscip":
+        Linking.openURL("https://forms.office.com/r/XzKHTNk6Zp");
         break;
       default:
         break;

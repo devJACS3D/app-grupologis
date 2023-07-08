@@ -43,21 +43,20 @@ class ZendeskChat extends Component {
                 <script id="ze-snippet"
                     src="https://static.zdassets.com/ekr/snippet.js?key=${zendesk_chat_key}"> </script>
                 <!-- End of Zendesk Widget script -->
-                <style type="text/css">html { background: transparent; }</style>
+                <style type="text/css">html { background: transparent; } button[aria-label="Cerrar"] {display: none !important;}</style>
             </head>
             <body>
                 <script>
-                    document.addEventListener( 'DOMContentLoaded', function( event ) {
-                        // zE('webWidget', 'prefill', {
-                        //   name: { value: "${user.name}", readOnly: true },
-                        //   email: { value: "${user.email}", readOnly: true },
-                        //   phone: { value: "${user.phone}", readOnly: true }
-                        // });
-                        // zE('webWidget', 'identify', { name: "${user.name}", email: "${user.email}" });
-                        zE('messenger', 'open');
-                        zE('webWidget:on', 'close', () => window.ReactNativeWebView.postMessage("close"));
-                        
-                    });
+                  document.addEventListener( 'DOMContentLoaded', function( event ) {
+                    // zE('webWidget', 'prefill', {
+                    //   name: { value: "${user.name}", readOnly: true },
+                    //   email: { value: "${user.email}", readOnly: true },
+                    //   phone: { value: "${user.phone}", readOnly: true }
+                    // });
+                    // zE('webWidget', 'identify', { name: "${user.name}", email: "${user.email}" });
+                    zE('messenger', 'open');
+                    zE('webWidget:on', 'close', () => window.ReactNativeWebView.postMessage("close"));
+                  });
                 </script>
             </body>
         </html>

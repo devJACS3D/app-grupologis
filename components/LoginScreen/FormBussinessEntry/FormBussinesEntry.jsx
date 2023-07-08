@@ -133,6 +133,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     height: 50,
     marginTop: 20,
+    width: widthPercentageToPx(70),
   },
   selectText: {
     // paddingHorizontal: 20,

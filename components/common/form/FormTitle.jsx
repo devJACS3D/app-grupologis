@@ -6,7 +6,7 @@ const FormTitle = ({ title, subtitle, description }) => {
   return (
     <View style={styles.titlesContainer}>
       <Text style={styles.welcomeText}>{title}</Text>
-      <Text style={styles.subtitle}>{subtitle}</Text>
+      {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
       {description && <Text style={styles.welcomeDesc}>{description}</Text>}
     </View>
   );

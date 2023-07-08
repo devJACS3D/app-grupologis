@@ -1,4 +1,9 @@
-import { Feather, AntDesign } from "@expo/vector-icons";
+import {
+  Feather,
+  AntDesign,
+  FontAwesome5,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import React, { useContext, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { colors, heightPercentageToPx, widthPercentageToPx } from "../../utils";
@@ -19,13 +24,13 @@ const Footer = (props) => {
     },
     {
       id: "employesManager",
-      icon: "briefcase",
+      icon: "users",
       screen: "EmployeeManagement",
       show: role === "business",
     },
     {
       id: "clientsInvoices",
-      icon: "book",
+      icon: "attach-money",
       screen: "ClientsInvoices",
       show: role === "business",
     },
@@ -66,17 +71,23 @@ const Footer = (props) => {
         .map((sc) => (
           <Pressable key={sc.id} onPress={() => handleChangeScreen(sc.screen)}>
             <View style={styles.navbarOption(screen === sc.screen)}>
-              {sc.id != "bot" ? (
+              {sc.id == "clientsInvoices" ? (
+                <MaterialIcons
+                  name={sc.icon}
+                  size={24}
+                  color={screen === sc.screen ? "#1A68FC" : "#fff"}
+                />
+              ) : sc.id != "bot" ? (
                 <Feather
                   name={sc.icon}
                   size={24}
-                  color={screen === sc.screen ? "white" : "#999AF6"}
+                  color={screen === sc.screen ? "#1A68FC" : "#fff"}
                 />
               ) : (
                 <AntDesign
                   name={sc.icon}
                   size={24}
-                  color={screen === sc.screen ? "white" : "#999AF6"}
+                  color={screen === sc.screen ? "#1A68FC" : colors.white}
                 />
               )}
             </View>
@@ -99,7 +110,7 @@ const styles = StyleSheet.create({
     width: widthPercentageToPx(90),
     height: 52,
 
-    backgroundColor: colors.white,
+    backgroundColor: "#1A68FC",
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
@@ -111,7 +122,7 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 40,
-    backgroundColor: isSelected ? "#999AF6" : colors.white,
+    backgroundColor: isSelected ? colors.white : "#1A68FC",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",

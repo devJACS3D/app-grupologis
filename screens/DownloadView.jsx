@@ -32,8 +32,8 @@ import SvgAusentism from "../assets/images/home/downloadView/SvgAusentism";
 import SvgCapacitations from "../assets/images/home/downloadView/SvgCapacitations";
 import SvgHumanResourcesIndicator from "../assets/images/home/downloadView/SvgHumanResourcesIndicator";
 import SvgAdatos from "../assets/images/home/downloadView/adatos";
-import SvgNdisciplinarias from "../assets/images/home/downloadView/ndisciplinarias";
 import SvgRincapacidad from "../assets/images/home/downloadView/rincapacidad";
+import SvgHvida from "../assets/images/components/HomeScreen/EmployeeManagement/SvgHvida";
 
 import LoaderProgContext, {
   LoaderProgContextProvider,
@@ -61,8 +61,8 @@ const displaySvg = (type) => {
       return <SvgCapacitations />;
     case "ausentism":
       return <SvgAusentism />;
-    case "ndiscip":
-      return <SvgNdisciplinarias />;
+    case "hvida":
+      return <SvgHvida />;
     case "rincapacidad":
       return <SvgRincapacidad />;
     case "adatos":
@@ -73,6 +73,7 @@ const displaySvg = (type) => {
 };
 
 const Download = (props) => {
+  const { navigation } = props;
   const { userData } = useContext(authContext);
   const [dataCards, setDataCards] = useState(
     userData.role === "employee" ? employeeDownloadables : businessDownloadables
@@ -156,6 +157,7 @@ const Download = (props) => {
                       image={displaySvg(e.id)}
                       title={e.title}
                       id={e.id}
+                      navigation={navigation}
                     />
                   </View>
                 ))}

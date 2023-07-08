@@ -11,6 +11,7 @@ import { Feather } from "@expo/vector-icons";
 import {
   colors,
   heightPercentageToPx,
+  listAsuntoPQR,
   widthPercentageToPx,
 } from "../../../utils";
 import GLButton from "../../common/buttons/GLButton";
@@ -18,6 +19,7 @@ import FormTitle from "../../common/form/FormTitle";
 import Toast from "react-native-toast-message";
 import LoaderItemSwitch from "../../common/loaders/LoaderItemSwitch";
 import { useFocusEffect } from "@react-navigation/native";
+import FormuBussines from "../../LoginScreen/FormBussinessEntry/FormBussinesEntry";
 
 const Form = ({ closeModal, onConfirm }) => {
   const [loader, setLoader] = useState(false);
@@ -68,19 +70,17 @@ const Form = ({ closeModal, onConfirm }) => {
       <Pressable onPress={handlePress}>
         <FormTitle
           title={"Nueva PQR"}
-
           description={
             "Puedes interponer una queja o reclamo por este medio o hacer seguimiento de las mismas"
           }
         />
 
         <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.titleContainer}
-            placeholder="Selecciona el asunto"
-            value={infoForm.asunto}
-            onChangeText={(asu) => setInfoForm({ ...infoForm, asunto: asu })}
-          ></TextInput>
+          <FormuBussines
+            title="Selecciona el asunto"
+            list={listAsuntoPQR}
+            onOptionSel={(asu) => setInfoForm({ ...infoForm, asunto: asu })}
+          />
           <TextInput
             style={styles.descriptionContainer}
             placeholder="Cuéntanos más..."
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    gap: 10,
+    gap: 11,
   },
 
   titleContainer: {

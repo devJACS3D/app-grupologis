@@ -44,7 +44,7 @@ const ResumeView = (props) => {
           showButton={true}
           showInput={true}
           onPressAction={() => sendInputChange(identif)}
-          handleGoBack={() => navigation.navigate("EmployeeManagement")}
+          handleGoBack={() => navigation.navigate("DownloadView")}
           onInputChange={handleInputChange}
         />
         <ResumeList idenHoja={sendIdent} />

@@ -162,6 +162,7 @@ const BusinessE = ({ navigation }) => {
     }, [])
   );
 
+  console.log("businessOptionsNew", businessOptionsNew);
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}

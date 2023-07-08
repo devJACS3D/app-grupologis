@@ -30,7 +30,7 @@ import MultipleDownloads from "./MultipleDownloads";
 import { ScrollView } from "react-native";
 const pixelDensity = parseInt(PixelRatio.get());
 
-const DownloadableCard = ({ title, desc, image, id }) => {
+const DownloadableCard = ({ title, desc, image, id, navigation }) => {
   const [modal, setModal] = useState(false);
   const [showForm, setShowForm] = useState("");
   const [reload, setReload] = useState(false);
@@ -389,8 +389,8 @@ const DownloadableCard = ({ title, desc, image, id }) => {
           Linking.openURL("https://forms.office.com/r/VS0VGLmKwk");
           setShowForm("");
           break;
-        case "ndiscip":
-          Linking.openURL("https://forms.office.com/r/XzKHTNk6Zp");
+        case "hvida":
+          navigation.navigate("ResumeView");
           setShowForm("");
           break;
 
@@ -409,8 +409,10 @@ const DownloadableCard = ({ title, desc, image, id }) => {
         <Pressable onPress={() => setShowForm(id)}>
           <View style={styles.downloadButton}>
             <Text style={{ color: colors.light, fontFamily: "Volks-Bold" }}>
-              {id == "rincapacidad" || id == "adatos" || id == "ndiscip"
+              {id == "rincapacidad" || id == "adatos"
                 ? "Acceder"
+                : id == "hvida"
+                ? "Buscar"
                 : reload
                 ? "Reintentar"
                 : "Descargar"}

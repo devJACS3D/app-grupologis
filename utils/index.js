@@ -213,11 +213,17 @@ export const businessDownloadables = [
     description: "Ahora puedes descargar tus certificados desde la App",
   },
   {
-    id: "ndiscip",
-    title: "Reporte de novedades disciplinarias",
-    description:
-      "Accede aquí al enlace para registrar procesos disciplinarios.",
+    id: "hvida",
+    title: "Hoja de vida",
+    description: "Ahora puedes descargar las hojas de vida de tus empleados",
+    //image: svg.
   },
+  // {
+  //   id: "ndiscip",
+  //   title: "Reporte de novedades disciplinarias",
+  //   description:
+  //     "Accede aquí al enlace para registrar procesos disciplinarios.",
+  // },
 ];
 export const newsInfo = [
   {
@@ -254,12 +260,6 @@ export const newsInfo = [
 
 export const employeeManagement = [
   {
-    id: "hvida",
-    title: "Hoja de vida",
-    description: "Ahora puedes descargar las hojas de vida de tus empleados",
-    //image: svg.
-  },
-  {
     id: "novedai",
     title: "Orden de ingreso",
     description: "Ahora puedes generar una novedad de ingreso desde la App",
@@ -276,6 +276,12 @@ export const employeeManagement = [
     title: "Capacitaciones",
     description: "Consulta las capacitaciones disponibles y sus estados.",
     // 2Enseguida pues en el avión por ahí abiertaimage: svg.
+  },
+  {
+    id: "ndiscip",
+    title: "Reporte de novedades disciplinarias",
+    description:
+      "Accede aquí al enlace para registrar procesos disciplinarios.",
   },
 ];
 
@@ -388,3 +394,76 @@ export const validCity = () => {
     ],
   };
 };
+
+export const listAsuntoPQR = [
+  { label: "TERMINACION DE CONTRATO", value: "TERMINACION DE CONTRATO" },
+  { label: "CONTRATACION", value: "CONTRATACION" },
+  { label: "ENVIO DE FACTURA", value: "ENVIO DE FACTURA" },
+  { label: "SOPORTE DE FACTURA", value: "SOPORTE DE FACTURA" },
+  {
+    label: "INCONVENIENTES NOTAS CREDITO",
+    value: "INCONVENIENTES NOTAS CREDITO",
+  },
+  { label: "SOLICITUD DE INFORMACION", value: "SOLICITUD DE INFORMACION" },
+  {
+    label: "ACTUALIZACION DE INFORMACION",
+    value: "ACTUALIZACION DE INFORMACION",
+  },
+  { label: "PROCESOS DISCIPLINARIOS", value: "PROCESOS DISCIPLINARIOS" },
+  { label: "INCONFORMIDAD PAGOS", value: "INCONFORMIDAD PAGOS" },
+  {
+    label: "PLANILLAS DE SEGURIDAD SOCIAL",
+    value: "PLANILLAS DE SEGURIDAD SOCIAL",
+  },
+  {
+    label: "INCONVENIENTES SEGURIDAD SOCIAL",
+    value: "INCONVENIENTES SEGURIDAD SOCIAL",
+  },
+  { label: "SOPORTE DE AFILIACIONES", value: "SOPORTE DE AFILIACIONES" },
+  { label: "FELICITACIONES", value: "FELICITACIONES" },
+  { label: "COPIA DE CONTRATO", value: "COPIA DE CONTRATO" },
+  { label: "PROCESO SELECCION ", value: "PROCESO SELECCION " },
+  {
+    label: "INCONFORMIDAD PROCESOS DE SELECCIÓN",
+    value: "INCONFORMIDAD PROCESOS DE SELECCIÓN",
+  },
+  {
+    label: "RETROALIMENTACION PROCESO DE CONTRATACION",
+    value: "RETROALIMENTACION PROCESO DE CONTRATACION",
+  },
+  { label: "NOVEDADES NOMINA", value: "NOVEDADES NOMINA" },
+  { label: "LIQUIDACIONES", value: "LIQUIDACIONES" },
+  { label: "FALLAS APLICATIVOS", value: "FALLAS APLICATIVOS" },
+  { label: "RETRASOS EXAMENES MEDICOS", value: "RETRASOS EXAMENES MEDICOS" },
+  { label: "DEVOLUCION DE FACTURA", value: "DEVOLUCION DE FACTURA" },
+  { label: "CAMBIO DE FACTURA", value: "CAMBIO DE FACTURA" },
+  {
+    label: "CONFIRMACION CERTIFICADO LABORAL",
+    value: "CONFIRMACION CERTIFICADO LABORAL",
+  },
+  { label: "INASISTENCIA DE PERSONAL", value: "INASISTENCIA DE PERSONAL" },
+  { label: "INFORMACION COVID 19", value: "INFORMACION COVID 19" },
+  { label: "INFORMACION CESANTIAS", value: "INFORMACION CESANTIAS" },
+  { label: "SEGUIMIENTO SST", value: "SEGUIMIENTO SST" },
+  { label: "BIENESTAR", value: "BIENESTAR" },
+  { label: "OTROS", value: "OTROS" },
+  {
+    label: "NOVEDADES DE NOMINA NO REPORTADA",
+    value: "NOVEDADES DE NOMINA NO REPORTADA",
+  },
+  {
+    label: "RETROALIMENTACION PROCESO DE SELECCION",
+    value: "RETROALIMENTACION PROCESO DE SELECCION",
+  },
+  {
+    label: "INCONVENIENTES CON AFILIACIONES",
+    value: "INCONVENIENTES CON AFILIACIONES",
+  },
+  {
+    label: "INCONFORMIDAD CON LA ATENCION O SERVICIO",
+    value: "INCONFORMIDAD CON LA ATENCION O SERVICIO",
+  },
+  { label: "INCLUIR OTRO SI", value: "INCLUIR OTRO SI" },
+  { label: "INCONFORMIDAD SST", value: "INCONFORMIDAD SST" },
+  { label: "CUENTA BANCARIA N", value: "CUENTA BANCARIA N" },
+];

@@ -7,6 +7,7 @@ import {
   Text,
   ScrollView,
   Keyboard,
+  PixelRatio,
 } from "react-native";
 import {
   colors,
@@ -26,6 +27,8 @@ import CircleProgressBar from "./stepsForm/formSteps/CircleProgressBar";
 import StepIdent from "./stepsForm/StepIdent";
 import { useFocusEffect } from "@react-navigation/native";
 import LoaderItemSwitch from "../../common/loaders/LoaderItemSwitch";
+
+const pixelDensity = parseInt(PixelRatio.get());
 
 const MultiStepForm = ({ onConfirm, closeModal }) => {
   const [formData, setFormData] = useState({});
@@ -163,7 +166,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     transform: [{ translateY: 50 }],
     width: widthPercentageToPx(90),
-    height: heightPercentageToPx(68),
+    height: heightPercentageToPx(pixelDensity <= 1 ? 68 : 73),
   },
   goBackButton: {
     position: "relative",
