@@ -84,21 +84,33 @@ const Download = (props) => {
   const { setLoaderProg } = useContext(LoaderProgContext);
 
   useEffect(() => {
-    // Animar el contenido del ScrollView horizontal cuando la anchura del ScrollView se haya establecido
+    let isMounted = true;
+
     if (scrollViewWidth > 0) {
-      Animated.timing(animation, {
+      const animation1 = Animated.timing(animation, {
         toValue: -scrollViewWidth,
         duration: 3000,
         useNativeDriver: true,
-      }).start(() => {
-        scrollRef.current.scrollTo({ x: 0, y: 0, animated: false });
-        Animated.timing(animation, {
-          toValue: 0,
-          duration: 3000,
-          useNativeDriver: true,
-        }).start();
+      });
+
+      animation1.start(() => {
+        if (scrollRef.current && isMounted) {
+          scrollRef.current.scrollTo({ x: 0, y: 0, animated: false });
+
+          const animation2 = Animated.timing(animation, {
+            toValue: 0,
+            duration: 2000,
+            useNativeDriver: true,
+          });
+
+          animation2.start();
+        }
       });
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [scrollViewWidth]);
 
   useFocusEffect(

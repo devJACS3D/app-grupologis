@@ -4,7 +4,7 @@ import {
   FontAwesome5,
   MaterialIcons,
 } from "@expo/vector-icons";
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { colors, heightPercentageToPx, widthPercentageToPx } from "../../utils";
 
@@ -62,6 +62,13 @@ const Footer = (props) => {
 
   const handleChangeScreen = (screen) => {
     setScreen(screen);
+    if (screen === "HelpBox") {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "HelpBox" }],
+      });
+      return;
+    }
     navigation.navigate(screen);
   };
   return (

@@ -1,8 +1,10 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import { WebView } from "react-native-webview";
 import { Button, Modal, View } from "react-native";
-import { heightPercentageToPx } from ".";
+import { colors, heightPercentageToPx } from ".";
 import { Text } from "react-native";
+import SvgVisualize from "../assets/images/components/helpBox/SvgVisualize";
+import LoaderItemSwitchDark from "../components/common/loaders/LoaderItemSwitchDark";
 
 // Author:    Hetmann Wilhelm Iohan
 // Email:     contact@react-ui-kit.com
@@ -27,6 +29,7 @@ import { Text } from "react-native";
 class ZendeskChat extends Component {
   state = {
     showChat: true,
+    loading: true,
   };
 
   chatHTML() {
@@ -43,9 +46,12 @@ class ZendeskChat extends Component {
                 <script id="ze-snippet"
                     src="https://static.zdassets.com/ekr/snippet.js?key=${zendesk_chat_key}"> </script>
                 <!-- End of Zendesk Widget script -->
-                <style type="text/css">html { background: transparent; } button[aria-label="Cerrar"] {display: none !important;}</style>
+                <style type="text/css">html { background: transparent; } .msgLoad {padding-top: 250px; display: flex; justify-content: center; align-items: center;}</style>
             </head>
             <body>
+              <div class="msgLoad">
+                <h3>Espere un momento</h3>
+              </div>
                 <script>
                   document.addEventListener( 'DOMContentLoaded', function( event ) {
                     // zE('webWidget', 'prefill', {
@@ -55,7 +61,7 @@ class ZendeskChat extends Component {
                     // });
                     // zE('webWidget', 'identify', { name: "${user.name}", email: "${user.email}" });
                     zE('messenger', 'open');
-                    zE('webWidget:on', 'close', () => window.ReactNativeWebView.postMessage("close"));
+                    zE('messenger:on', 'close', () => window.ReactNativeWebView.postMessage("close"));
                   });
                 </script>
             </body>
@@ -66,27 +72,50 @@ class ZendeskChat extends Component {
   render() {
     const { showChat } = this.state;
     const userAgent = "YourApp";
+    console.log("nuevo llego aca nuevo 2 render");
 
     return (
-      <WebView
-        useWebKit
-        style={{
-          //   width: "100%",
-          flex: 1,
-        }}
-        hideKeyboardAccessoryView
-        source={{
-          html: this.chatHTML(),
-          baseUrl: "https://static.zdassets.com",
-        }}
-        showsVerticalScrollIndicator={false}
-        applicationNameForUserAgent={userAgent}
-        onMessage={({ nativeEvent }) => {
-          nativeEvent.data === "close" && this.setState({ showChat: false });
-        }}
-        originWhitelist={["*"]}
-        // shouldStartLoadWithRequestHandler={({ url }) => url.startsWith("about:blank")}
-      />
+      <View style={{ flex: 1 }}>
+        {showChat ? (
+          <View style={{ flex: 1 }}>
+            <WebView
+              useWebKit
+              style={{
+                // display: loading ? "none" : "flex",
+                // flex: loading ? 0 : 1,
+                flex: 1,
+                // opacity: loading ? 0 : 1,
+              }}
+              hideKeyboardAccessoryView
+              source={{
+                html: this.chatHTML(),
+                baseUrl: "https://static.zdassets.com",
+              }}
+              showsVerticalScrollIndicator={false}
+              applicationNameForUserAgent={userAgent}
+              onMessage={({ nativeEvent }) => {
+                nativeEvent.data === "close" &&
+                  this.setState({ showChat: false });
+              }}
+              originWhitelist={["*"]}
+              messagingEnabled={true}
+              // shouldStartLoadWithRequestHandler={({ url }) => url.startsWith("about:blank")}
+            />
+          </View>
+        ) : (
+          <View
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              top: 130,
+            }}
+          >
+            <SvgVisualize />
+            <LoaderItemSwitchDark />
+          </View>
+        )}
+      </View>
     );
   }
 }

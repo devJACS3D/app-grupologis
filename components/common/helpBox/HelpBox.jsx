@@ -16,6 +16,7 @@ import ZendeskChat from "../../../utils/Zendesk";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // import * as Zendesk from "react-native-zendesk-messaging";
+import SvgVisualize from "../../../assets/images/components/helpBox/SvgVisualize";
 
 const HelpBox = (props) => {
   const { navigation } = props;
@@ -46,7 +47,11 @@ const HelpBox = (props) => {
   return (
     <Layout props={{ ...props }}>
       <View style={styles.contenBox}>
-        {isShowChat && <ZendeskChat user={infoUs} title="text2" />}
+        {isShowChat && (
+          <View style={{ flex: 1 }}>
+            <ZendeskChat user={infoUs} title="text2" />
+          </View>
+        )}
       </View>
     </Layout>
   );
