@@ -7,10 +7,12 @@ import { useState } from "react";
 import Toast from "react-native-toast-message";
 import { colors, getFontStyles, widthPercentageToPx } from "../../../../utils";
 import RemoveNovIng from "../../../../assets/images/components/infoModal/RemoveNovIng";
+import { useNavigation } from "@react-navigation/native";
 
 const DeleteNovIng = (props) => {
   const { infoDel, showModal } = props;
   const [loader, setLoader] = useState(false);
+  const navigation = useNavigation();
 
   const showToast = (smg, type) => {
     Toast.show({
@@ -33,6 +35,10 @@ const DeleteNovIng = (props) => {
       if (data.status) {
         showModal(true);
         showToast("se elimino el registro correctamente", "success");
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "NewEntryView" }],
+        });
       } else {
         showModal(true);
         showToast("error al eliminar el registro", "error");

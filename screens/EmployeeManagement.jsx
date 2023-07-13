@@ -42,16 +42,15 @@ const EmployeeManagement = (props) => {
   //const [dataCard, setDataCard] = useState()
   const handleRedirect = (id) => {
     switch (id) {
-      case "hvida":
-        navigation.navigate("ResumeView");
-        break;
       case "novedai":
         navigation.navigate("NewEntryView");
         break;
       case "maestroe":
         navigation.navigate("MasterEmployee");
+        break;
       case "capacit":
         navigation.navigate("Capacitations");
+        break;
       case "ndiscip":
         Linking.openURL("https://forms.office.com/r/XzKHTNk6Zp");
         break;

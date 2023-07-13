@@ -62,7 +62,7 @@ const LineElement = ({ index, currentIndex }) => {
 };
 
 const StatusLine = ({ status }) => {
-  const statuses = ["Registrado", "En Proceso", "Finalizado", "Procesado"];
+  const statuses = ["Registrado", "En Proceso", "Realizado", "Finalizado"];
   const currentIndex = statuses.indexOf(status);
 
   return (

@@ -25,7 +25,7 @@ const NewEntryCard = (props) => {
   const [SerCons, setSerCons] = useState("");
   const [infoDel, setInfoDel] = useState({});
   const nameComp = props.nom1_emp.trim() + " " + props.ap1_emp.trim();
-  const cargo = props.tip_tra;
+  const cargo = props.cod_car;
 
   const closeModal = () => {
     setModal(false);
@@ -42,7 +42,11 @@ const NewEntryCard = (props) => {
         <View style={styles.cardColumn}>
           <CardElement
             head={"Nombre"}
-            content={nameComp.substring(0, 10) + "..."}
+            content={
+              nameComp.length > 12
+                ? nameComp.substring(0, 12) + "..."
+                : nameComp
+            }
           />
           <CardElement
             head={"Cargo"}
@@ -51,7 +55,7 @@ const NewEntryCard = (props) => {
         </View>
       </View>
       <View style={styles.cardColumn}>
-        <CardElement head={"Identificacion"} content={props.cod_emp} />
+        <CardElement head={"Identificación"} content={props.cod_emp} />
       </View>
 
       <View style={styles.rightContent}>

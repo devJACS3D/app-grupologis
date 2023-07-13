@@ -72,7 +72,6 @@ class ZendeskChat extends Component {
   render() {
     const { showChat } = this.state;
     const userAgent = "YourApp";
-    console.log("nuevo llego aca nuevo 2 render");
 
     return (
       <View style={{ flex: 1 }}>

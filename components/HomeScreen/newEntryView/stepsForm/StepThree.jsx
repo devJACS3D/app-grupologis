@@ -54,6 +54,11 @@ const StepThree = ({ formData, onComplete, completed }) => {
     const respAuxBon = await getSer(pathAuxBon, 30000);
     const { status, data } = respAuxBon;
     if (status) {
+      data.novedades.unshift({
+        cod_con: "",
+        nom_con: "Sin bonificacion",
+      });
+      console.log(data.novedades);
       setListAuxBon(data.novedades);
     } else {
       if (data == "limitExe") {
@@ -103,7 +108,6 @@ const StepThree = ({ formData, onComplete, completed }) => {
         valorSalario,
         zapatos,
       } = value;
-
       if (
         centCostos.label == "Centro de costos" ||
         salario.label == "Tipo de salario" ||

@@ -70,7 +70,6 @@ const Code = ({ navigation }) => {
 
   const handleContinueToSelectBusiness = async () => {
     const codeVer = await AsyncStorage.getItem("code");
-    console.log("codigo", codeVer);
     if (code.length !== 4 || code != codeVer) {
       showToast("El código no es válido", "error");
       return;
@@ -128,7 +127,6 @@ const Code = ({ navigation }) => {
     const body = `identificacion=${ident}&contactTipoClienteField=${typeCli}`;
 
     const respApi = await fetchPost(path, body);
-    console.log("respApi", respApi);
     const { status, data } = respApi;
 
     if (status && data.status) {

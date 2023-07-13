@@ -1,25 +1,12 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import {
-  NavigationContainer,
-  useFocusEffect,
-  useNavigation,
-  useNavigationState,
-  useRoute,
-} from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useBackHandler } from "@react-native-community/hooks";
 
 import * as ScreenOrientation from "expo-screen-orientation";
 import { useFonts } from "expo-font";
 
-import {
-  PermissionsAndroid,
-  KeyboardAvoidingView,
-  Platform,
-  View,
-  Modal,
-  BackHandler,
-} from "react-native";
+import { PermissionsAndroid, Platform } from "react-native";
 import * as MediaLibrary from "expo-media-library";
 import * as Permissions from "expo-permissions";
 
@@ -64,6 +51,7 @@ import { WebViewContextProvider } from "./context/webView/WebViewContext";
 import { Linking } from "react-native";
 import { Alert } from "react-native";
 import HelpBox from "./components/common/helpBox/HelpBox";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const openAppSettings = () => {
   Linking.openSettings();
@@ -74,7 +62,6 @@ async function getMediaLibraryPermission() {
     Platform.OS === "ios" ||
     (Platform.OS === "android" && parseInt(Platform.Version, 10) < 30)
   ) {
-    console.log("entro permiso");
     const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
     if (status !== "granted") {
       const msg =
@@ -184,7 +171,6 @@ export default function App() {
       .routes.find((route) => route.name === "Home");
     if (currentRoute) {
       // Si el usuario está en la pantalla de inicio, no hacer nada y evitar salir de la aplicación
-      console.log("inicio", currentRoute);
       return currentRoute.state.history.length <= 1 ? true : false;
       // return handleBackButton("DownloadView");
     }
@@ -202,10 +188,25 @@ export default function App() {
         );
   };
 
+  const verifiLoged = async () => {
+    let isLoggd = await AsyncStorage.getItem("logged");
+    isLoggd = JSON.parse(isLoggd);
+    if (isLoggd) {
+      // si esta logueado guardamos en la storage la informacion que necesita para seleccionar la empresa
+
+      await AsyncStorage.setItem("type", isLoggd.type);
+      await AsyncStorage.setItem("phone", isLoggd.phoneLog);
+      await AsyncStorage.setItem("identi", isLoggd.codEmp);
+
+      navigationRef.current?.navigate("BusinessEntry");
+    }
+  };
+
   useEffect(() => {
     getMediaLibraryPermission();
     requestStoragePermission();
     lockScreenOrientation();
+    verifiLoged();
   }, []);
 
   const [fontsLoaded] = useFonts({

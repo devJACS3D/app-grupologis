@@ -62,7 +62,6 @@ const Claim = (props) => {
     const path = "usuario/getListadoQuejas.php";
     const respApi = await fetchPost(path, info);
     const { status, data } = respApi;
-    console.log("respQueja", respApi);
     if (status) {
       if (data.Correcto === 1) {
         if (data.Programa != undefined && data.Programa.length > 0) {
@@ -92,7 +91,6 @@ const Claim = (props) => {
     const info = `idQuejas=${idQueja}&tipousuarioId=${tipo}&IdUsuario=${empl}`;
     const path = "usuario/SendMailQuejas.php";
     const respApi = await fetchPost(path, info, 30000);
-    console.log("respApi mail", respApi);
     const { status, data } = respApi;
     if (status) {
       if (data === "TRUE") {
@@ -130,7 +128,6 @@ const Claim = (props) => {
     const info = `Asunto=${infoPqr.asunto}&Detalle=${infoPqr.description}&Empresa=${empSel}&IdUsuario=${codEmp}&tipousuarioId=${typeCli}`;
     const path = "usuario/getQuejas.php";
     const respApi = await fetchPost(path, info);
-    console.log("respApi guardar", respApi);
     const { status, data } = respApi;
     if (status) {
       if (data.Correcto === 1) {

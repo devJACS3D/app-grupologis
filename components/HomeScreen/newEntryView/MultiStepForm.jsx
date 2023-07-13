@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Pressable,
   View,
@@ -34,9 +34,11 @@ const MultiStepForm = ({ onConfirm, closeModal }) => {
   const [formData, setFormData] = useState({});
   const [currentStep, setCurrentStep] = useState(0);
   const [loader, setLoader] = useState(false);
+  const scrollViewRef = useRef(null);
 
   const handleStepComplete = (data) => {
     setFormData({ ...formData, ...data });
+    scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
     handleNextStep();
   };
 
@@ -90,7 +92,10 @@ const MultiStepForm = ({ onConfirm, closeModal }) => {
   };
 
   const handleNextStep = () => setCurrentStep(currentStep + 1);
-  const handlePrevStep = () => setCurrentStep(currentStep - 1);
+  const handlePrevStep = () => {
+    scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
+    setCurrentStep(currentStep - 1);
+  };
 
   const StepComponent = steps[currentStep].component;
   const onComplete = steps[currentStep].onComplete;
@@ -119,7 +124,7 @@ const MultiStepForm = ({ onConfirm, closeModal }) => {
           <CircleProgressBar currentStep={currentStep} />
         </View>
       </Pressable>
-      <ScrollView>
+      <ScrollView ref={scrollViewRef}>
         {steps.map((step, index) => (
           <View
             key={index}

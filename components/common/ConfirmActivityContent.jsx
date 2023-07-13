@@ -7,7 +7,7 @@ const ConfirmActivityContent = ({ image, title, description, closeModal }) => {
   return (
     <View style={styles.contentContainer}>
       <View style={styles.topContent}>
-        <Image style={styles.iconImage} source={image} />
+        <Image style={styles.iconImage} source={{ uri: image }} />
         <View style={styles.textsContainer}>
           <Text style={styles.titleText}>{title}</Text>
           <Text style={styles.descriptionText}> {description}</Text>

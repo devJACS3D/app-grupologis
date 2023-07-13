@@ -84,14 +84,24 @@ const UserView = (props) => {
         dataUs.Id_Est_Civ = estadoCiv.indexOf(dataUs.Est_Civ.trim()).toString();
       }
       path = "usuario/getLoadEditar.php";
-      info = `CodEmpleado=${dataUs.codEmp.trim()}&Direccion=${dataUs.dir_res.trim()}&Email=${dataUs.e_mail.trim()}`;
-      info += `&Telefono=${dataUs.tel_res.trim()}&Celular=${dataUs.tel_cel.trim()}`;
-      info += `&EstadoCivil=${dataUs.Id_Est_Civ.trim()}&Empresa=${dataUs.empSel.trim()}`;
+      info = `CodEmpleado=${dataUs.codEmp.trim()}&Direccion=${
+        dataUs.dir_res && dataUs.dir_res.trim()
+      }&Email=${dataUs.e_mail && dataUs.e_mail.trim()}`;
+      info += `&Telefono=${dataUs.tel_res && dataUs.tel_res.trim()}&Celular=${
+        dataUs.tel_cel && dataUs.tel_cel.trim()
+      }`;
+      info += `&EstadoCivil=${
+        dataUs.Id_Est_Civ && dataUs.Id_Est_Civ.trim()
+      }&Empresa=${dataUs.empSel.trim()}`;
     } else {
       // es 2
       path = "usuario/getLoadEditarClien.php";
-      info = `NitCliente=${dataUs.codEmp.trim()}&Direccion=${dataUs.Direccion.trim()}`;
-      info += `&Email=${dataUs.Correo.trim()}&Telefono=${dataUs.Telefono.trim()}`;
+      info = `NitCliente=${dataUs.codEmp.trim()}&Direccion=${
+        dataUs.Direccion && dataUs.Direccion.trim()
+      }`;
+      info += `&Email=${dataUs.Correo && dataUs.Correo.trim()}&Telefono=${
+        dataUs.Telefono && dataUs.Telefono.trim()
+      }`;
     }
 
     const respApi = await fetchPost(path, info);

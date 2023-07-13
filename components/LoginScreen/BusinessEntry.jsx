@@ -30,7 +30,7 @@ import { useFocusEffect } from "@react-navigation/core";
 import { cancelarSolicitudesApi } from "../../utils/axiosInstance";
 
 const BusinessE = ({ navigation }) => {
-  const { setBusiness } = useContext(authContext);
+  const { setBusiness, setRole } = useContext(authContext);
   const [businessOptionsNew, setBusinessOption] = useState([]);
   const pickerRef = useRef(null);
   const [selectedBusiness, setSelectedBusiness] = useState(null);
@@ -115,9 +115,9 @@ const BusinessE = ({ navigation }) => {
       setLoader(true);
       setReintentar(false);
       const type = await AsyncStorage.getItem("type");
-
       const typeCli = type === "business" ? 2 : 1;
       const identification = await AsyncStorage.getItem("identi");
+      const phone = await AsyncStorage.getItem("phone");
 
       const info = `empresaId=${selectedBusiness}&identificacionId=${identification}`;
       const path =
@@ -131,7 +131,9 @@ const BusinessE = ({ navigation }) => {
         if (typeof data === "object") {
           data.codEmp = identification;
           data.empSel = selectedBusiness;
+          data.phoneLog = phone;
           data.type = type;
+          setRole(type);
           await AsyncStorage.clear();
           const loggedIn = JSON.stringify(data);
           await AsyncStorage.setItem("logged", loggedIn);
@@ -162,7 +164,6 @@ const BusinessE = ({ navigation }) => {
     }, [])
   );
 
-  console.log("businessOptionsNew", businessOptionsNew);
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}

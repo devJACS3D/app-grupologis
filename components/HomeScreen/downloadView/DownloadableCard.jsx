@@ -247,7 +247,6 @@ const DownloadableCard = ({ title, desc, image, id, navigation }) => {
           `Empresa=${empSel}&NitCliente=${codEmp}&Anho=${val.year}&Mes=${month}`;
 
     const respApi = await fetchPost(path, info);
-
     const { status, data } = respApi;
     if (status) {
       if (data.Correcto === 1) {

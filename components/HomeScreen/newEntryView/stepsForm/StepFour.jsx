@@ -92,11 +92,9 @@ const StepFour = ({ formData, onComplete, completed }) => {
           <View style={styles.resume}>
             <Text style={styles.textHead}>Auxilio bonificacion</Text>
             <Text style={styles.textContent}>
-              {
-                (stepThreeData.select.auxBonif.label = "Aux / bonificaciones"
-                  ? "Sin bonificacion"
-                  : stepThreeData.select.auxBonif.label)
-              }
+              {stepThreeData.select.auxBonif.label == "Aux / bonificaciones"
+                ? "Sin bonificacion"
+                : stepThreeData.select.auxBonif.label}
             </Text>
 
             <Text style={styles.textHead}>Tipo Salario</Text>

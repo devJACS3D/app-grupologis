@@ -91,22 +91,11 @@ const BillsCard = (props) => {
       <View style={styles.leftContent}>
         <View style={styles.cardColumn}>
           <CardElement head={"Año"} content={props.anho.trim()} />
-          <CardElement head={"Subtipo"} content={props.subtipo.trim()} />
-        </View>
-        <View style={styles.cardColumn}>
-          <CardElement head={"Mes"} content={props.mes.trim()} />
           <CardElement head={"Fecha"} content={props.fecha} />
         </View>
         <View style={styles.cardColumn}>
+          <CardElement head={"Mes"} content={props.mes.trim()} />
           <CardElement head={"No.Factura"} content={props.nofact.trim()} />
-          <CardElement
-            head={"Descripcion"}
-            content={
-              props.desc != null
-                ? props.desc?.slice(0, 10) + "..."
-                : "Sin Descr..."
-            }
-          />
         </View>
       </View>
 
@@ -165,5 +154,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 7,
+    marginTop: 3,
+    marginBottom: 3,
   }),
 });
