@@ -14,7 +14,6 @@ import {
   heightPercentageToPx,
   widthPercentageToPx,
 } from "../../../utils";
-import { Colors } from "react-native/Libraries/NewAppScreen";
 
 class FormuBussines extends Component {
   state = {
@@ -48,11 +47,23 @@ class FormuBussines extends Component {
           style={styles.select}
           onPress={() => this.openModal("select")}
         >
-          <Text style={styles.selectText}>{this.state.optSelectLab}</Text>
+          <Text
+            style={
+              this.state.optSelectLab == this.props.title
+                ? styles.selectText
+                : styles.selectedText
+            }
+          >
+            {this.state.optSelectLab}
+          </Text>
           <Ionicons
             name="chevron-down-outline"
             size={24}
-            color={colors.placeholderColor}
+            color={
+              this.state.optSelectLab == this.props.title
+                ? colors.placeholderColor
+                : colors.black
+            }
           />
         </TouchableOpacity>
 
@@ -140,6 +151,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Volks-Serial-Medium",
     color: colors.placeholderColor,
+  },
+  selectedText: {
+    // paddingHorizontal: 20,
+    fontSize: 16,
+    fontFamily: "Volks-Serial-Medium",
+    color: colors.black,
   },
   modalContainer: {
     flex: 1,

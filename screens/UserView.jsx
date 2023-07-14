@@ -25,6 +25,7 @@ const UserView = (props) => {
     "SOLTERO",
     "CASADO",
     "VIUDO",
+    "SEPARADO",
     "UNION LIBRE",
     "RELIGIOSO",
     "OTRO",
@@ -135,8 +136,6 @@ const UserView = (props) => {
           showToast("Ocurrio un error en el servidor", "error");
         }
       }
-    } else {
-      console.log("no enviar");
     }
   };
 

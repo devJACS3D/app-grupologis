@@ -37,9 +37,10 @@ const UserForm = ({
       { label: "SOLTERO", value: "1" },
       { label: "CASADO", value: "2" },
       { label: "VIUDO", value: "3" },
-      { label: "UNION LIBRE", value: "4" },
-      { label: "RELIGIOSO", value: "5" },
-      { label: "OTRO", value: "6" },
+      { label: "SEPARADO", value: "4" },
+      { label: "UNION LIBRE", value: "5" },
+      { label: "RELIGIOSO", value: "6" },
+      { label: "OTRO", value: "7" },
     ],
   ];
 

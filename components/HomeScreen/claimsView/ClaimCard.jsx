@@ -2,6 +2,7 @@ import { AntDesign, Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
   Modal,
+  PixelRatio,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -18,6 +19,8 @@ import StatusLine from "../../common/StatusLine";
 import CardElement from "../newsView/components/CardElement";
 import ShowInfo from "../newEntryView/stepsForm/ShowInfo";
 import GLButton from "../../common/buttons/GLButton";
+
+const pixelDensity = parseInt(PixelRatio.get());
 
 const ClaimCard = (props) => {
   const [modal, setModal] = useState(false);
@@ -52,7 +55,7 @@ const ClaimCard = (props) => {
                   color={colors.placeholderColor}
                 />
               </TouchableOpacity>
-              <View style={styles.modalContainer}>
+              <View style={styles.infoClaim}>
                 <ScrollView
                   showsHorizontalScrollIndicator={false}
                   showsVerticalScrollIndicator={false}
@@ -61,7 +64,7 @@ const ClaimCard = (props) => {
                   <GLButton
                     type={"second"}
                     placeholder="Cerrar"
-                    width={widthPercentageToPx(60)}
+                    width={widthPercentageToPx(74)}
                     onPressAction={() => closeModal()}
                   />
                 </ScrollView>
@@ -102,18 +105,20 @@ const styles = StyleSheet.create({
   }),
   modalContainer: {
     flex: 1,
-    margin: 16,
-    borderRadius: 8,
-    height: 20,
     alignItems: "center",
     justifyContent: "center",
     transform: [{ translateY: 50 }],
   },
+  infoClaim: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 30,
+  },
   modal: {
-    top: 90,
     backgroundColor: "white",
     width: widthPercentageToPx(90),
-    height: heightPercentageToPx(80),
+    height: heightPercentageToPx(pixelDensity <= 1 ? 60 : 70),
     borderRadius: 10,
     // padding: 30,
     paddingHorizontal: 30,

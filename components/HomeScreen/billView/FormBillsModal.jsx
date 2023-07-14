@@ -18,7 +18,7 @@ const FormBillsModal = ({ closeModal, onConfirm }) => {
   const now = moment();
   const [period, setPeriod] = useState({
     start: now.startOf("M"),
-    end: now.startOf("M").add(1, "M"),
+    end: now.startOf("M"),
   });
   const [values, setValues] = useState({
     month: now.get("M"),
@@ -27,8 +27,8 @@ const FormBillsModal = ({ closeModal, onConfirm }) => {
 
   const [showYearSelector, setShowYearSelector] = useState(false);
   const [showMonthSelector, setShowMonthSelector] = useState(false);
-  const [hasChangedMonth, setHasChangedMonth] = useState(false);
-  const [hasChangedYear, setHasChangedYear] = useState(false);
+  const [hasChangedMonth, setHasChangedMonth] = useState(true);
+  const [hasChangedYear, setHasChangedYear] = useState(true);
 
   const showToast = (smg, type) => {
     Toast.show({
@@ -40,6 +40,7 @@ const FormBillsModal = ({ closeModal, onConfirm }) => {
   };
 
   const handleChangeMonth = (e) => {
+    console.log("1", e);
     setPeriod({
       start: period.start.set("M", e),
       end: period.end.set("M", e),
@@ -71,6 +72,7 @@ const FormBillsModal = ({ closeModal, onConfirm }) => {
     if (!hasChangedYear || !hasChangedMonth) {
       showToast("Seleccione los datos", "error");
     } else {
+      console.log("values", values);
       onConfirm(values);
     }
   };
@@ -95,9 +97,7 @@ const FormBillsModal = ({ closeModal, onConfirm }) => {
           onPress={() => setShowYearSelector(true)}
         >
           <View style={styles.selectorOption}>
-            <Text style={styles.selectorText}>
-              {hasChangedYear ? values.year : "Selecciona año"}
-            </Text>
+            <Text style={styles.selectorText}>{values.year}</Text>
             <Ionicons name="calendar" size={20} color={colors.boldGray} />
           </View>
         </Pressable>
@@ -118,7 +118,7 @@ const FormBillsModal = ({ closeModal, onConfirm }) => {
             <Text style={styles.selectorText}>
               {hasChangedMonth
                 ? validDates().validMonths[period.start.get("M")]
-                : "Selecciona mes / periodo"}
+                : validDates().validMonths[period.start.get("M")]}
             </Text>
             <Ionicons name="calendar" size={20} color={colors.boldGray} />
           </View>

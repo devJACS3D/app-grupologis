@@ -13,6 +13,7 @@ import {
   heightPercentageToPx,
   listAsuntoPQR,
   widthPercentageToPx,
+  getFontStyles,
 } from "../../../utils";
 import GLButton from "../../common/buttons/GLButton";
 import FormTitle from "../../common/form/FormTitle";
@@ -47,6 +48,11 @@ const Form = ({ closeModal, onConfirm }) => {
       if (infoForm.asunto == "" || infoForm.description == "") {
         showToast("Seleccione todos los campos", "error");
       } else {
+        console.log(infoForm.description.length);
+        if (infoForm.description.length > 1000) {
+          showToast("Solo es permitido 1000 caracteres", "error");
+          return;
+        }
         setLoader(true);
         onConfirm(infoForm);
       }
@@ -92,6 +98,9 @@ const Form = ({ closeModal, onConfirm }) => {
               setInfoForm({ ...infoForm, description: des })
             }
           ></TextInput>
+          <Text style={styles.cantDesc}>
+            {infoForm.description.length + " de 1000"}
+          </Text>
           <GLButton
             onPressAction={() => validarInfo()}
             type="default"
@@ -166,5 +175,14 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     height: 50,
     marginTop: 15,
+  },
+  cantDesc: {
+    fontFamily: "Volks-Serial-Light",
+    color: colors.descriptionColors,
+    alignSelf: "flex-end",
+    paddingRight: 30,
+    marginBottom: 5,
+    marginTop: 5,
+    ...getFontStyles(17, 1, 1.2),
   },
 });
