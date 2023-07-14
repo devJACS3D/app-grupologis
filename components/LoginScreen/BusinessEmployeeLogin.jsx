@@ -60,47 +60,49 @@ const BusinessEmployeeLogin = ({ navigation, route }) => {
   };
 
   const submitForm = async () => {
-    if (identification != "" && phone != "") {
-      if (!validatePhone(phone)) {
-        showToast("El celular es incorrecto", "error");
-      } else {
-        setLoader(true);
-        setReintentar(false);
-        const typeCli = type === "business" ? 2 : 1;
-        const body = `contactTipoClienteField=${typeCli}
-            &contactIdentificacionField=${identification}
-            &contactNumeroTelefonico=${phone}
-            &contactApp=true`;
-        const path = "usuario/saveUsuarioNew.php";
-        const respApi = await fetchPost(path, body);
-        const { status, data } = respApi;
-        if (status) {
-          const data = respApi.data;
-          if (typeof data == "object") {
-            const codeDec = decode(data.codigo);
-            const codeVer = codeDec.slice(3, -2);
-            await AsyncStorage.setItem("type", type);
-            await AsyncStorage.setItem("identi", identification);
-            await AsyncStorage.setItem("phone", phone);
-            await AsyncStorage.setItem("code", codeVer);
-            navigation.navigate("CodeAuth", { type: "business" });
-          } else {
-            setLoader(false);
-            showToast("El usuario o celular no son validos", "error");
-          }
+    if (!loader) {
+      if (identification != "" && phone != "") {
+        if (!validatePhone(phone)) {
+          showToast("El celular es incorrecto", "error");
         } else {
-          if (data == "limitExe") {
-            setLoader(false);
-            showToast("El servicio demoro mas de lo normal", "error");
-            setReintentar(true);
-          } else if (data != "abortUs") {
-            setLoader(false);
-            showToast("ocurrio un error en el sistema", "error");
+          setLoader(true);
+          setReintentar(false);
+          const typeCli = type === "business" ? 2 : 1;
+          const body = `contactTipoClienteField=${typeCli}
+              &contactIdentificacionField=${identification}
+              &contactNumeroTelefonico=${phone}
+              &contactApp=true`;
+          const path = "usuario/saveUsuarioNew.php";
+          const respApi = await fetchPost(path, body);
+          const { status, data } = respApi;
+          if (status) {
+            const data = respApi.data;
+            if (typeof data == "object") {
+              const codeDec = decode(data.codigo);
+              const codeVer = codeDec.slice(3, -2);
+              await AsyncStorage.setItem("type", type);
+              await AsyncStorage.setItem("identi", identification);
+              await AsyncStorage.setItem("phone", phone);
+              await AsyncStorage.setItem("code", codeVer);
+              navigation.navigate("CodeAuth", { type: "business" });
+            } else {
+              setLoader(false);
+              showToast("El usuario o celular no son validos", "error");
+            }
+          } else {
+            if (data == "limitExe") {
+              setLoader(false);
+              showToast("El servicio demoro mas de lo normal", "error");
+              setReintentar(true);
+            } else if (data != "abortUs") {
+              setLoader(false);
+              showToast("ocurrio un error en el sistema", "error");
+            }
           }
         }
+      } else {
+        showToast("Todos los campos son requeridos", "error");
       }
-    } else {
-      showToast("Todos los campos son requeridos", "error");
     }
   };
 

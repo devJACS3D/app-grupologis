@@ -104,6 +104,13 @@ const MultiStepForm = ({ onConfirm, closeModal }) => {
     // cerrar el teclado
     Keyboard.dismiss();
   };
+
+  const sendOrden = () => {
+    if (!loader) {
+      setLoader(true);
+      onConfirm(formData);
+    }
+  };
   return (
     <View style={styles.modalForm}>
       <View style={styles.headFormStep}>
@@ -145,10 +152,7 @@ const MultiStepForm = ({ onConfirm, closeModal }) => {
           )}
           {currentStep === steps.length - 1 && (
             <GLButton
-              onPressAction={() => {
-                setLoader(true);
-                onConfirm(formData);
-              }}
+              onPressAction={() => sendOrden()}
               type="default"
               placeholder={!loader ? "Enviar" : <LoaderItemSwitch />}
               width={widthPercentageToPx(70)}

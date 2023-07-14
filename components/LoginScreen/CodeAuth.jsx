@@ -79,83 +79,87 @@ const Code = ({ navigation }) => {
   };
 
   const resendCode = async () => {
-    if (reenMensDis) {
-      setLoader(true);
-      const phone = await AsyncStorage.getItem("phone");
-      const path = "usuario/ReenviarCodigo.php";
-      const body = `telefono=${phone}`;
+    if (!loader) {
+      if (reenMensDis) {
+        setLoader(true);
+        const phone = await AsyncStorage.getItem("phone");
+        const path = "usuario/ReenviarCodigo.php";
+        const body = `telefono=${phone}`;
 
-      const respApi = await post(path, body);
+        const respApi = await post(path, body);
 
-      const { status, data } = respApi;
-      if (status) {
-        if (data.code) {
-          showToast("Mensaje enviado correctamente", "success");
-          setMedioSedMens("celular");
-          setReenMensDis(false);
-          messageWaiting(20000);
-          messageWaitingDis(120000);
-          setMsgReenv("Código sms");
-          AsyncStorage.setItem("code", data.code);
-          setLoader(false);
+        const { status, data } = respApi;
+        if (status) {
+          if (data.code) {
+            showToast("Mensaje enviado correctamente", "success");
+            setMedioSedMens("celular");
+            setReenMensDis(false);
+            messageWaiting(20000);
+            messageWaitingDis(120000);
+            setMsgReenv("Código sms");
+            AsyncStorage.setItem("code", data.code);
+            setLoader(false);
+          } else {
+            showToast("Error al enviar el codigo", "error");
+            setLoader(false);
+          }
         } else {
-          showToast("Error al enviar el codigo", "error");
-          setLoader(false);
+          if (data == "limitExe") {
+            showToast("El servicio demoro mas de lo normal", "error");
+            setMsgReenv("Código sms");
+            setLoader(false);
+          } else if (data != "abortUs") {
+            showToast("Error al enviar el codigo", "error");
+            setLoader(false);
+          }
         }
       } else {
-        if (data == "limitExe") {
-          showToast("El servicio demoro mas de lo normal", "error");
-          setMsgReenv("Código sms");
-          setLoader(false);
-        } else if (data != "abortUs") {
-          showToast("Error al enviar el codigo", "error");
-          setLoader(false);
-        }
+        showToast("El mensaje llega en menos de 2 min.", "success");
       }
-    } else {
-      showToast("El mensaje llega en menos de 2 min.", "success");
     }
   };
 
   const resendCodeEmail = async () => {
-    setLoaderEmail(true);
-    const ident = await AsyncStorage.getItem("identi");
-    const type = await AsyncStorage.getItem("type");
-    const typeCli = type === "business" ? 2 : 1;
+    if (!loaderEmail) {
+      setLoaderEmail(true);
+      const ident = await AsyncStorage.getItem("identi");
+      const type = await AsyncStorage.getItem("type");
+      const typeCli = type === "business" ? 2 : 1;
 
-    const path = "usuario/sendCodeEmail.php";
-    const body = `identificacion=${ident}&contactTipoClienteField=${typeCli}`;
+      const path = "usuario/sendCodeEmail.php";
+      const body = `identificacion=${ident}&contactTipoClienteField=${typeCli}`;
 
-    const respApi = await fetchPost(path, body);
-    const { status, data } = respApi;
+      const respApi = await fetchPost(path, body);
+      const { status, data } = respApi;
 
-    if (status && data.status) {
-      const codeDec = decode(data.message.codigo);
-      const codeVer = codeDec.slice(3, -2);
+      if (status && data.status) {
+        const codeDec = decode(data.message.codigo);
+        const codeVer = codeDec.slice(3, -2);
 
-      await AsyncStorage.setItem("code", codeVer);
-      setMedioSedMens(data.message.correo);
-      showToast("Codigo reenviado correctamente", "success");
-      setLoaderEmail(false);
-      return;
-    }
+        await AsyncStorage.setItem("code", codeVer);
+        setMedioSedMens(data.message.correo);
+        showToast("Codigo reenviado correctamente", "success");
+        setLoaderEmail(false);
+        return;
+      }
 
-    if (status && !data.status) {
-      showToast(data.message, "error");
-      setLoaderEmail(false);
-      return;
-    }
+      if (status && !data.status) {
+        showToast(data.message, "error");
+        setLoaderEmail(false);
+        return;
+      }
 
-    if (!status && data == "limitExe") {
-      showToast("El servicio demoro mas de lo normal", "error");
-      setLoaderEmail(false);
-      return;
-    }
+      if (!status && data == "limitExe") {
+        showToast("El servicio demoro mas de lo normal", "error");
+        setLoaderEmail(false);
+        return;
+      }
 
-    if (!status) {
-      showToast("Ocurrio un error en el servidor", "error");
-      setLoaderEmail(false);
-      return;
+      if (!status) {
+        showToast("Ocurrio un error en el servidor", "error");
+        setLoaderEmail(false);
+        return;
+      }
     }
   };
 

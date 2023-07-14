@@ -35,7 +35,7 @@ const DownloadableCard = ({ title, desc, image, id, navigation }) => {
   const [showForm, setShowForm] = useState("");
   const [reload, setReload] = useState(false);
   const [multHojasVida, setMultHojasVida] = useState(null);
-  const { setLoaderProg } = useContext(LoaderProgContext);
+  const { showLoader, setLoaderProg } = useContext(LoaderProgContext);
   const { nameUtiView, setNameUtiView } = useContext(WebViewContext);
 
   const showToast = (smg, type) => {
@@ -48,143 +48,155 @@ const DownloadableCard = ({ title, desc, image, id, navigation }) => {
   };
 
   const servicesDescHojaVida = async (docs) => {
-    setLoaderProg(true);
-    let infoLog = await AsyncStorage.getItem("logged");
-    infoLog = JSON.parse(infoLog);
-    const empSel = infoLog.empSel;
-    const codEmp = infoLog.codEmp;
-    const { CodEmpleado, IdDocumento } = docs;
-    let infoDes = `NitCliente=%&Empresa=${empSel.toUpperCase()}`;
-    infoDes += `&CodEmpleado=${CodEmpleado}&IdDocumento=${IdDocumento}`;
-    const pathDes = "usuario/getDownDoc.php";
-    const respApiDes = await fetchPost(pathDes, infoDes);
+    if (!showLoader) {
+      setLoaderProg(true);
+      let infoLog = await AsyncStorage.getItem("logged");
+      infoLog = JSON.parse(infoLog);
+      const empSel = infoLog.empSel;
+      const codEmp = infoLog.codEmp;
+      const { CodEmpleado, IdDocumento } = docs;
+      let infoDes = `NitCliente=%&Empresa=${empSel.toUpperCase()}`;
+      infoDes += `&CodEmpleado=${CodEmpleado}&IdDocumento=${IdDocumento}`;
+      const pathDes = "usuario/getDownDoc.php";
+      const respApiDes = await fetchPost(pathDes, infoDes);
 
-    const { status, data } = respApiDes;
-    if (status) {
-      if (data.Correcto === 1) {
-        dowArchivo(data);
+      const { status, data } = respApiDes;
+      if (status) {
+        if (data.Correcto === 1) {
+          dowArchivo(data);
+        } else {
+          showToast("No se encontro documento", "error");
+          setLoaderProg(false);
+        }
       } else {
-        showToast("No se encontro documento", "error");
-        setLoaderProg(false);
+        if (data == "limitExe") {
+          showToast("El servicio demoro mas de lo normal", "error");
+          setLoaderProg(false);
+          setReload(true);
+        } else if (data != "abortUs") {
+          showToast("Error en el servidor", "error");
+          setLoaderProg(false);
+        }
       }
     } else {
-      if (data == "limitExe") {
-        showToast("El servicio demoro mas de lo normal", "error");
-        setLoaderProg(false);
-        setReload(true);
-      } else if (data != "abortUs") {
-        showToast("Error en el servidor", "error");
-        setLoaderProg(false);
-      }
+      console.log("no enviar");
     }
   };
 
   const getCerLaboral = async () => {
     // descargar certificado laboral
-    setLoaderProg(true);
-    setReload(false);
-    let infoLog = await AsyncStorage.getItem("logged");
-    infoLog = JSON.parse(infoLog);
-    const empSel = infoLog.empSel;
-    const codEmp = infoLog.codEmp;
-    const info = `Empresa=${empSel}&Cedula=${codEmp}`;
-    const path = "usuario/getCertificadoLaboral.php";
-    const respApi = await fetchPost(path, info);
+    if (!showLoader) {
+      setLoaderProg(true);
+      setReload(false);
+      let infoLog = await AsyncStorage.getItem("logged");
+      infoLog = JSON.parse(infoLog);
+      const empSel = infoLog.empSel;
+      const codEmp = infoLog.codEmp;
+      const info = `Empresa=${empSel}&Cedula=${codEmp}`;
+      const path = "usuario/getCertificadoLaboral.php";
+      const respApi = await fetchPost(path, info);
 
-    const { status, data } = respApi;
+      const { status, data } = respApi;
 
-    if (status) {
-      if (data.Correcto === 1) {
-        dowArchivo(data);
+      if (status) {
+        if (data.Correcto === 1) {
+          dowArchivo(data);
+        } else {
+          showToast("Error en el servidor", "error");
+          setLoaderProg(false);
+        }
       } else {
-        showToast("Error en el servidor", "error");
-        setLoaderProg(false);
-      }
-    } else {
-      if (data == "limitExe") {
-        showToast("El servicio demoro mas de lo normal", "error");
-        setLoaderProg(false);
-        setReload(true);
-      } else if (data != "abortUs") {
-        showToast("Error en el servidor", "error");
-        setLoaderProg(false);
+        if (data == "limitExe") {
+          showToast("El servicio demoro mas de lo normal", "error");
+          setLoaderProg(false);
+          setReload(true);
+        } else if (data != "abortUs") {
+          showToast("Error en el servidor", "error");
+          setLoaderProg(false);
+        }
       }
     }
   };
 
   const getIngresoRete = async () => {
     // descargar ingreso y retencion
-    setLoaderProg(true);
-    setReload(false);
-    let infoLog = await AsyncStorage.getItem("logged");
-    infoLog = JSON.parse(infoLog);
-    const empSel = infoLog.empSel;
-    const codEmp = infoLog.codEmp;
-    const date = new Date().getFullYear() - 1;
+    if (!showLoader) {
+      setLoaderProg(true);
+      setReload(false);
+      let infoLog = await AsyncStorage.getItem("logged");
+      infoLog = JSON.parse(infoLog);
+      const empSel = infoLog.empSel;
+      const codEmp = infoLog.codEmp;
+      const date = new Date().getFullYear() - 1;
 
-    const info = `Empresa=${empSel}&Cedula=${codEmp}&Anho=${date}`;
-    const path = "usuario/getCertificadoRetencion.php";
+      const info = `Empresa=${empSel}&Cedula=${codEmp}&Anho=${date}`;
+      const path = "usuario/getCertificadoRetencion.php";
 
-    const respApi = await fetchPost(path, info);
+      const respApi = await fetchPost(path, info);
 
-    const { status, data } = respApi;
-    if (status) {
-      if (data.Correcto === 1) {
-        dowArchivo(data);
+      const { status, data } = respApi;
+      if (status) {
+        if (data.Correcto === 1) {
+          dowArchivo(data);
+        } else {
+          showToast("Error en el servidor", "error");
+          setLoaderProg(false);
+        }
       } else {
-        showToast("Error en el servidor", "error");
-        setLoaderProg(false);
-      }
-    } else {
-      if (data == "limitExe") {
-        showToast("El servicio demoro más de lo normal", "error");
-        setLoaderProg(false);
-        setReload(true);
-      } else if (data != "abortUs") {
-        showToast("Error en el servidor", "error");
-        setLoaderProg(false);
+        if (data == "limitExe") {
+          showToast("El servicio demoro más de lo normal", "error");
+          setLoaderProg(false);
+          setReload(true);
+        } else if (data != "abortUs") {
+          showToast("Error en el servidor", "error");
+          setLoaderProg(false);
+        }
       }
     }
   };
 
   const getHojaVidaLab = async () => {
     // descargar hoja de vida laboral
-    setLoaderProg(true);
-    setReload(false);
-    let infoLog = await AsyncStorage.getItem("logged");
-    infoLog = JSON.parse(infoLog);
-    const empSel = infoLog.empSel;
-    const codEmp = infoLog.codEmp;
-    const nit = "%";
+    if (!showLoader) {
+      setLoaderProg(true);
+      setReload(false);
+      let infoLog = await AsyncStorage.getItem("logged");
+      infoLog = JSON.parse(infoLog);
+      const empSel = infoLog.empSel;
+      const codEmp = infoLog.codEmp;
+      const nit = "%";
 
-    const info = `Empresa=${empSel}&CodEmpleado=${codEmp}&NitCliente=${nit}`;
-    const path = "usuario/getHojaDeVidaEmpleado.php";
+      const info = `Empresa=${empSel}&CodEmpleado=${codEmp}&NitCliente=${nit}`;
+      const path = "usuario/getHojaDeVidaEmpleado.php";
 
-    const respApi = await fetchPost(path, info);
+      const respApi = await fetchPost(path, info);
 
-    const { status, data } = respApi;
-    if (status) {
-      if (data.Correcto == 1) {
-        if (data.Docs.length > 1) {
-          setLoaderProg(false);
-          setMultHojasVida(data.Docs);
-          setModal(true);
+      const { status, data } = respApi;
+      if (status) {
+        if (data.Correcto == 1) {
+          if (data.Docs.length > 1) {
+            setLoaderProg(false);
+            setMultHojasVida(data.Docs);
+            setModal(true);
+          } else {
+            servicesDescHojaVida(data.Docs);
+          }
         } else {
-          servicesDescHojaVida(data.Docs);
+          showToast("No se encontro documento", "error");
+          setLoaderProg(false);
         }
       } else {
-        showToast("No se encontro documento", "error");
-        setLoaderProg(false);
+        if (data == "limitExe") {
+          showToast("El servicio demoro mas de lo normal", "error");
+          setLoaderProg(false);
+          setReload(true);
+        } else if (data != "abortUs") {
+          showToast("Error en el servidor", "error");
+          setLoaderProg(false);
+        }
       }
     } else {
-      if (data == "limitExe") {
-        showToast("El servicio demoro mas de lo normal", "error");
-        setLoaderProg(false);
-        setReload(true);
-      } else if (data != "abortUs") {
-        showToast("Error en el servidor", "error");
-        setLoaderProg(false);
-      }
+      console.log("no pasar");
     }
   };
 
@@ -334,9 +346,11 @@ const DownloadableCard = ({ title, desc, image, id, navigation }) => {
       if (archDes) {
         showToast("Listo", "success");
         setLoaderProg(false);
+        setModal(false);
       } else {
         showToast("Error al generar el archivo", "error");
         setLoaderProg(false);
+        setModal(false);
       }
     }
   };
@@ -419,7 +433,7 @@ const DownloadableCard = ({ title, desc, image, id, navigation }) => {
           </View>
         </Pressable>
       </View>
-      {modal && (
+      {modal && !showLoader && (
         <Modal animationType="slide" visible={modal} transparent={true}>
           {multHojasVida ? (
             <View style={styles.modalContainer}>

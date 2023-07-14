@@ -93,9 +93,7 @@ const ClientsInvoiceView = ({ props }) => {
         <MainCardInfo
           firstTitle={"Buscar "}
           secondTitle="facturas"
-          description={
-            "Mantén la información importante siempre a la mano"
-          }
+          description={"Mantén la información importante siempre a la mano"}
           image={images.bannerTwo}
         />
 
@@ -129,5 +127,6 @@ const styles = StyleSheet.create({
   modalContainer: {
     justifyContent: "center",
     alignItems: "center",
+    transform: [{ translateY: 50 }],
   },
 });

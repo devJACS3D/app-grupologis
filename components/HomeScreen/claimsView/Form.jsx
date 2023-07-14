@@ -43,11 +43,13 @@ const Form = ({ closeModal, onConfirm }) => {
   };
 
   const validarInfo = () => {
-    if (infoForm.asunto == "" || infoForm.description == "") {
-      showToast("Seleccione todos los campos", "error");
-    } else {
-      setLoader(true);
-      onConfirm(infoForm);
+    if (!loader) {
+      if (infoForm.asunto == "" || infoForm.description == "") {
+        showToast("Seleccione todos los campos", "error");
+      } else {
+        setLoader(true);
+        onConfirm(infoForm);
+      }
     }
   };
 

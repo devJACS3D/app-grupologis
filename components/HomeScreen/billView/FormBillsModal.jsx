@@ -146,7 +146,7 @@ export default FormBillsModal;
 
 const styles = StyleSheet.create({
   modalForm: {
-    top: widthPercentageToPx(20),
+    top: widthPercentageToPx(15),
     backgroundColor: colors.white,
     borderRadius: 10,
     paddingVertical: 20,

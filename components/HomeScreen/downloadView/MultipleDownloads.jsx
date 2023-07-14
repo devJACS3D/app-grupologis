@@ -65,14 +65,14 @@ export default MultipleDownloads;
 
 const styles = StyleSheet.create({
   modalForm: {
-    top: pixelDensity <= 1 ? widthPercentageToPx(2) : widthPercentageToPx(12),
+    top: widthPercentageToPx(4),
     backgroundColor: colors.white,
     borderRadius: 10,
     paddingVertical: 20,
     paddingHorizontal: 15,
     transform: [{ translateY: 65 }],
     width: widthPercentageToPx(90),
-    height: heightPercentageToPx(69),
+    height: heightPercentageToPx(pixelDensity <= 1 ? 67 : 74),
   },
   goBackButton: {
     position: "relative",
@@ -102,6 +102,6 @@ const styles = StyleSheet.create({
   },
   infoContent: {
     width: widthPercentageToPx(90),
-    height: heightPercentageToPx(43),
+    height: heightPercentageToPx(pixelDensity <= 1 ? 43 : 52),
   },
 });

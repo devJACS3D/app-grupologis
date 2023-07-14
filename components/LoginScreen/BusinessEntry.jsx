@@ -111,48 +111,50 @@ const BusinessE = ({ navigation }) => {
   }, [optionsHtml]);
 
   const handleSelectBusiness = async () => {
-    if (selectedBusiness != null) {
-      setLoader(true);
-      setReintentar(false);
-      const type = await AsyncStorage.getItem("type");
-      const typeCli = type === "business" ? 2 : 1;
-      const identification = await AsyncStorage.getItem("identi");
-      const phone = await AsyncStorage.getItem("phone");
+    if (!loader) {
+      if (selectedBusiness != null) {
+        setLoader(true);
+        setReintentar(false);
+        const type = await AsyncStorage.getItem("type");
+        const typeCli = type === "business" ? 2 : 1;
+        const identification = await AsyncStorage.getItem("identi");
+        const phone = await AsyncStorage.getItem("phone");
 
-      const info = `empresaId=${selectedBusiness}&identificacionId=${identification}`;
-      const path =
-        typeCli === 1
-          ? "usuario/getPerfilInfo.php"
-          : "usuario/getPerfilClienteInfo.php";
-      const respApi = await fetchPost(path, info);
+        const info = `empresaId=${selectedBusiness}&identificacionId=${identification}`;
+        const path =
+          typeCli === 1
+            ? "usuario/getPerfilInfo.php"
+            : "usuario/getPerfilClienteInfo.php";
+        const respApi = await fetchPost(path, info);
 
-      const { status, data } = respApi;
-      if (status) {
-        if (typeof data === "object") {
-          data.codEmp = identification;
-          data.empSel = selectedBusiness;
-          data.phoneLog = phone;
-          data.type = type;
-          setRole(type);
-          await AsyncStorage.clear();
-          const loggedIn = JSON.stringify(data);
-          await AsyncStorage.setItem("logged", loggedIn);
-          navigation.navigate("Home");
+        const { status, data } = respApi;
+        if (status) {
+          if (typeof data === "object") {
+            data.codEmp = identification;
+            data.empSel = selectedBusiness;
+            data.phoneLog = phone;
+            data.type = type;
+            setRole(type);
+            await AsyncStorage.clear();
+            const loggedIn = JSON.stringify(data);
+            await AsyncStorage.setItem("logged", loggedIn);
+            navigation.navigate("Home");
+          } else {
+            showToast("ocurrio un error en el sistema", "error");
+          }
         } else {
-          showToast("ocurrio un error en el sistema", "error");
+          if (data == "limitExe") {
+            setLoader(false);
+            showToast("El servicio demoro mas de lo normal", "error");
+            setReintentar(true);
+          } else if (data != "abortUs") {
+            setLoader(false);
+            showToast("ocurrio un error en el sistema", "error");
+          }
         }
       } else {
-        if (data == "limitExe") {
-          setLoader(false);
-          showToast("El servicio demoro mas de lo normal", "error");
-          setReintentar(true);
-        } else if (data != "abortUs") {
-          setLoader(false);
-          showToast("ocurrio un error en el sistema", "error");
-        }
+        showToast("Seleccione una empresa", "error");
       }
-    } else {
-      showToast("Seleccione una empresa", "error");
     }
   };
 

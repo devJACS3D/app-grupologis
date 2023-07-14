@@ -18,7 +18,7 @@ const UserView = (props) => {
   const { userData, updateUser } = useContext(authContext);
   const [dataUs, setDataUs] = useState({ ...userData });
   const [loaderComp, setLoaderComp] = useState(false);
-  const { setLoaderProg } = useContext(LoaderProgContext);
+  const { showLoader, setLoaderProg } = useContext(LoaderProgContext);
 
   const estadoCiv = [
     "DESCONOCIDO",
@@ -35,6 +35,11 @@ const UserView = (props) => {
       const userDataJSON = await AsyncStorage.getItem("logged");
       if (userDataJSON !== null) {
         const userData = JSON.parse(userDataJSON);
+        for (let key in userData) {
+          if (userData[key] === "null") {
+            userData[key] = "";
+          }
+        }
         setDataUs(userData);
         setLoaderComp(false);
       }
@@ -72,60 +77,66 @@ const UserView = (props) => {
   };
 
   const handleUpdateUser = async () => {
-    setLoaderProg(true);
-    let infoLog = await AsyncStorage.getItem("logged");
-    infoLog = JSON.parse(infoLog);
+    if (!showLoader) {
+      setLoaderProg(true);
+      let infoLog = await AsyncStorage.getItem("logged");
+      infoLog = JSON.parse(infoLog);
 
-    let path;
-    let info;
-    if (infoLog.type === "employee") {
-      // es 1
-      if (dataUs.Id_Est_Civ == undefined) {
-        dataUs.Id_Est_Civ = estadoCiv.indexOf(dataUs.Est_Civ.trim()).toString();
-      }
-      path = "usuario/getLoadEditar.php";
-      info = `CodEmpleado=${dataUs.codEmp.trim()}&Direccion=${
-        dataUs.dir_res && dataUs.dir_res.trim()
-      }&Email=${dataUs.e_mail && dataUs.e_mail.trim()}`;
-      info += `&Telefono=${dataUs.tel_res && dataUs.tel_res.trim()}&Celular=${
-        dataUs.tel_cel && dataUs.tel_cel.trim()
-      }`;
-      info += `&EstadoCivil=${
-        dataUs.Id_Est_Civ && dataUs.Id_Est_Civ.trim()
-      }&Empresa=${dataUs.empSel.trim()}`;
-    } else {
-      // es 2
-      path = "usuario/getLoadEditarClien.php";
-      info = `NitCliente=${dataUs.codEmp.trim()}&Direccion=${
-        dataUs.Direccion && dataUs.Direccion.trim()
-      }`;
-      info += `&Email=${dataUs.Correo && dataUs.Correo.trim()}&Telefono=${
-        dataUs.Telefono && dataUs.Telefono.trim()
-      }`;
-    }
-
-    const respApi = await fetchPost(path, info);
-
-    const { status, data } = respApi;
-    if (status) {
-      if (data == "Perfil actualizado correctamente" || data.Correcto == 1) {
-        setLoaderProg(false);
-        showToast("Perfil actualizado correctamente", "success");
-
-        await updateUser(dataUs);
-        await AsyncStorage.setItem("logged", JSON.stringify(dataUs));
+      let path;
+      let info;
+      if (infoLog.type === "employee") {
+        // es 1
+        if (dataUs.Id_Est_Civ == undefined) {
+          dataUs.Id_Est_Civ = estadoCiv
+            .indexOf(dataUs.Est_Civ.trim())
+            .toString();
+        }
+        path = "usuario/getLoadEditar.php";
+        info = `CodEmpleado=${dataUs.codEmp.trim()}&Direccion=${
+          dataUs.dir_res && dataUs.dir_res.trim()
+        }&Email=${dataUs.e_mail && dataUs.e_mail.trim()}`;
+        info += `&Telefono=${dataUs.tel_res && dataUs.tel_res.trim()}&Celular=${
+          dataUs.tel_cel && dataUs.tel_cel.trim()
+        }`;
+        info += `&EstadoCivil=${
+          dataUs.Id_Est_Civ && dataUs.Id_Est_Civ.trim()
+        }&Empresa=${dataUs.empSel.trim()}`;
       } else {
-        setLoaderProg(false);
-        showToast("Ocurrio un error al actualizar", "error");
+        // es 2
+        path = "usuario/getLoadEditarClien.php";
+        info = `NitCliente=${dataUs.codEmp.trim()}&Direccion=${
+          dataUs.Direccion && dataUs.Direccion.trim()
+        }`;
+        info += `&Email=${dataUs.Correo && dataUs.Correo.trim()}&Telefono=${
+          dataUs.Telefono && dataUs.Telefono.trim()
+        }`;
+      }
+
+      const respApi = await fetchPost(path, info);
+
+      const { status, data } = respApi;
+      if (status) {
+        if (data == "Perfil actualizado correctamente" || data.Correcto == 1) {
+          setLoaderProg(false);
+          showToast("Perfil actualizado correctamente", "success");
+
+          await updateUser(dataUs);
+          await AsyncStorage.setItem("logged", JSON.stringify(dataUs));
+        } else {
+          setLoaderProg(false);
+          showToast("Ocurrio un error al actualizar", "error");
+        }
+      } else {
+        if (data == "limitExe") {
+          setLoaderProg(false);
+          showToast("El servicio demoro mas de lo normal", "error");
+        } else if (data != "abortUs") {
+          setLoaderProg(false);
+          showToast("Ocurrio un error en el servidor", "error");
+        }
       }
     } else {
-      if (data == "limitExe") {
-        setLoaderProg(false);
-        showToast("El servicio demoro mas de lo normal", "error");
-      } else if (data != "abortUs") {
-        setLoaderProg(false);
-        showToast("Ocurrio un error en el servidor", "error");
-      }
+      console.log("no enviar");
     }
   };
 
