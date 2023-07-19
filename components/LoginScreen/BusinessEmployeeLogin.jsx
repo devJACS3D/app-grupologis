@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   logoImage: {
-    width: widthPercentageToPx(35),
+    width: widthPercentageToPx(36.5),
     height: heightPercentageToPx(9),
     overflow: "visible",
   },

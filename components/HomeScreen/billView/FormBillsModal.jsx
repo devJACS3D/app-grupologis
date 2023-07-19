@@ -40,7 +40,6 @@ const FormBillsModal = ({ closeModal, onConfirm }) => {
   };
 
   const handleChangeMonth = (e) => {
-    console.log("1", e);
     setPeriod({
       start: period.start.set("M", e),
       end: period.end.set("M", e),
@@ -72,7 +71,6 @@ const FormBillsModal = ({ closeModal, onConfirm }) => {
     if (!hasChangedYear || !hasChangedMonth) {
       showToast("Seleccione los datos", "error");
     } else {
-      console.log("values", values);
       onConfirm(values);
     }
   };

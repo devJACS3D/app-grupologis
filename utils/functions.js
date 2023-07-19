@@ -115,15 +115,17 @@ const characteres = () => {
   return [init, fin];
 };
 
-export async function fetchPost(path, body, limit = "") {
+export async function fetchPost(path, body, limit = "", encodUri = false) {
   const minSec = typeof limit == "number" ? limit : 20000;
   const token = await getToken(minSec);
   const carac = await characteres();
   if (token.status) {
     body += `&token=${token.data}`;
-    const encodedBody = encode(body);
+    if (encodUri) {
+      body = encodeURIComponent(body); // encripta como url
+    }
+    const encodedBody = encode(body); // encripta utf8
     const data = `value=${carac[0]}${encodedBody}${carac[1]}`;
-
     return await post(path, data, minSec);
   } else {
     return { status: false, data: token.data };

@@ -58,7 +58,6 @@ const StepThree = ({ formData, onComplete, completed }) => {
         cod_con: "",
         nom_con: "Sin bonificacion",
       });
-      console.log(data.novedades);
       setListAuxBon(data.novedades);
     } else {
       if (data == "limitExe") {

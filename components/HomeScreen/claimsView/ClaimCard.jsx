@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    transform: [{ translateY: 50 }],
+    transform: [{ translateY: 20 }],
   },
   infoClaim: {
     flex: 1,
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   modal: {
     backgroundColor: "white",
     width: widthPercentageToPx(90),
-    height: heightPercentageToPx(pixelDensity <= 1 ? 60 : 70),
+    height: heightPercentageToPx(pixelDensity <= 1 ? 70 : 80),
     borderRadius: 10,
     // padding: 30,
     paddingHorizontal: 30,

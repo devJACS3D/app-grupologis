@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   Keyboard,
+  PixelRatio,
   Pressable,
   StyleSheet,
   Text,
@@ -22,6 +23,7 @@ import LoaderItemSwitch from "../../common/loaders/LoaderItemSwitch";
 import { useFocusEffect } from "@react-navigation/native";
 import FormuBussines from "../../LoginScreen/FormBussinessEntry/FormBussinesEntry";
 
+const pixelDensity = parseInt(PixelRatio.get());
 const Form = ({ closeModal, onConfirm }) => {
   const [loader, setLoader] = useState(false);
   const [infoForm, setInfoForm] = useState({
@@ -48,7 +50,6 @@ const Form = ({ closeModal, onConfirm }) => {
       if (infoForm.asunto == "" || infoForm.description == "") {
         showToast("Seleccione todos los campos", "error");
       } else {
-        console.log(infoForm.description.length);
         if (infoForm.description.length > 1000) {
           showToast("Solo es permitido 1000 caracteres", "error");
           return;
@@ -117,14 +118,14 @@ export default Form;
 
 const styles = StyleSheet.create({
   modalForm: {
-    top: widthPercentageToPx(18),
+    top: widthPercentageToPx(pixelDensity <= 1 ? 18 : 14),
     backgroundColor: colors.white,
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 15,
-    transform: [{ translateY: 50 }],
+    // transform: [{ translateY: 50 }],
     width: widthPercentageToPx(90),
-    height: heightPercentageToPx(68),
+    height: heightPercentageToPx(pixelDensity <= 1 ? 70 : 78),
   },
   goBackButton: {
     position: "relative",
@@ -140,7 +141,7 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    gap: 11,
+    gap: pixelDensity <= 1 ? 5 : 10,
   },
 
   titleContainer: {

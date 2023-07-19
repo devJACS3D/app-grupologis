@@ -78,8 +78,6 @@ const DownloadableCard = ({ title, desc, image, id, navigation }) => {
           setLoaderProg(false);
         }
       }
-    } else {
-      console.log("no enviar");
     }
   };
 
@@ -195,8 +193,6 @@ const DownloadableCard = ({ title, desc, image, id, navigation }) => {
           setLoaderProg(false);
         }
       }
-    } else {
-      console.log("no pasar");
     }
   };
 

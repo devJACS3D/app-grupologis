@@ -50,10 +50,32 @@ const UserView = (props) => {
     }
   };
 
+  const getInfoPerfil = async () => {
+    const userDataJSON = await AsyncStorage.getItem("logged");
+    const userData = JSON.parse(userDataJSON);
+    const info = `empresaId=${userData.empSel}&identificacionId=${userData.codEmp}`;
+    const path =
+      userData.type === "employee"
+        ? "usuario/getPerfilInfo.php"
+        : "usuario/getPerfilClienteInfo.php";
+    // userData.type === "employee";  es 1
+    const respApi = await fetchPost(path, info);
+    const { status, data } = respApi;
+    if (status) {
+      data.codEmp = userData.codEmp;
+      data.empSel = userData.empSel;
+      data.phoneLog = userData.phoneLog;
+      data.type = userData.type;
+      const loggedIn = JSON.stringify(data);
+      await AsyncStorage.setItem("logged", loggedIn);
+    }
+    getUserDataFromAsyncStorage();
+  };
+
   useFocusEffect(
     React.useCallback(() => {
       setLoaderComp(true);
-      getUserDataFromAsyncStorage();
+      getInfoPerfil();
       return () => {
         cancelarSolicitudesApi();
         setLoaderProg(false);
@@ -113,7 +135,7 @@ const UserView = (props) => {
         }`;
       }
 
-      const respApi = await fetchPost(path, info);
+      const respApi = await fetchPost(path, info, "", true);
 
       const { status, data } = respApi;
       if (status) {

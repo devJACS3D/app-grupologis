@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
   //   width: widthPercentageToPx(100),
   // },
   logoImage: {
-    width: widthPercentageToPx(35),
+    width: widthPercentageToPx(36.5),
     height: heightPercentageToPx(9),
     marginTop: 50,
     marginBottom: 50,
@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.mainBlue,
     fontFamily: "Poppins-Regular",
     height: 55,
-    width: widthPercentageToPx(65),
+    width: widthPercentageToPx(70),
     display: "flex",
     justifyContent: "center",
     alignItems: "center",

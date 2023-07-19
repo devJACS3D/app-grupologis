@@ -127,7 +127,7 @@ const Claim = (props) => {
     const typeCli = infoLog.type === "employee" ? 1 : 2;
     const info = `Asunto=${infoPqr.asunto}&Detalle=${infoPqr.description}&Empresa=${empSel}&IdUsuario=${codEmp}&tipousuarioId=${typeCli}`;
     const path = "usuario/getQuejas.php";
-    const respApi = await fetchPost(path, info);
+    const respApi = await fetchPost(path, info, "", true);
     const { status, data } = respApi;
     if (status) {
       if (data.Correcto === 1) {
