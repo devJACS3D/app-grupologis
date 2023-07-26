@@ -44,7 +44,7 @@ const Footer = (props) => {
       id: "pqr",
       icon: "message-square",
       screen: "ClaimsView",
-      show: true,
+      show: role === "business",
     },
     {
       id: "profile",
@@ -56,7 +56,7 @@ const Footer = (props) => {
       id: "bot",
       icon: "customerservice",
       screen: "HelpBox",
-      show: true,
+      show: role === "employee",
     },
   ];
 

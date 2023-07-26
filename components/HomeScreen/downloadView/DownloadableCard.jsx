@@ -500,7 +500,7 @@ const styles = StyleSheet.create({
   description: {
     fontFamily: "Volks-Serial-Light",
     color: colors.descriptionColors,
-    ...getFontStyles(12, 0.9, 1.2),
+    ...getFontStyles(12, 0.9, 1),
     flex: 1,
   },
   downloadButton: {

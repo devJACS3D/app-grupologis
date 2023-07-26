@@ -6,7 +6,8 @@ const pixelDensity = parseInt(PixelRatio.get());
 const EmployeeMcard = ({ title, desc, image, id, onRedirect }) => {
   return (
     <View style={styles.scrollStyle}>
-      <View style={styles.containerCard}>
+      <View>
+        {/* <View style={styles.containerCard}> */}
         <View style={styles.certificadoImage}>{image}</View>
         <Text style={styles.title(pixelDensity <= 1 ? 12 : 15)}>{title}</Text>
         <Text style={styles.description}>{desc}</Text>
@@ -24,6 +25,7 @@ const EmployeeMcard = ({ title, desc, image, id, onRedirect }) => {
             </Text>
           </View>
         </Pressable>
+        {/* </View> */}
       </View>
     </View>
   );
@@ -33,11 +35,12 @@ export default EmployeeMcard;
 
 const styles = StyleSheet.create({
   scrollStyle: {
+    marginRight: 12,
     width: 148,
     backgroundColor: colors.white,
     borderRadius: 17,
-    paddingHorizontal: 15,
-    paddingVertical: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 19,
     alignItems: "flex-start",
     flexDirection: "column",
   },
@@ -59,8 +62,8 @@ const styles = StyleSheet.create({
     fontFamily: "Volks-Serial-Light",
     color: colors.descriptionColors,
     ...getFontStyles(12, 0.9, 1),
-
-    // height: 50,
+    flex: 1,
+    // height: 60,
   },
   downloadButton: {
     backgroundColor: colors.buttonsColor,
