@@ -117,7 +117,7 @@ const Header = ({}) => {
           )}
         </View>
         <View style={styles.infoUser}>
-          <Text style={styles.hello}>Hola!</Text>
+          <Text style={styles.hello}>Hola,</Text>
           <Text style={styles.nameUser}>
             {dataUs.Nombre != undefined
               ? dataUs.Nombre.length > 20

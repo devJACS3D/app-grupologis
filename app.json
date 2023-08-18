@@ -2,7 +2,7 @@
   "expo": {
     "name": "grupologis-app",
     "slug": "grupologis-app",
-    "version": "1.8.3",
+    "version": "1.8.4",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -14,18 +14,20 @@
       "width": "100%",
       "height": "100%"
     },
+    "locales": {
+      "es": "./locales/es.json",
+      "en": "./locales/en.json"
+    },
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "icon": "./assets/icon-120.png",
-      "buildNumber": "1.8.3",
+      "buildNumber": "1.8.4",
       "bundleIdentifier": "mglio.com",
       "supportsTablet": true,
 
       "infoPlist": {
         "CFBundleIconName": "icon",
-        "NSPhotoLibraryUsageDescription": "La aplicación necesita acceder a la biblioteca de medios para guardar los archivos descargados",
-        "NSCameraUsageDescription": "Se requiere acceso a la cámara para tomar fotos",
-        "NSLocationWhenInUseUsageDescription": "Se requiere acceso a la ubicación para mostrar información personalizada basada en la ubicación",
+        "NSPhotoLibraryUsageDescription": "Se requiere permiso para acceder la biblioteca multimedia para poder seleccionar las imagenes y establecerlas como perfil",
         "PHPhotoLibraryPreventAutomaticLimitedAccessAlert": true
       }
     },

@@ -133,20 +133,31 @@ const Download = (props) => {
         <View style={styles.downloadContainer}>
           <View style={styles.infoContainer}>
             <View style={styles.title}>
-              <Text style={styles.welcomeText}>¡Bienvenido </Text>
-              <Text style={styles.subtitle}>al portal Grupo Logis!</Text>
+              <Text style={styles.welcomeText}>Descarga </Text>
+              <Text style={styles.subtitle}>Certificados y documentos</Text>
 
               <View style={styles.descriptionContainer}>
                 <Text style={styles.welcomeDesc}>
-                  Aquí podrás autogestionar
+                  Trabajamos para mejorar tu experiencia como
                 </Text>
-                <Text style={styles.welcomeDesc}>tus solicitudes de una</Text>
-                <Text style={styles.welcomeDesc}>forma sencilla y ágil.</Text>
+
+                <Text style={styles.welcomeDesc}>
+                  {userData.role === "employee" ? "colaborador. " : "cliente. "}
+                  Aquí puedes
+                  {userData.role === "employee"
+                    ? " descargar "
+                    : " autogestionar tus "}
+                </Text>
+                <Text style={styles.welcomeDesc}>
+                  {userData.role === "employee"
+                    ? "certificados y documentos."
+                    : "solicitudes, informes y documentos. "}
+                </Text>
               </View>
             </View>
             <Image
               style={styles.workersImage}
-              source={require("../assets/images/home/banners/imgDownloadDocuments.png")}
+              source={require("../assets/images/home/banners/bannerTwo.png")}
             />
           </View>
           <View style={styles.containerScroll}>
@@ -224,14 +235,14 @@ const styles = StyleSheet.create({
   welcomeDesc: {
     fontFamily: "Volks-Serial-Light",
     color: colors.descriptionColors,
-    ...getFontStyles(14, 0.5, 1.1),
+    ...getFontStyles(14, 0.6, 1),
   },
 
   workersImage: {
-    height: heightPercentageToPx(30),
-    width: widthPercentageToPx(70),
-    left: 50,
-    bottom: 180,
+    height: heightPercentageToPx(22),
+    width: widthPercentageToPx(50),
+    left: 82,
+    bottom: 83,
   },
 
   textInputContainers: {
@@ -246,16 +257,16 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     width: widthPercentageToPx(90),
-    height: heightPercentageToPx(26),
+    height: heightPercentageToPx(29),
     overflow: "hidden",
-    marginBottom: 7,
+    marginBottom: 5,
     backgroundColor: colors.white,
     borderRadius: 17,
     alignItems: "center",
   },
   title: {
     width: "100%",
-    padding: 20,
+    padding: 16,
   },
   containerScroll: {
     flex: 1,

@@ -188,7 +188,7 @@ const Code = ({ navigation }) => {
 
           <View style={styles.descriptionContainer}>
             <Text style={styles.welcomeDesc}>
-              Ingrese el código de 4 digitos que fue enviado a su {medioSedMens}
+              Ingresa el código de 4 dígitos que fue enviado a tu {medioSedMens}
               .
             </Text>
           </View>
@@ -263,7 +263,7 @@ const Code = ({ navigation }) => {
         <Image
           style={styles.loginBackgroundImages}
           // source={{ uri: images.loginImage }}
-          source={images.loginImage}
+          source={images.loginImageCode}
         />
       </View>
     </View>

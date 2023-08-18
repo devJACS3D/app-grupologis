@@ -14,8 +14,8 @@ const ClaimList = (props) => {
     <View style={styles.newsListContainer}>
       <View style={styles.titleContainer}>
         <FontAwesome5 name="calendar-alt" size={24} color={colors.mainBlue} />
-        <Text style={styles.firstTitle}>Quejas /</Text>
-        <Text style={styles.secondTitle}>Enviadas</Text>
+        <Text style={styles.firstTitle}>PQR</Text>
+        {/* <Text style={styles.secondTitle}>Enviadas</Text> */}
       </View>
       <View>
         {claimsList.length > 0 &&

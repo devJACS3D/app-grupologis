@@ -80,7 +80,7 @@ const Form = ({ closeModal, onConfirm }) => {
         <FormTitle
           title={"Nueva PQR"}
           description={
-            "Puedes interponer una queja o reclamo por este medio o hacer seguimiento de las mismas"
+            "Aquí puedes interponer tus peticiones, quejas o reclamos."
           }
         />
 

@@ -20,7 +20,9 @@ const imgDownloadDocuments = require("../assets/images/home/banners/imgDownloadD
 
 const imgBussines = require("../assets/images/auth/img-bussines-login.png");
 const imgEmployee = require("../assets/images/auth/img-employee.png");
-const loginImage = require("../assets/images/auth/login-img.png");
+// const loginImage = require("../assets/images/auth/login-img.png");
+const loginImage = require("../assets/images/auth/login-img-p.jpg");
+const loginImageCode = require("../assets/images/auth/login-img-code.jpg");
 const employeeNimage = require("../assets/images/home/banners/imgEmployees.png");
 const bannerTwo = require("../assets/images/home/banners/bannerTwo.png");
 const bannerThree = require("../assets/images/home/banners/bannerTwo.png");
@@ -73,6 +75,7 @@ export const colors = {
 
 export const images = {
   loginImage: loginImage,
+  loginImageCode: loginImageCode,
   colorLogo:
     "https://firebasestorage.googleapis.com/v0/b/grupologis-app.appspot.com/o/images%2FlogoColor.png?alt=media&token=cce21b6a-ad7d-4da4-9015-ec672632f72d",
   whiteLogo:
@@ -262,7 +265,7 @@ export const employeeManagement = [
   {
     id: "novedai",
     title: "Orden de ingreso",
-    description: "Ahora puedes generar una novedad de ingreso desde la App",
+    description: "Aquí puedes crear una nueva orden de ingreso",
     // image: svg.
   },
   // {

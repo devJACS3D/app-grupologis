@@ -189,7 +189,7 @@ const BusinessE = ({ navigation }) => {
               <Text style={styles.subtitle}>la empresa.</Text>
               <View style={styles.descriptionContainer}>
                 <Text style={styles.welcomeDesc}>
-                  Seleccione la empresa donde desea realizar la consulta.
+                  Selecciona la empresa por la cual deseas ingresar
                 </Text>
               </View>
             </View>
@@ -198,7 +198,7 @@ const BusinessE = ({ navigation }) => {
           <View style={styles.formContent}>
             <View style={styles.pickerContainer}>
               <FormuBussines
-                title="Seleccione la empresa"
+                title="Selecciona la empresa"
                 list={businessOptionsNew}
                 onOptionSel={(selected) => setSelectedBusiness(selected)}
               />

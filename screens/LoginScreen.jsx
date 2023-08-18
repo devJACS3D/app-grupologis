@@ -31,8 +31,8 @@ const LoginScreen = ({ navigation }) => {
       <View style={styles.topContainer}>
         <Image style={styles.logoImage} source={{ uri: images.colorLogo }} />
         <View style={styles.title}>
-          <Text style={styles.welcomeText}>Bienvenidos!</Text>
-          <Text style={styles.subtitle}>a la Aplicación</Text>
+          <Text style={styles.welcomeText}>Bienvenido</Text>
+          <Text style={styles.subtitle}>a la App Grupo Logis</Text>
 
           <View style={styles.descriptionContainer}>
             <Text style={styles.welcomeDesc}>
@@ -43,7 +43,7 @@ const LoginScreen = ({ navigation }) => {
         <View style={styles.buttonsContainer}>
           <Pressable onPress={() => handleSelection("employee")}>
             <View style={styles.asEmployeeButton}>
-              <Text style={{ color: colors.white }}>SOY EMPLEADO</Text>
+              <Text style={{ color: colors.white }}>SOY COLABORADOR</Text>
             </View>
           </Pressable>
           <Pressable onPress={() => handleSelection("business")}>

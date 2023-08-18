@@ -327,10 +327,6 @@ export const downloadArchivoIOS = async (base64, mime, name) => {
       mime == "application/octet-stream"
         ? getMimeFromExtension(fileExtension)
         : mime;
-    // Leer el contenido del archivo guardado
-    // const fileContent = await FileSystem.readAsStringAsync(fileUri, {
-    //   encoding: FileSystem.EncodingType.Base64,
-    // });
 
     const infoFile = {
       file: fileUri,

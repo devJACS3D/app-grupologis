@@ -223,8 +223,8 @@ const Claim = (props) => {
                   setModal(false);
                   setShowForm(true);
                 }}
-                title="Su queja o reclamo ha sido enviada"
-                description="Recuerde estar pendiente a su correo para recibir la respuesta"
+                title="Tu PQR ha sido enviada"
+                description="Recuerda estar atento a tu correo para recibir la respuesta."
                 image={images.checkImage}
               />
             )}

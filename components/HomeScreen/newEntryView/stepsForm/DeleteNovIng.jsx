@@ -62,7 +62,7 @@ const DeleteNovIng = (props) => {
         ¿Esta seguro que desea eliminar este registro?
       </Text>
       <Text style={styles.descrip}>
-        Si la eliminas no podra ser recuperada posterior mente
+        Si lo eliminas no lo podrás recuperar posteriormente.
       </Text>
       <GLButton
         onPressAction={() => deleteReg()}

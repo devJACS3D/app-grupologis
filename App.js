@@ -5,7 +5,6 @@ import { useBackHandler } from "@react-native-community/hooks";
 
 import * as ScreenOrientation from "expo-screen-orientation";
 import { useFonts } from "expo-font";
-
 import { PermissionsAndroid, Platform } from "react-native";
 import * as MediaLibrary from "expo-media-library";
 import * as Permissions from "expo-permissions";
@@ -65,11 +64,11 @@ async function getMediaLibraryPermission() {
     const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
     if (status !== "granted") {
       const msg =
-        "Se requiere permiso para acceder la biblioteca multimedia y asi poder guardar los documentos que usted descargue desde la aplicación";
+        "Se requiere permiso para acceder la biblioteca multimedia y asi poder guardar los documentos que usted descargue desde la aplicación y seleccionar su foto de perfil";
       Alert.alert(
         "Permiso denegado",
         Platform.OS === "ios"
-          ? "Se requiere permiso para acceder la biblioteca multimedia y asi poder seleccionar imagenes"
+          ? "Se requiere permiso para acceder la biblioteca multimedia para poder seleccionar las imagenes y establecerlas como perfil"
           : `${msg}.`,
         [
           {

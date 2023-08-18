@@ -6,6 +6,8 @@ import {
   StyleSheet,
   Text,
   View,
+  Switch,
+  Linking,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
@@ -21,6 +23,7 @@ import {
 
 import { InputWithIcon } from "../common/form/Input";
 import { fetchPost, validatePhone } from "../../utils/functions";
+import Checkbox from "expo-checkbox";
 
 import CloseLogin from "../../assets/images/auth/svg/CloseLogin";
 import IconHelp from "../../assets/images/auth/svg/IconHelp";
@@ -28,12 +31,14 @@ import LoaderItemSwitch from "../common/loaders/LoaderItemSwitch";
 import { decode } from "base-64";
 import { useFocusEffect } from "@react-navigation/core";
 import { cancelarSolicitudesApi } from "../../utils/axiosInstance";
+
 const pixelDensity = parseInt(PixelRatio.get());
 
 const BusinessEmployeeLogin = ({ navigation, route }) => {
   const { type } = route.params;
   const [identification, setIdentification] = useState("");
   const [phone, setPhone] = useState("");
+  const [polityData, setPolityData] = useState(false);
   const [loader, setLoader] = useState(false);
   const [reintentar, setReintentar] = useState(false);
 
@@ -59,49 +64,58 @@ const BusinessEmployeeLogin = ({ navigation, route }) => {
     await AsyncStorage.clear();
   };
 
+  const linkPolityData = () => {
+    Linking.openURL("https://grupologis.co/politica-de-tratamiento-de-datos/");
+  };
+
   const submitForm = async () => {
     if (!loader) {
-      if (identification != "" && phone != "") {
-        if (!validatePhone(phone)) {
-          showToast("El celular es incorrecto", "error");
-        } else {
-          setLoader(true);
-          setReintentar(false);
-          const typeCli = type === "business" ? 2 : 1;
-          const body = `contactTipoClienteField=${typeCli}
-              &contactIdentificacionField=${identification}
-              &contactNumeroTelefonico=${phone}
-              &contactApp=true`;
-          const path = "usuario/saveUsuarioNew.php";
-          const respApi = await fetchPost(path, body);
-          const { status, data } = respApi;
-          if (status) {
-            const data = respApi.data;
-            if (typeof data == "object") {
-              const codeDec = decode(data.codigo);
-              const codeVer = codeDec.slice(3, -2);
-              await AsyncStorage.setItem("type", type);
-              await AsyncStorage.setItem("identi", identification);
-              await AsyncStorage.setItem("phone", phone);
-              await AsyncStorage.setItem("code", codeVer);
-              navigation.navigate("CodeAuth", { type: "business" });
-            } else {
-              setLoader(false);
-              showToast("El usuario o celular no son validos", "error");
-            }
+      console.log(polityData);
+      if (polityData) {
+        if (identification != "" && phone != "") {
+          if (!validatePhone(phone)) {
+            showToast("El celular es incorrecto", "error");
           } else {
-            if (data == "limitExe") {
-              setLoader(false);
-              showToast("El servicio demoro mas de lo normal", "error");
-              setReintentar(true);
-            } else if (data != "abortUs") {
-              setLoader(false);
-              showToast("ocurrio un error en el sistema", "error");
+            setLoader(true);
+            setReintentar(false);
+            const typeCli = type === "business" ? 2 : 1;
+            const body = `contactTipoClienteField=${typeCli}
+                &contactIdentificacionField=${identification}
+                &contactNumeroTelefonico=${phone}
+                &contactApp=true`;
+            const path = "usuario/saveUsuarioNew.php";
+            const respApi = await fetchPost(path, body);
+            const { status, data } = respApi;
+            if (status) {
+              const data = respApi.data;
+              if (typeof data == "object") {
+                const codeDec = decode(data.codigo);
+                const codeVer = codeDec.slice(3, -2);
+                await AsyncStorage.setItem("type", type);
+                await AsyncStorage.setItem("identi", identification);
+                await AsyncStorage.setItem("phone", phone);
+                await AsyncStorage.setItem("code", codeVer);
+                navigation.navigate("CodeAuth", { type: "business" });
+              } else {
+                setLoader(false);
+                showToast("El usuario o celular no son validos", "error");
+              }
+            } else {
+              if (data == "limitExe") {
+                setLoader(false);
+                showToast("El servicio demoro mas de lo normal", "error");
+                setReintentar(true);
+              } else if (data != "abortUs") {
+                setLoader(false);
+                showToast("ocurrio un error en el sistema", "error");
+              }
             }
           }
+        } else {
+          showToast("Todos los campos son requeridos", "error");
         }
       } else {
-        showToast("Todos los campos son requeridos", "error");
+        showToast("Acepte los terminos para continuar", "error");
       }
     }
   };
@@ -129,17 +143,22 @@ const BusinessEmployeeLogin = ({ navigation, route }) => {
 
         <View style={styles.textsContainer}>
           <View style={styles.titleContainer}>
-            <Text style={styles.welcomeText}>SOY</Text>
             <Text style={styles.subtitle}>
-              {type === "business" ? "EMPRESA" : "EMPLEADO"}
+              {type === "business" ? "¡Bienvenido!" : "¡Bienvenido!"}
             </Text>
+            {/* {type === "business" && (
+              <Text style={styles.welcomeText}>a la App Grupo Logis!</Text>
+            )} */}
           </View>
 
           {/* <View style={styles.descriptionContainer}> */}
           {/* </View> */}
           <View style={styles.descriptionContainer}>
             <Text style={styles.welcomeDesc}>
-              Por favor ingrese nit cliente y número de teléfono autorizado
+              Aquí podrás autogestionar algunas de tus solicitudes.
+            </Text>
+            <Text style={styles.welcomeDescForm}>
+              Ingresa tu número de identificación y número de celular.
             </Text>
           </View>
         </View>
@@ -177,6 +196,31 @@ const BusinessEmployeeLogin = ({ navigation, route }) => {
               </Text>
             </View>
           </Pressable>
+          {/* politica de datos  */}
+          <View style={styles.containerPolity}>
+            <View style={styles.descCheck}>
+              <Checkbox
+                style={styles.checkPolity}
+                value={polityData}
+                onValueChange={setPolityData}
+                color={polityData ? "#4630EB" : undefined}
+              />
+              <Text style={styles.titlePolity}>Aceptar</Text>
+            </View>
+            <View style={styles.containerDesPolity}>
+              <Text style={styles.titleDescr}>
+                Política de tratamiento de datos
+              </Text>
+              <Text style={styles.descrip}>
+                LOGÍSTICA LABORAL SAS es la empresa de servicios temporales que
+                en desarrollo de su objeto social es receptora y por ende
+                responsable de datos personales,
+              </Text>
+              <Pressable onPress={() => linkPolityData()}>
+                <Text style={styles.titleDescr}>Leer Politica completa</Text>
+              </Pressable>
+            </View>
+          </View>
         </View>
       </View>
       <View style={styles.imageContainer}>
@@ -218,7 +262,7 @@ const styles = StyleSheet.create({
       alignItems: "center",
       justifyContent: "space-between",
       paddingTop: heightPercentageToPx(4),
-      height: heightPercentageToPx(pixelDensity <= 1 ? 109 : 107),
+      height: heightPercentageToPx(pixelDensity <= 1 ? 112 : 107),
     };
   },
   formContainer: {
@@ -241,7 +285,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 40,
-    marginBottom: 30,
+    marginBottom: 20,
   },
   logoImage: {
     width: widthPercentageToPx(36.5),
@@ -276,13 +320,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     textAlign: "justify",
     width: widthPercentageToPx(90),
-    marginBottom: 20,
+    marginBottom: 10,
   },
   welcomeDesc: {
     fontFamily: "Poppins-Regular",
     color: colors.white,
     ...getFontStyles(13, 0.7, 1.2),
     textAlign: "center",
+  },
+  welcomeDescForm: {
+    fontFamily: "Poppins-Bold",
+    color: colors.white,
+    ...getFontStyles(14, 0.7, 1.2),
+    textAlign: "center",
+    paddingTop: 15,
   },
   loginFormInput: {
     fontFamily: "Poppins-Regular",
@@ -296,7 +347,7 @@ const styles = StyleSheet.create({
   asIngresaButton: {
     backgroundColor: "transparent",
     fontFamily: "Poppins-Regular",
-    height: 50,
+    height: pixelDensity <= 1 ? 45 : 50,
     width: widthPercentageToPx(60),
     display: "flex",
     justifyContent: "center",
@@ -317,7 +368,7 @@ const styles = StyleSheet.create({
     marginTop: pixelDensity <= 1 ? -3 : 10,
   },
   imageContainer: {
-    height: heightPercentageToPx(45),
+    height: heightPercentageToPx(pixelDensity <= 1 ? 37 : 39),
     width: widthPercentageToPx(100),
   },
   loginBackgroundImages: {
@@ -330,8 +381,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom:
       Platform.OS == "android"
-        ? heightPercentageToPx(12)
-        : heightPercentageToPx(10),
+        ? heightPercentageToPx(pixelDensity <= 1 ? 15 : 12)
+        : heightPercentageToPx(pixelDensity <= 1 ? 13 : 10),
     width: widthPercentageToPx(80),
     backgroundColor: "rgba(255, 255, 255, 0.8)",
     height: 52,
@@ -357,5 +408,46 @@ const styles = StyleSheet.create({
   },
   emlInfo: {
     fontFamily: "Poppins-Bold",
+  },
+  containerPolity: {
+    top: Platform.OS == "android" ? 0 : 2,
+    // marginBottom: Platform.OS == "android" ? -10 : 0,
+    // height: Platform.OS == "android" ? 30 : 30,
+    width: widthPercentageToPx(60),
+    zIndex: 999,
+  },
+  descCheck: {
+    display: "flex",
+    alignItems: "flex-start",
+    flexDirection: "row",
+  },
+  checkPolity: {
+    borderColor: colors.white,
+    borderRadius: 5,
+  },
+  titlePolity: {
+    fontFamily: "Poppins-Bold",
+    color: colors.white,
+    ...getFontStyles(17, 1, 1.2),
+    paddingLeft: 7,
+  },
+  containerDesPolity: {
+    display: "flex",
+    flexDirection: "column",
+    width: widthPercentageToPx(62),
+  },
+  titleDescr: {
+    fontFamily: "Poppins-Bold",
+    color: colors.white,
+    ...getFontStyles(14, 0.8, 1.2),
+    // paddingLeft: 7,
+  },
+  descrip: {
+    fontFamily: "Poppins-Regular",
+    color: colors.white,
+    ...getFontStyles(10, 0.8, 1),
+  },
+  textPolity: {
+    marginLeft: 10,
   },
 });

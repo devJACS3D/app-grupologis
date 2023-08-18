@@ -225,7 +225,7 @@ const NewEntryView = (props) => {
         }
       >
         <CardEinfo
-          title={"Orden de ingreso"}
+          title={"ORDENES DE INGRESO"}
           buttonText="Generar"
           showButton={true}
           showInput={false}
@@ -254,8 +254,8 @@ const NewEntryView = (props) => {
                   setModal(false);
                   setShowForm(true);
                 }}
-                title="Se ha generado su solicitud de ingreso"
-                description="Recuerde estar pendiente a su correo para recibir la respuesta"
+                title="Se ha creado tu orden correctamente"
+                description=""
                 image={images.checkImage}
               />
             )}
