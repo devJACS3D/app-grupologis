@@ -270,9 +270,9 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     display: "flex",
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "center",
-    width: widthPercentageToPx(100),
+    width: widthPercentageToPx(60),
   },
   logoContainer: {
     display: "flex",
