@@ -146,13 +146,7 @@ const BusinessEmployeeLogin = ({ navigation, route }) => {
             <Text style={styles.subtitle}>
               {type === "business" ? "¡Bienvenido!" : "¡Bienvenido!"}
             </Text>
-            {/* {type === "business" && (
-              <Text style={styles.welcomeText}>a la App Grupo Logis!</Text>
-            )} */}
           </View>
-
-          {/* <View style={styles.descriptionContainer}> */}
-          {/* </View> */}
           <View style={styles.descriptionContainer}>
             <Text style={styles.welcomeDesc}>
               Aquí podrás autogestionar algunas de tus solicitudes.
@@ -317,22 +311,22 @@ const styles = StyleSheet.create({
   descriptionContainer: {
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "flex-start",
     textAlign: "justify",
-    width: widthPercentageToPx(90),
-    marginBottom: 10,
+    width: widthPercentageToPx(60),
+    marginBottom: 7,
   },
   welcomeDesc: {
     fontFamily: "Poppins-Regular",
     color: colors.white,
     ...getFontStyles(13, 0.7, 1.2),
-    textAlign: "center",
+    textAlign: "left",
   },
   welcomeDescForm: {
     fontFamily: "Poppins-Bold",
     color: colors.white,
-    ...getFontStyles(14, 0.7, 1.2),
-    textAlign: "center",
+    ...getFontStyles(13.5, 0.7, 1.2),
+    textAlign: "left",
     paddingTop: 15,
   },
   loginFormInput: {
@@ -368,8 +362,9 @@ const styles = StyleSheet.create({
     marginTop: pixelDensity <= 1 ? -3 : 10,
   },
   imageContainer: {
-    height: heightPercentageToPx(pixelDensity <= 1 ? 37 : 39),
+    height: heightPercentageToPx(pixelDensity <= 1 ? 33 : 37),
     width: widthPercentageToPx(100),
+    zIndex: 9,
   },
   loginBackgroundImages: {
     height: Platform.OS === "ios" ? "90%" : heightPercentageToPx(43),
@@ -389,6 +384,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     borderRadius: 10,
+    zIndex: 99,
   },
   helpIcon: {
     width: widthPercentageToPx(15),
@@ -410,6 +406,7 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Bold",
   },
   containerPolity: {
+    position: "relative",
     top: Platform.OS == "android" ? 0 : 2,
     // marginBottom: Platform.OS == "android" ? -10 : 0,
     // height: Platform.OS == "android" ? 30 : 30,
@@ -441,6 +438,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     ...getFontStyles(14, 0.8, 1.2),
     // paddingLeft: 7,
+    zIndex: 99,
   },
   descrip: {
     fontFamily: "Poppins-Regular",

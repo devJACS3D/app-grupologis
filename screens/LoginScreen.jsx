@@ -79,8 +79,8 @@ const styles = StyleSheet.create({
     width: widthPercentageToPx(75),
   },
   imageContainer: {
-    height: heightPercentageToPx(40),
-    width: widthPercentageToPx(100),
+    height: heightPercentageToPx(pixelDensity <= 1 ? 30 : 40),
+    width: widthPercentageToPx(pixelDensity <= 1 ? 90 : 100),
   },
   logoImage: {
     width: widthPercentageToPx(36.5),

@@ -26,7 +26,7 @@ export default {
         foregroundImage: "./assets/adaptive-icon.png",
         backgroundColor: "#ffffff",
       },
-      versionCode: 2,
+      versionCode: 3,
       // ... Resto de tu configuración Android ...
     },
 
