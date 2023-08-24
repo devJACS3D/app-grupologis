@@ -112,7 +112,7 @@ const Capacitations = (props) => {
         <CardEinfo
           title={"Capacitaciones"}
           buttonText="Buscar"
-          inputText="Ingresa el radicado"
+          inputText="Ingresa el número del documento"
           showButton={false}
           showInput={true}
           handleGoBack={() => navigation.navigate("EmployeeManagement")}

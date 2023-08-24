@@ -79,9 +79,7 @@ const Form = ({ closeModal, onConfirm }) => {
       <Pressable onPress={handlePress}>
         <FormTitle
           title={"Nueva PQR"}
-          description={
-            "Aquí puedes interponer tus peticiones, quejas o reclamos."
-          }
+          description={"Escribe aquí tu queja o reclamo"}
         />
 
         <View style={styles.inputContainer}>

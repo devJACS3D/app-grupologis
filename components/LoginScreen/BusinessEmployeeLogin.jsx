@@ -211,7 +211,7 @@ const BusinessEmployeeLogin = ({ navigation, route }) => {
                 responsable de datos personales,
               </Text>
               <Pressable onPress={() => linkPolityData()}>
-                <Text style={styles.titleDescr}>Leer Politica completa</Text>
+                <Text style={styles.titleDescr}>Leer política completa</Text>
               </Pressable>
             </View>
           </View>

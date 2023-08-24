@@ -133,25 +133,25 @@ const Download = (props) => {
         <View style={styles.downloadContainer}>
           <View style={styles.infoContainer}>
             <View style={styles.title}>
-              <Text style={styles.welcomeText}>Descarga </Text>
-              <Text style={styles.subtitle}>Certificados y documentos</Text>
+              <Text style={styles.welcomeText}>Bienvenido </Text>
+              <Text style={styles.subtitle}>a la App Grupo Logis</Text>
 
               <View style={styles.descriptionContainer}>
                 <Text style={styles.welcomeDesc}>
-                  Trabajamos para mejorar tu experiencia como
+                  {userData.role === "employee"
+                    ? "Trabajamos para mejorar tu experiencia como"
+                    : "Aquí puedes gestionar de manera rápida"}
                 </Text>
 
                 <Text style={styles.welcomeDesc}>
-                  {userData.role === "employee" ? "colaborador. " : "cliente. "}
-                  Aquí puedes
                   {userData.role === "employee"
-                    ? " descargar "
-                    : " autogestionar tus "}
+                    ? "colaborador. Aquí puedes descargar "
+                    : "y sencilla tus procesos, solicitudes o "}
                 </Text>
                 <Text style={styles.welcomeDesc}>
                   {userData.role === "employee"
                     ? "certificados y documentos."
-                    : "solicitudes, informes y documentos. "}
+                    : "informes."}
                 </Text>
               </View>
             </View>

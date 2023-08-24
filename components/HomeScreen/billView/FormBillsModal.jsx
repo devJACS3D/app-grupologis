@@ -84,10 +84,7 @@ const FormBillsModal = ({ closeModal, onConfirm }) => {
 
       <View style={styles.modalContent}>
         <View style={{ width: "85%" }}>
-          <FormStep
-            icon={"info"}
-            description="Selecciona las fechas en las cuales deseas buscar."
-          />
+          <FormStep icon={"info"} description="Selecciona mes y año." />
         </View>
 
         <Pressable

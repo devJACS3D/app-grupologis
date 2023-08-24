@@ -184,7 +184,7 @@ const Code = ({ navigation }) => {
         <Image style={styles.logoImage} source={{ uri: images.colorLogo }} />
         <View style={styles.title}>
           <Text style={styles.subtitle}>Ingrese</Text>
-          <Text style={styles.subtitle}>el codigo</Text>
+          <Text style={styles.subtitle}>el código</Text>
 
           <View style={styles.descriptionContainer}>
             <Text style={styles.welcomeDesc}>

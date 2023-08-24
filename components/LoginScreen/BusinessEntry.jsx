@@ -185,7 +185,7 @@ const BusinessE = ({ navigation }) => {
               source={{ uri: images.colorLogo }}
             />
             <View style={styles.title}>
-              <Text style={styles.subtitle}>Elija</Text>
+              <Text style={styles.subtitle}>Elige</Text>
               <Text style={styles.subtitle}>la empresa.</Text>
               <View style={styles.descriptionContainer}>
                 <Text style={styles.welcomeDesc}>

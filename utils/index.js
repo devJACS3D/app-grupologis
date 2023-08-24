@@ -163,24 +163,24 @@ export const employeeDownloadables = [
   {
     id: "laboralCertificate",
     title: "Certificado laboral",
-    description: "Descargar tu certificado laboral a un solo clic",
+    description: "Descarga tu certificado laboral de forma rápida y sencilla",
   },
   {
     id: "payrollFlyer",
     title: "Volante de nómina",
-    description: "Descarga tu volante de nómina desde la App",
+    description:
+      "Descarga tu volante de nómina, elige el año y mes que quieres consultar",
   },
   {
     id: "laboralCertificate2",
-    title: "Ingreso y retención",
-    description:
-      "Descargar tu certificado laboral sin necesidad de pedirlo a Grupologis",
+    title: "Certificado de ingresos y retenciones",
+    description: "Descarga tu certificado y gestiona tus trámites",
   },
   {
     id: "laboralCertificate3",
-    title: "Hoja de vida laboral",
+    title: "Historial laboral",
     description:
-      "Descargar tu hoja de vida sin necesidad de pedirlo a Grupologis",
+      "Consulta y descarga tu historia laboral, contrato y afiliaciones",
   },
   {
     id: "rincapacidad",
@@ -197,13 +197,15 @@ export const employeeDownloadables = [
 export const businessDownloadables = [
   {
     id: "humanResourcesIndicator",
-    title: "Indicador de gestion humana",
-    description: "Descarga tus indicadores de gestión humana desde la App",
+    title: "Indicador de Gestión Humana",
+    description:
+      "Descarga tus indicadores seleccionando la fecha inicial y final",
   },
   {
     id: "generalPayroll",
-    title: "Volante de nómina general",
-    description: "Descarga tu volante de nómina desde la App",
+    title: "Volante de Nómina General",
+    description:
+      "Descarga tu volante, elige el año y mes que quieres consultar",
   },
   // {
   //   id: "capacitations",
@@ -212,13 +214,14 @@ export const businessDownloadables = [
   // },
   {
     id: "ausentism",
-    title: "Ausentismos",
-    description: "Ahora puedes descargar tus certificados desde la App",
+    title: "Ausentismo",
+    description: "Descarga tu reporte de ausentismo de forma sencilla",
   },
   {
     id: "hvida",
-    title: "Hoja de vida",
-    description: "Ahora puedes descargar las hojas de vida de tus empleados",
+    title: "Historial laboral",
+    description:
+      "Consulta y descarga tu historia laboral, contrato y afiliaciones",
     //image: svg.
   },
   // {
@@ -277,7 +280,7 @@ export const employeeManagement = [
   {
     id: "capacit",
     title: "Capacitaciones",
-    description: "Consulta las capacitaciones disponibles y sus estados.",
+    description: "Consulta y descarga el historial de tus capacitaciones",
     // 2Enseguida pues en el avión por ahí abiertaimage: svg.
   },
   {
