@@ -5,6 +5,7 @@ import {
   Image,
   Pressable,
   TextInput,
+  Keyboard,
 } from "react-native";
 import {
   colors,
@@ -60,6 +61,7 @@ const Code = ({ navigation }) => {
   };
 
   const handlePressCode = () => {
+    Keyboard.dismiss();
     codeInputRef.current.focus();
   };
 
