@@ -1,6 +1,9 @@
 export default {
   expo: {
     // Otras opciones de configuración de Expo aquí
+    name: "GRUPOLOGIS",
+    slug: "GRUPOLOGIS",
+    orientation: "portrait",
     ios: {
       icon: "./assets/icon-120.png",
       bundleIdentifier: "mglio.com",
@@ -26,7 +29,7 @@ export default {
         foregroundImage: "./assets/adaptive-icon.png",
         backgroundColor: "#ffffff",
       },
-      versionCode: 5,
+      versionCode: 6,
       // ... Resto de tu configuración Android ...
     },
 
