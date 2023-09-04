@@ -78,8 +78,9 @@ const UserForm = ({
 
     const info = `CodEmpleado=${codEmp}&Empresa=${empSel}&filename=${nomImg}&fileBase64=${b64All}`;
     const path = "usuario/updatePhotoPer.php";
-    const respApi = await fetchPost(path, info);
+    const respApi = await fetchPost(path, info, true);
     const { data, status } = respApi;
+    console.log("respApi", respApi);
     if (!status) {
       if (data == "limitExe") {
         reloadPhoto(b64All, mime, b64);
@@ -106,40 +107,47 @@ const UserForm = ({
   };
 
   const selectPhoto = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    try {
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    if (status !== "granted") {
-      Alert.alert(
-        "Permiso denegado",
-        "Se requiere permiso para acceder la biblioteca multimedia y asi poder seleccionar la imagen",
-        [
-          {
-            text: "Aceptar",
-            onPress: () => console.log("Botón Aceptar presionado"),
-          },
-          { text: "Ir a Configuración", onPress: openAppSettings },
-        ]
-      );
-      return;
-    }
+      if (status !== "granted") {
+        Alert.alert(
+          "Permiso denegado",
+          "Se requiere permiso para acceder la biblioteca multimedia y asi poder seleccionar la imagen",
+          [
+            {
+              text: "Aceptar",
+              onPress: () => console.log("Botón Aceptar presionado"),
+            },
+            { text: "Ir a Configuración", onPress: openAppSettings },
+          ]
+        );
+        return;
+      }
 
-    const result = await ImagePicker.launchImageLibraryAsync({ base64: true });
-
-    if (!result.canceled) {
-      const localUri = result.assets[0].uri;
-      const filename = localUri.split("/").pop();
-      const match = /\.(\w+)$/.exec(filename);
-      const extension = match ? match[1] : "";
-      const fullName = `${filename}`;
-      const mimeType = `image/${extension}`;
-
-      const base64Image = await FileSystem.readAsStringAsync(localUri, {
-        encoding: "base64",
+      const result = await ImagePicker.launchImageLibraryAsync({
+        base64: true,
       });
-      setNomImg(fullName);
-      const prefixedBase64Image = `data:${mimeType};base64,${base64Image}`;
 
-      updateFoto(prefixedBase64Image, mimeType, base64Image);
+      if (!result.canceled) {
+        const localUri = result.assets[0].uri;
+        const filename = localUri.split("/").pop();
+        const match = /\.(\w+)$/.exec(filename);
+        const extension = match ? match[1] : "";
+        const fullName = `${filename}`;
+        const mimeType = `image/${extension}`;
+
+        const base64Image = await FileSystem.readAsStringAsync(localUri, {
+          encoding: "base64",
+        });
+        setNomImg(fullName);
+        const prefixedBase64Image = `data:${mimeType};base64,${base64Image}`;
+
+        updateFoto(prefixedBase64Image, mimeType, base64Image);
+      }
+    } catch (error) {
+      console.error("error", error);
     }
   };
 
