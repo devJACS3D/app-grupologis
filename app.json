@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "GRUPOLOGIS",
-    "slug": "GRUPOLOGIS",
+    "slug": "grupologis-app",
     "version": "1.8.8",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

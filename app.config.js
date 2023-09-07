@@ -2,7 +2,7 @@ export default {
   expo: {
     // Otras opciones de configuración de Expo aquí
     name: "GRUPOLOGIS",
-    slug: "GRUPOLOGIS",
+    slug: "grupologis-app",
     orientation: "portrait",
     ios: {
       icon: "./assets/icon-120.png",
