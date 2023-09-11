@@ -2,7 +2,7 @@
   "expo": {
     "name": "GRUPOLOGIS",
     "slug": "grupologis-app",
-    "version": "1.8.8",
+    "version": "1.8.9",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -21,7 +21,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "icon": "./assets/icon-120.png",
-      "buildNumber": "1.8.7",
+      "buildNumber": "1.8.9",
       "bundleIdentifier": "mglio.com",
       "supportsTablet": true,
 
@@ -45,7 +45,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "app.react2023.grupologis",
-      "versionCode": 3
+      "versionCode": 7
     },
     "web": {
       "favicon": "./assets/favicon.png"

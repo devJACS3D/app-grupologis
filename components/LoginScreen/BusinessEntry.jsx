@@ -19,7 +19,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import authContext from "../../context/auth/authContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { fetchPost } from "../../utils/functions";
+import { fetchPost, reduceImageQuality } from "../../utils/functions";
 
 import FormuBussines from "./FormBussinessEntry/FormBussinesEntry";
 import LoaderItemSwitch from "../common/loaders/LoaderItemSwitch";
@@ -125,8 +125,8 @@ const BusinessE = ({ navigation }) => {
           typeCli === 1
             ? "usuario/getPerfilInfo.php"
             : "usuario/getPerfilClienteInfo.php";
+        console.log("info", info);
         const respApi = await fetchPost(path, info);
-
         const { status, data } = respApi;
         if (status) {
           if (typeof data === "object") {
@@ -136,7 +136,14 @@ const BusinessE = ({ navigation }) => {
             data.type = type;
             setRole(type);
             await AsyncStorage.clear();
+            const imgRed = `data:${data.foto.mimetype}:base64,${data.foto.file}`;
+            const reducedImage = await reduceImageQuality(imgRed);
+            const stringifiedImage = JSON.stringify(reducedImage);
+            await AsyncStorage.setItem("photo", stringifiedImage);
+
+            delete data.foto;
             const loggedIn = JSON.stringify(data);
+            console.log("data", loggedIn);
             await AsyncStorage.setItem("logged", loggedIn);
             navigation.navigate("Home");
           } else {

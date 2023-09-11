@@ -21,7 +21,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import Toast from "react-native-toast-message";
 
-import { fetchPost } from "../../../utils/functions";
+import { fetchPost, reduceImageQuality } from "../../../utils/functions";
 
 const UserForm = ({
   userData,
@@ -73,7 +73,9 @@ const UserForm = ({
 
   const updateFoto = async (b64All, mime, b64) => {
     let infoLog = await AsyncStorage.getItem("logged");
+    let infoPho = await AsyncStorage.getItem("photo");
     infoLog = JSON.parse(infoLog);
+    infoPho = JSON.parse(infoPho);
     const { codEmp, empSel } = infoLog;
 
     const info = `CodEmpleado=${codEmp}&Empresa=${empSel}&filename=${nomImg}&fileBase64=${b64All}`;
@@ -90,11 +92,10 @@ const UserForm = ({
       return;
     }
     if (data.Correcto == 1) {
-      infoLog.foto.file = b64;
-      infoLog.foto.mimetype = mime;
-      infoLog.foto.name = nomImg;
-      const loggedIn = JSON.stringify(infoLog);
-      await AsyncStorage.setItem("logged", loggedIn);
+      const imgRed = `data:${mime}:base64,${b64}`;
+      const reducedImage = await reduceImageQuality(imgRed);
+      const stringifiedImage = JSON.stringify(reducedImage);
+      await AsyncStorage.setItem("photo", stringifiedImage);
       showToast("Foto actualizada correctamente", "success");
       handleImgUser();
     } else {

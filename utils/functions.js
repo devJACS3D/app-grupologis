@@ -5,6 +5,7 @@ import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import * as Permissions from "expo-permissions";
 import * as Sharing from "expo-sharing";
+import * as ImageManipulator from "expo-image-manipulator";
 
 import WebViewContext from "../context/webView/WebViewContext";
 import { get, getDes, post } from "./axiosInstance";
@@ -126,6 +127,7 @@ export async function fetchPost(path, body, limit = "", encodUri = false) {
     }
     const encodedBody = encode(body); // encripta utf8
     const data = `value=${carac[0]}${encodedBody}${carac[1]}`;
+    console.log("body", data);
     return await post(path, data, minSec);
   } else {
     return { status: false, data: token.data };
@@ -230,69 +232,6 @@ export const downloadArchivoAndroid = async (base64, mime, name) => {
   }
 };
 
-// export const downloadArchivoAndroid = async (base64, mime, name) => {
-//   let permReq;
-//   try {
-//     name = name.replaceAll(" ", "_");
-//     name = reemplazarTildes(name);
-//     if (decodeURIComponent(escape(name))) {
-//       name = decodeURIComponent(escape(name));
-//     }
-//     name = reemplazarTildes(name);
-//     const fileUri = FileSystem.cacheDirectory + name;
-
-//     const data = `data:${mime};base64,${base64}`;
-//     const base64Code = data.split(`data:${mime};base64,`)[1];
-
-//     // Verificar los permisos antes de descargar el archivo
-//     permReq = await checkStoragePermission();
-
-//     await FileSystem.writeAsStringAsync(fileUri, base64Code, {
-//       encoding: FileSystem.EncodingType.Base64,
-//     });
-//     await MediaLibrary.saveToLibraryAsync(fileUri);
-
-//     return true;
-//   } catch (error) {
-//     console.log(error);
-//     if (error.code == "ERR_PERMISSIONS") {
-//       if (permReq) {
-//         // reiniciar aplicacion
-//         showRestartAlert();
-//       } else {
-//         getMediaLibraryPermission();
-//       }
-//     }
-//     return false;
-//   }
-// };
-
-// export const downloadArchivoAndroid = async (base64, mime, name) => {
-//   try {
-//     console.log("android");
-//     const fileUri = FileSystem.cacheDirectory + name;
-
-//     const data = `data:${mime};base64,${base64}`;
-//     const base64Code = data.split(`data:${mime};base64,`)[1];
-
-//     await FileSystem.writeAsStringAsync(fileUri, base64Code, {
-//       encoding: FileSystem.EncodingType.Base64,
-//     });
-
-//     const uti =
-//       mime === "application/pdf" ? "com.adobe.pdf" : "com.microsoft.excel.xls";
-//     await Sharing.shareAsync(fileUri, {
-//       mimeType: mime,
-//       UTI: uti,
-//     });
-
-//     return true;
-//   } catch (error) {
-//     console.log(error);
-//     return false;
-//   }
-// };
-
 export const downloadArchivoIOS = async (base64, mime, name) => {
   try {
     name = name.replaceAll(" ", "_");
@@ -343,51 +282,18 @@ export const downloadArchivoIOS = async (base64, mime, name) => {
   }
 };
 
-/* 
-codigo para compartir 
-export const downloadArchivoIOS = async (base64, mime, name) => {
+export const reduceImageQuality = async (base64) => {
   try {
-    name = name.replaceAll(" ", "_");
-    name = decodeURIComponent(escape(name));
-    name = reemplazarTildes(name);
-    const downloadsDirectory = `${FileSystem.documentDirectory}Archivosapp/`;
-    const fileUri = `${downloadsDirectory}${name}`;
-    const base64Code = base64;
-
-    // crea el directorio de descargas si no existe
-    await FileSystem.makeDirectoryAsync(downloadsDirectory, {
-      intermediates: true,
+    const manipResult = await ImageManipulator.manipulateAsync(base64, [], {
+      compress: 0.2,
+      format: ImageManipulator.SaveFormat.JPEG,
     });
-
-    // escribe los datos en el archivo
-    await FileSystem.writeAsStringAsync(fileUri, base64Code, {
-      encoding: FileSystem.EncodingType.Base64,
-    });
-
-    const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
-    if (status !== "granted") {
-      alert("No se otorgó permiso para acceder a la biblioteca de medios");
-      return false;
-    }
-
-    const fileUriLocal = `${FileSystem.documentDirectory}Archivosapp/${name}`;
-
-    // codigo para compartir archivo
-    const fileExtension = name
-      .substring(name.lastIndexOf(".") + 1)
-      .toLowerCase();
-    await Sharing.shareAsync(fileUriLocal, {
-      mimeType: mime,
-      UTI: getUTIFromExtension(fileExtension),
-    });
-
-    return true;
+    return manipResult.uri;
   } catch (error) {
     console.log(error);
-    return false;
+    return null;
   }
 };
-*/
 
 export const htmlChatBot = `
 <html>

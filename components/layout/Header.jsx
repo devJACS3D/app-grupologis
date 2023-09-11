@@ -28,8 +28,11 @@ const Header = ({}) => {
     try {
       const userDataJSON = await AsyncStorage.getItem("logged");
       if (userDataJSON !== null) {
+        let photo = await AsyncStorage.getItem("photo");
+        photo = JSON.parse(photo);
         const userData = JSON.parse(userDataJSON);
-        setDataUs(userData);
+        const dataUss = { ...userData, foto: photo };
+        setDataUs(dataUss);
       }
     } catch (error) {
       console.log(error);
@@ -93,12 +96,12 @@ const Header = ({}) => {
     <View style={styles.notbar}>
       <View style={styles.notbarInfoUser}>
         <View style={styles.userImgContainer}>
-          {typeof dataUs.foto == "object" ? (
+          {typeof dataUs.foto ? (
             <View style={styles.userImgContainer}>
               <Image
                 style={styles.userImg}
                 source={{
-                  uri: `data:${dataUs.foto.mimetype};base64,${dataUs.foto.file}`,
+                  uri: dataUs.foto,
                 }}
               />
               <View style={styles.onlineIndicator} />

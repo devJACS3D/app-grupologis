@@ -17,12 +17,12 @@ const UserInfo = (props) => {
 
   return (
     <View style={styles.userInfoContainer}>
-      {typeof userData.foto == "object" ? (
+      {typeof userData.foto ? (
         <View>
           <Image
             style={styles.userImg}
             source={{
-              uri: `data:${userData.foto.mimetype};base64,${userData.foto.file}`,
+              uri: userData.foto,
             }}
           />
         </View>

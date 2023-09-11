@@ -1,6 +1,6 @@
 {
   "name": "grupologis-app",
-  "version": "1.8.8",
+  "version": "1.8.9",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -46,7 +46,8 @@
     "react-native-toast-notifications": "^3.3.1",
     "react-native-webview": "11.26.0",
     "rn-fetch-blob": "^0.12.0",
-    "expo-checkbox": "~2.3.1"
+    "expo-checkbox": "~2.3.1",
+    "expo-image-manipulator": "~11.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

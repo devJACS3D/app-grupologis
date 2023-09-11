@@ -70,7 +70,6 @@ const BusinessEmployeeLogin = ({ navigation, route }) => {
 
   const submitForm = async () => {
     if (!loader) {
-      console.log(polityData);
       if (polityData) {
         if (identification != "" && phone != "") {
           if (!validatePhone(phone)) {
@@ -83,8 +82,10 @@ const BusinessEmployeeLogin = ({ navigation, route }) => {
                 &contactIdentificacionField=${identification}
                 &contactNumeroTelefonico=${phone}
                 &contactApp=true`;
+            console.log("body", body);
             const path = "usuario/saveUsuarioNew.php";
             const respApi = await fetchPost(path, body);
+            console.log("respApi", respApi);
             const { status, data } = respApi;
             if (status) {
               const data = respApi.data;

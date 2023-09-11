@@ -6,7 +6,7 @@ import Layout from "../components/layout/Layout";
 import authContext from "../context/auth/authContext";
 import { colors, heightPercentageToPx, widthPercentageToPx } from "../utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { fetchPost } from "../utils/functions";
+import { fetchPost, reduceImageQuality } from "../utils/functions";
 import Toast from "react-native-toast-message";
 import LoadFullScreen from "../components/common/loaders/LoadFullScreen";
 import { useFocusEffect } from "@react-navigation/native";
@@ -41,7 +41,10 @@ const UserView = (props) => {
             userData[key] = "";
           }
         }
-        setDataUs(userData);
+        let photo = await AsyncStorage.getItem("photo");
+        photo = JSON.parse(photo);
+        const dataUss = { ...userData, foto: photo };
+        setDataUs(dataUss);
         setLoaderComp(false);
       }
     } catch (error) {
@@ -66,6 +69,11 @@ const UserView = (props) => {
       data.empSel = userData.empSel;
       data.phoneLog = userData.phoneLog;
       data.type = userData.type;
+      const imgRed = `data:${data.foto.mimetype}:base64,${data.foto.file}`;
+      const reducedImage = await reduceImageQuality(imgRed);
+      const stringifiedImage = JSON.stringify(reducedImage);
+      await AsyncStorage.setItem("photo", stringifiedImage);
+      delete data.foto;
       const loggedIn = JSON.stringify(data);
       await AsyncStorage.setItem("logged", loggedIn);
     }
