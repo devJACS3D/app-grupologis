@@ -136,14 +136,14 @@ const BusinessE = ({ navigation }) => {
             data.type = type;
             setRole(type);
             await AsyncStorage.clear();
-            const imgRed = `data:${data.foto.mimetype}:base64,${data.foto.file}`;
-            const reducedImage = await reduceImageQuality(imgRed);
-            const stringifiedImage = JSON.stringify(reducedImage);
-            await AsyncStorage.setItem("photo", stringifiedImage);
-
+            if (typeof data.foto == "object") {
+              const imgRed = `data:${data.foto.mimetype}:base64,${data.foto.file}`;
+              const reducedImage = await reduceImageQuality(imgRed);
+              const stringifiedImage = JSON.stringify(reducedImage);
+              await AsyncStorage.setItem("photo", stringifiedImage);
+            }
             delete data.foto;
             const loggedIn = JSON.stringify(data);
-            console.log("data", loggedIn);
             await AsyncStorage.setItem("logged", loggedIn);
             navigation.navigate("Home");
           } else {

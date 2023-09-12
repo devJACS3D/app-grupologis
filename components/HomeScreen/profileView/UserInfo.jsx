@@ -17,7 +17,7 @@ const UserInfo = (props) => {
 
   return (
     <View style={styles.userInfoContainer}>
-      {typeof userData.foto ? (
+      {userData.foto ? (
         <View>
           <Image
             style={styles.userImg}

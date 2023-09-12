@@ -28,10 +28,15 @@ const Header = ({}) => {
     try {
       const userDataJSON = await AsyncStorage.getItem("logged");
       if (userDataJSON !== null) {
-        let photo = await AsyncStorage.getItem("photo");
-        photo = JSON.parse(photo);
         const userData = JSON.parse(userDataJSON);
-        const dataUss = { ...userData, foto: photo };
+        let dataUss;
+        let photo = await AsyncStorage.getItem("photo");
+        if (photo !== null) {
+          photo = JSON.parse(photo);
+          dataUss = { ...userData, foto: photo };
+        } else {
+          dataUss = { ...userData };
+        }
         setDataUs(dataUss);
       }
     } catch (error) {
@@ -96,7 +101,7 @@ const Header = ({}) => {
     <View style={styles.notbar}>
       <View style={styles.notbarInfoUser}>
         <View style={styles.userImgContainer}>
-          {typeof dataUs.foto ? (
+          {dataUs.foto ? (
             <View style={styles.userImgContainer}>
               <Image
                 style={styles.userImg}

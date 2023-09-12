@@ -42,8 +42,13 @@ const UserView = (props) => {
           }
         }
         let photo = await AsyncStorage.getItem("photo");
-        photo = JSON.parse(photo);
-        const dataUss = { ...userData, foto: photo };
+        let dataUss;
+        if (photo !== null) {
+          photo = JSON.parse(photo);
+          dataUss = { ...userData, foto: photo };
+        } else {
+          dataUss = { ...userData };
+        }
         setDataUs(dataUss);
         setLoaderComp(false);
       }
@@ -69,10 +74,12 @@ const UserView = (props) => {
       data.empSel = userData.empSel;
       data.phoneLog = userData.phoneLog;
       data.type = userData.type;
-      const imgRed = `data:${data.foto.mimetype}:base64,${data.foto.file}`;
-      const reducedImage = await reduceImageQuality(imgRed);
-      const stringifiedImage = JSON.stringify(reducedImage);
-      await AsyncStorage.setItem("photo", stringifiedImage);
+      if (typeof data.foto == "object") {
+        const imgRed = `data:${data.foto.mimetype}:base64,${data.foto.file}`;
+        const reducedImage = await reduceImageQuality(imgRed);
+        const stringifiedImage = JSON.stringify(reducedImage);
+        await AsyncStorage.setItem("photo", stringifiedImage);
+      }
       delete data.foto;
       const loggedIn = JSON.stringify(data);
       await AsyncStorage.setItem("logged", loggedIn);
