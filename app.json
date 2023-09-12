@@ -2,7 +2,7 @@
   "expo": {
     "name": "GRUPOLOGIS",
     "slug": "grupologis-app",
-    "version": "1.8.9",
+    "version": "1.9.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -45,7 +45,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "app.react2023.grupologis",
-      "versionCode": 7
+      "versionCode": 8
     },
     "web": {
       "favicon": "./assets/favicon.png"
