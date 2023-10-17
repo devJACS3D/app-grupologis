@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: heightPercentageToPx(55),
     width: widthPercentageToPx(75),
+    zIndex: 99,
   },
   imageContainer: {
     height: heightPercentageToPx(pixelDensity <= 1 ? 30 : 40),

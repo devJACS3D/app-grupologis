@@ -218,10 +218,11 @@ const styles = StyleSheet.create({
   welcomeText: {
     fontFamily: "Poppins-Bold",
     color: colors.mainBlue,
-    ...getFontStyles(25),
+    ...getFontStyles(23, 1, 1.3),
+
   },
   subtitle: {
-    ...getFontStyles(17),
+    ...getFontStyles(17, 1, 1.2),
     fontFamily: "Poppins-Bold",
   },
   toApp: {
@@ -235,7 +236,7 @@ const styles = StyleSheet.create({
   welcomeDesc: {
     fontFamily: "Volks-Serial-Light",
     color: colors.descriptionColors,
-    ...getFontStyles(14, 0.6, 1),
+    ...getFontStyles(12, 1, 1.3),
   },
 
   workersImage: {
@@ -273,14 +274,15 @@ const styles = StyleSheet.create({
     width: widthPercentageToPx(90),
     height:
       Platform.OS === "android"
-        ? heightPercentageToPx(34)
-        : heightPercentageToPx(31),
+        ? 270
+        : 270,
     paddingTop: 10,
   },
   downloadableCardsContainer: {
     display: "flex",
     flexDirection: "row",
     gap: 10,
+    
   },
 });
 

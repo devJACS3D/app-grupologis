@@ -8,9 +8,14 @@ import {
   View,
   Switch,
   Linking,
+  Dimensions,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
+
+const { height } = Dimensions.get('window');
+const showImage = height >= 669;  // Ajusta este valor según tus necesidades
+
 
 import React, { useState } from "react";
 import {
@@ -200,12 +205,10 @@ const BusinessEmployeeLogin = ({ navigation, route }) => {
                 onValueChange={setPolityData}
                 color={polityData ? "#4630EB" : undefined}
               />
-              <Text style={styles.titlePolity}>Aceptar</Text>
+              <Text style={styles.titlePolity}>Aceptar Política de tratamiento de datos</Text>
             </View>
             <View style={styles.containerDesPolity}>
-              <Text style={styles.titleDescr}>
-                Política de tratamiento de datos
-              </Text>
+              
               <Text style={styles.descrip}>
                 LOGÍSTICA LABORAL SAS es la empresa de servicios temporales que
                 en desarrollo de su objeto social es receptora y por ende
@@ -219,15 +222,17 @@ const BusinessEmployeeLogin = ({ navigation, route }) => {
         </View>
       </View>
       <View style={styles.imageContainer}>
-        <Image
-          style={styles.loginBackgroundImages}
-          source={
-            type === "business"
-              ? images.businessLoginImage
-              : images.employeeLoginImage
-          }
-        />
-      </View>
+        {showImage && (
+            <Image
+                style={styles.loginBackgroundImages}
+                source={
+                    type === "business"
+                        ? images.businessLoginImage
+                        : images.employeeLoginImage
+                }
+            />
+        )}
+    </View>
       <View style={styles.helpContainer}>
         <View style={styles.helpIcon}>
           <IconHelp />
@@ -320,15 +325,15 @@ const styles = StyleSheet.create({
   welcomeDesc: {
     fontFamily: "Poppins-Regular",
     color: colors.white,
-    ...getFontStyles(13, 0.7, 1.2),
+    ...getFontStyles(12, 1, 1.2),
     textAlign: "left",
   },
   welcomeDescForm: {
     fontFamily: "Poppins-Bold",
     color: colors.white,
-    ...getFontStyles(13.5, 0.7, 1.2),
+    ...getFontStyles(12, 1, 1.2),
     textAlign: "left",
-    paddingTop: 15,
+    paddingTop: 5,
   },
   loginFormInput: {
     fontFamily: "Poppins-Regular",
@@ -401,7 +406,8 @@ const styles = StyleSheet.create({
   welcomeProb: {
     fontFamily: "Poppins-Regular",
     color: colors.black,
-    ...getFontStyles(13, 0.7, 0.9),
+    ...getFontStyles(12, 0.7, 1),
+    width: "90%",
   },
   emlInfo: {
     fontFamily: "Poppins-Bold",
@@ -426,8 +432,9 @@ const styles = StyleSheet.create({
   titlePolity: {
     fontFamily: "Poppins-Bold",
     color: colors.white,
-    ...getFontStyles(17, 1, 1.2),
+    ...getFontStyles(13, 1, 1.2),
     paddingLeft: 7,
+    width: "85%",
   },
   containerDesPolity: {
     display: "flex",
@@ -437,7 +444,8 @@ const styles = StyleSheet.create({
   titleDescr: {
     fontFamily: "Poppins-Bold",
     color: colors.white,
-    ...getFontStyles(14, 0.8, 1.2),
+    ...getFontStyles(12, 0.8, 1.2),
+    
     // paddingLeft: 7,
     zIndex: 99,
   },

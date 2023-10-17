@@ -477,6 +477,7 @@ const styles = StyleSheet.create({
   scrollStyle: {
     marginRight: 12,
     width: 145,
+    height: 250,
     backgroundColor: colors.white,
     borderRadius: 17,
     paddingHorizontal: 10,
@@ -491,6 +492,7 @@ const styles = StyleSheet.create({
   },
   imageSvg: {
     marginBottom: 15,
+    
   },
   title: (tmn) => ({
     ...getFontStyles(tmn, 0.9, 1.1),
